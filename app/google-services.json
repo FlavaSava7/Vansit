@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "407574058453",
+    "firebase_url": "https://vansit-f961f.firebaseio.com",
+    "project_id": "vansit-f961f",
+    "storage_bucket": "vansit-f961f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:407574058453:android:177c2603a642c99e",
+        "android_client_info": {
+          "package_name": "devgam.vansit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "407574058453-21cm24sucrvl6urv7stnugoutq9d91sa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "devgam.vansit",
+            "certificate_hash": "094168D7BB9709C547C6398DA2C07136C974A14C"
+          }
+        },
+        {
+          "client_id": "407574058453-4iu78su7628ijpg65cc5fqslf7l2n3cu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "devgam.vansit",
+            "certificate_hash": "2D18DFF2D52150E6DD2DCA985E87ADB2D65A07F3"
+          }
+        },
+        {
+          "client_id": "407574058453-qg0d2sb5oiguan63tchmj9cnpie1nnc8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgyHLYcQ1wu90-Iuj4p-fDpYJwQmA-KWQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "407574058453-qg0d2sb5oiguan63tchmj9cnpie1nnc8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
