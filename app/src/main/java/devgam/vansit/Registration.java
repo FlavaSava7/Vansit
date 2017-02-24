@@ -115,6 +115,7 @@ public class Registration extends Fragment {
                             //startActivity(new Intent(getActivity().getApplicationContext(), MainPage.class));
 
                             Util.ChangeFrag(mainPage,fragmentManager);// use like this to go from fragment to other
+
                         }
                         else
                         {

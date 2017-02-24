@@ -11,10 +11,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Window;
 import android.widget.Toast;
-
 import com.google.firebase.auth.FirebaseAuth;
 
+
 import java.io.IOException;
+import java.util.Calendar;
 
 /**
  THIS CLASS IS FOR METHODS THAT WILL BE RE-USED ALOT
@@ -53,6 +54,11 @@ class Util
     static String userName, phoneNumber, userGender, userCity;
     static int dayOfBirth, monthOfBirth, yearOfBirth;
 
+    final static Calendar CALENDAR = Calendar.getInstance();
+    //These values to get current date and open date picker on current date
+    static int dayNow = CALENDAR.get(Calendar.DAY_OF_MONTH);
+    static int monthNow = CALENDAR.get(Calendar.MONTH);
+    static int yearNow = CALENDAR.get(Calendar.YEAR);
 
 
 
@@ -101,8 +107,10 @@ class Util
     static boolean isLogged()// to check if user is already logged
     {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        return (firebaseAuth.getCurrentUser() != null);
+        return ( firebaseAuth.getCurrentUser() != null);
     }
+
+
     static void ChangeFrag(Fragment fragment, FragmentManager fragmentManager)//change fragments
     {
         String backStateName = fragment.getClass().getName();

@@ -2,6 +2,7 @@ package devgam.vansit;
 
 import android.os.Build;
 import android.os.Bundle;
+
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -17,13 +18,14 @@ import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+
 public class MainController extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
 
 
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
-    NavigationView navigationView;//Used to hide items if user logged in
+
 
 
 
@@ -80,9 +82,6 @@ public class MainController extends AppCompatActivity
         Util.ChangeFrag(mainPage,fragmentManager);
         //Log.v("Main:","Util.IS_USER_CONNECTED: "+Util.IS_USER_CONNECTED);
 
-        //call method to hide items of navigation drawer if user logged in / out
-        //hideItem();
-
 
 
     }
@@ -91,6 +90,9 @@ public class MainController extends AppCompatActivity
     protected void onResume()
     {
         super.onResume();
+        hideItem();
+
+
 
     }
 
@@ -177,6 +179,11 @@ public class MainController extends AppCompatActivity
         } else if(id == R.id.nav_my_account){
             myAccount myAccount = new myAccount();
             Util.ChangeFrag(myAccount, fragmentManager);
+        } else if(id == R.id.nav_user) {
+            //Temp calling to test setter valid or not !
+            userInformation user = new userInformation(this, "Nimer Esam", "1995", "10", "Amman","male");
+            user.show();
+            //Util.ChangeFrag(user, fragmentManager);
         }
 
 
@@ -186,19 +193,19 @@ public class MainController extends AppCompatActivity
     }
 
 
-    private void hideItem() {
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        Menu nav_Menu = navigationView.getMenu();
-        if (Util.isLogged()) {//user is logged in
-            nav_Menu.findItem(R.id.nav_login).setVisible(false);
-            nav_Menu.findItem(R.id.nav_register).setVisible(false);
-            nav_Menu.findItem(R.id.nav_my_account).setVisible(true);
-        } else {
-            nav_Menu.findItem(R.id.nav_login).setVisible(true);
-            nav_Menu.findItem(R.id.nav_register).setVisible(true);
-            nav_Menu.findItem(R.id.nav_my_account).setVisible(false);
+    public void hideItem() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
-        }
+        //if (Util.isLogged()) {//user is logged in
+            //nav_Menu.findItem(R.id.nav_login).setVisible(false);
+            //nav_Menu.findItem(R.id.nav_register).setVisible(false);
+            //nav_Menu.findItem(R.id.nav_my_account).setVisible(true);
+        //} else {
+            /*nav_Menu.findItem(R.id.nav_login).setVisible(true);
+            nav_Menu.findItem(R.id.nav_register).setVisible(true);
+            nav_Menu.findItem(R.id.nav_my_account).setVisible(false);*/
+
+        //}
     }
 
 }

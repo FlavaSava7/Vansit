@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +22,7 @@ import java.util.Calendar;
 
 public class myAccount extends Fragment implements View.OnClickListener{
 
-    final Calendar calendar = Calendar.getInstance();
+
     private EditText nameEdit, phoneEdit ;
     private TextView birthEdit;
     private Button saveButton;
@@ -33,7 +34,7 @@ public class myAccount extends Fragment implements View.OnClickListener{
     //temp day, month, year to save data from picker until data click save
     //because may be user cancel change
     //that's will product real data on fireBase
-    private int dayNow, monthNow, yearNow, tempDayOfBirth, tempMonthOfBirth, tempYearOfBirth ;
+    private int tempDayOfBirth, tempMonthOfBirth, tempYearOfBirth ;
     private String tempUserName, tempPhoneNumber, tempUserCity, tempUserGander ;
 
 
@@ -49,10 +50,7 @@ public class myAccount extends Fragment implements View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //These values to get current date and open date picker on current date
-        dayNow = calendar.get(Calendar.DAY_OF_MONTH);
-        monthNow = calendar.get(Calendar.MONTH);
-        yearNow = calendar.get(Calendar.YEAR);
+
 
         //shared preference initialize
         Context context = getActivity();
@@ -87,7 +85,7 @@ public class myAccount extends Fragment implements View.OnClickListener{
 
         //if user don't set his birthday
         //temp code !!!
-            birthEdit.setText(dayNow + " / " + monthNow + "/ " + yearNow);
+            birthEdit.setText(Util.dayNow + " / " + Util.monthNow + "/ " + Util.yearNow);
 
         maleRadio = (RadioButton) getActivity().findViewById(R.id.my_account_male_radio);
         femaleRadio = (RadioButton) getActivity().findViewById(R.id.my_account_female_radio);
@@ -109,7 +107,7 @@ public class myAccount extends Fragment implements View.OnClickListener{
                     tempMonthOfBirth = month;
                     tempYearOfBirth = year;
                 }
-            }, yearNow, monthNow, dayNow);
+            }, Util.yearNow, Util.monthNow, Util.dayNow);
             datePicker.show();
 
         } if(v == saveButton){
@@ -132,7 +130,7 @@ public class myAccount extends Fragment implements View.OnClickListener{
             //The initial value of int is 0, then if still 0 that's mean user never add his birthday
             Util.makeToast(getActivity(), "Birth day is required");
             return false;
-        } else if(yearNow + 16 < tempYearOfBirth) {
+        } else if(Util.yearNow + 16 < tempYearOfBirth) {
             //Check if user add real birthDate not current date !
             //Just year because no body born in this year can make account
             //No one less than 16 can drive or make deal with other people
@@ -140,14 +138,18 @@ public class myAccount extends Fragment implements View.OnClickListener{
             return false;
         }
 
+        //set values from views to vars
+        tempUserName = nameEdit.getText().toString();
 
-        //Code to set temp values to real DB
+        tempStringCheck = phoneEdit.getText().toString();
+        if(!tempStringCheck.isEmpty() && tempStringCheck != "")
+            tempPhoneNumber = phoneEdit.getText().toString();
+
+        //need code to set city & gender
+
         return true;
 
     }
-
-
-
 
 
 }
