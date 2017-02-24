@@ -1,5 +1,7 @@
 package devgam.vansit.JSON_Classes;
 
+import java.lang.*;
+import java.util.*;
 
 /**
  THIS WILL CONTAIN ALL THE DESCRIPTIONS OF A USER.
@@ -10,21 +12,91 @@ public class Users
 {
     private String Name;
     private String City;
-    private int Age;
     private long Phone;
+    private String Gender;
+    // it contains the Authentication ID from Authentication table,
+    // must be set AFTER we create a record in Authentication table then get the ID then create a User.
+    private String AuthID;
 
-    //
+    private String dateDay;
+    private String dateMonth;
+    private String dateYear;
+
+    private int rateCount;// we use get and increaseRateCount which only increases 1 to rateCount
+    private int rateService;
+    private int ratePrice;
+    private List<String> RatedFor;//lists that contains IDs of who THIS user rated for.
 
     public Users()
     {
-        //empty cons for Firebase
+        //empty constructor for Firebase API
     }
-    public Users(String mName,String mCity,int mAge,long mPhone)
+
+    // we will use this after a new user is created in Auth. table
+    public Users(String name, String city, long phone, String gender, String authID, String dateDay, String dateMonth, String dateYear, String userKey)
     {
-        this.Name = mName;
-        this.City = mCity;
-        this.Age = mAge;
-        this.Phone = mPhone;
+
+        this.Name = name;
+        this.City = city;
+        this.Phone = phone;
+        this.Gender = gender;
+        this.AuthID = authID;
+        this.dateDay = dateDay;
+        this.dateMonth = dateMonth;
+        this.dateYear = dateYear;
+
+        this.RatedFor = new ArrayList<>();
+        this.RatedFor.add(userKey);// so the user cant rate himself
+    }
+
+    public String getGender() {
+        return Gender;
+    }
+
+    public void setGender(String gender) {
+        Gender = gender;
+    }
+    public String getAuthID() {
+        return AuthID;
+    }
+    public String getDateDay() {
+        return dateDay;
+    }
+
+    public void setDateDay(String dateDay) {
+        this.dateDay = dateDay;
+    }
+
+    public String getDateMonth() {
+        return dateMonth;
+    }
+
+    public void setDateMonth(String dateMonth) {
+        this.dateMonth = dateMonth;
+    }
+
+    public String getDateYear() {
+        return dateYear;
+    }
+
+    public void setDateYear(String dateYear) {
+        this.dateYear = dateYear;
+    }
+
+    public int getRateService() {
+        return rateService;
+    }
+
+    public int getRatePrice() {
+        return ratePrice;
+    }
+
+    public List<String> getRatedFor() {
+        return RatedFor;
+    }
+
+    public int getRateCount() {
+        return rateCount;
     }
 
     public String getName() {
@@ -41,14 +113,6 @@ public class Users
 
     public void setCity(String city) {
         City = city;
-    }
-
-    public int getAge() {
-        return Age;
-    }
-
-    public void setAge(int age) {
-        Age = age;
     }
 
     public long getPhone() {
