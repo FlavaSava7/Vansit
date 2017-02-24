@@ -5,7 +5,8 @@
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:layout_marginTop="20dp"
-    tools:context="devgam.vansit.AddOffer">
+    tools:context="devgam.vansit.AddOffer"
+    android:id="@+id/fragParent_add_offer">
 
     <TextView
         android:layout_width="wrap_content"

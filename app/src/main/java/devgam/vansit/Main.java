@@ -57,13 +57,13 @@ public class Main extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        //Log.v("Main","onCreate");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        //Log.v("Main","onCreateView");
         return inflater.inflate(R.layout.fragment_main, container, false);
     }
 
@@ -73,8 +73,10 @@ public class Main extends Fragment
         super.onResume();
 
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);// we should show this when he is logged
+
         if(Util.isLogged())
         {
+            fab.setVisibility(View.VISIBLE);
             fab.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -87,13 +89,13 @@ public class Main extends Fragment
             });
         }else
         {
-            Log.v("Main","onCreate "+Util.isLogged());
+            Log.v("Main","User is not logged in ");
             fab.setVisibility(View.GONE);
         }
 
         DataBaseRoot = FirebaseDatabase.getInstance().getReference();//connect to DB root
 
-        firebaseAuth = FirebaseAuth.getInstance();
+
 
         listView = (ListView) getActivity().findViewById(R.id.frag_main_listview);
         ShowMoreBtn(listView);
@@ -121,6 +123,7 @@ public class Main extends Fragment
 
             }
         });
+
         spinnerType = (Spinner)getActivity().findViewById(R.id.frag_main_spinType);
         spinnerType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
@@ -161,29 +164,21 @@ public class Main extends Fragment
         DatabaseReference mRef = DataBaseRoot.child(Util.RDB_COUNTRY+"/"+Util.RDB_JORDAN);
 
         //City
+        ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_item,
+                getResources().getStringArray(R.array.city_list));
+        spinnerCity.setAdapter(cityAdapter);
+        /*
         final ArrayList <String> cityList = new ArrayList<>();
         ValueEventListener VEL = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
-//                Map<String,Object> jordanMap = (Map<String, Object>) dataSnapshot.getValue();
-//                for (Map.Entry<String,Object> entry : jordanMap.entrySet())
-//                {
-//                    cityList.add(entry.getKey());
-//                    Log.v("MainController","onDataChange : "+entry.getKey());
-//                }
-                //int x = 0;
                 for (DataSnapshot areaSnapshot: dataSnapshot.getChildren())
-                {
                     cityList.add(areaSnapshot.getKey());
-//                    Log.v("MainController", "onDataChange : " + cityList.get(x));
-//                    x += 1;
-                }
                 ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item,cityList);
                 cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerCity.setAdapter(cityAdapter);
-
-
             }
 
             @Override
@@ -192,12 +187,15 @@ public class Main extends Fragment
             }
         };
         mRef.addListenerForSingleValueEvent(VEL);
-        //mRef.removeEventListener(VEL); check it later
+
+        mRef.removeEventListener(VEL); check it later
+        */
+
 
         //Type
         ArrayAdapter<String> typeAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item,
-                getResources().getStringArray(R.array.typesList));
+                getResources().getStringArray(R.array.type_list));
         spinnerType.setAdapter(typeAdapter);
 
         //Initial Filling of ListView
