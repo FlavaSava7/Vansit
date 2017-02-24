@@ -23,6 +23,7 @@ public class MainController extends AppCompatActivity
 
 
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
+    NavigationView navigationView;//Used to hide items if user logged in
 
 
 
@@ -78,6 +79,9 @@ public class MainController extends AppCompatActivity
         Main mainPage = new Main();
         Util.ChangeFrag(mainPage,fragmentManager);
         //Log.v("Main:","Util.IS_USER_CONNECTED: "+Util.IS_USER_CONNECTED);
+
+        //call method to hide items of navigation drawer if user logged in / out
+        //hideItem();
 
 
 
@@ -170,6 +174,9 @@ public class MainController extends AppCompatActivity
         {
             Main mainPage = new Main();
             Util.ChangeFrag(mainPage,fragmentManager);
+        } else if(id == R.id.nav_my_account){
+            myAccount myAccount = new myAccount();
+            Util.ChangeFrag(myAccount, fragmentManager);
         }
 
 
@@ -178,5 +185,20 @@ public class MainController extends AppCompatActivity
         return true;
     }
 
+
+    private void hideItem() {
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu nav_Menu = navigationView.getMenu();
+        if (Util.isLogged()) {//user is logged in
+            nav_Menu.findItem(R.id.nav_login).setVisible(false);
+            nav_Menu.findItem(R.id.nav_register).setVisible(false);
+            nav_Menu.findItem(R.id.nav_my_account).setVisible(true);
+        } else {
+            nav_Menu.findItem(R.id.nav_login).setVisible(true);
+            nav_Menu.findItem(R.id.nav_register).setVisible(true);
+            nav_Menu.findItem(R.id.nav_my_account).setVisible(false);
+
+        }
+    }
 
 }
