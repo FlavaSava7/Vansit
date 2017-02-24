@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Window;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -47,6 +48,13 @@ class Util
     static final String RDB_BUS = "Bus";
     static final String RDB_TRUCK = "Truck";
     static final String RDB_TAXI = "Taxi";
+
+    // TODO: Variables for sharedPreference Data to get locally As static members
+    static String userName, phoneNumber, userGender, userCity;
+    static int dayOfBirth, monthOfBirth, yearOfBirth;
+
+
+
 
     // TODO: Methods
     static boolean CheckConnection(Context context)//this will use isOnline or isOnlineApi18 to check for internet
@@ -140,6 +148,10 @@ class Util
                 Util.ProgDialogStarter(progressDialog,null);
             }
         }, timer);
+    }
+
+    static void makeToast(Context context, String msg){
+        Toast.makeText(context ,msg, Toast.LENGTH_SHORT ).show();
     }
 
 }

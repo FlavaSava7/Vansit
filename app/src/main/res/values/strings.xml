@@ -32,4 +32,21 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- TODO: String Array for spinners -->
+    <string-array name="city_list">
+        <item> Amman </item>
+        <item> Zarqa </item>
+        <item> Irbid </item>
+        <item> Ajloun </item>
+        <item> Jarash </item>
+        <item> Aqaba </item>
+        <item> Mafraq </item>
+        <item> Tafila </item>
+        <item> Maan </item>
+        <item> Madaba </item>
+        <item> Balqa </item>
+        <item> Karak </item>
+
+    </string-array>
 </resources>

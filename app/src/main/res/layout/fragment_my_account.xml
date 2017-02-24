@@ -1,0 +1,174 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".myAccount">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <Button
+        android:text="save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/my_account_save_button"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="110dp" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/my_account_main_linear"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/my_account_1st_row">
+
+            <TextView
+                android:text="Name "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/my_account_name_text"
+                android:layout_weight="0.13"
+                android:fontFamily="sans-serif"
+                android:textSize="18sp"
+                android:textAlignment="center" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/my_account_name_edit"
+                android:layout_weight="0.60"
+                android:inputType="textPersonName" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/my_account_2nd_row">
+
+            <TextView
+                android:text="Phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/my_account_phone_text"
+                android:layout_weight="0.13"
+                android:fontFamily="sans-serif"
+                android:textSize="18sp"
+                android:textAlignment="center" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/my_account_phone_edit"
+                android:layout_weight="0.54"
+                android:inputType="phone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/my_account_3rd_row">
+
+            <TextView
+                android:text="Birthday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/my_account_birth_text"
+                android:fontFamily="sans-serif"
+                android:textSize="18sp"
+                android:textAlignment="center"
+                android:padding="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/my_account_birth_edit"
+                android:layout_weight="0.89"
+                android:padding="10dp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/my_account_4th_row">
+
+            <TextView
+                android:text="City"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/my_account_city_text"
+                android:layout_weight="0.00"
+                android:fontFamily="sans-serif"
+                android:textSize="18sp"
+                android:textAlignment="center"
+                android:padding="10dp" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/my_account_city_spinner"
+                android:textAlignment="center" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/my_account_5th_row">
+
+            <TextView
+                android:text="Gender"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/my_account_gender_text"
+                android:fontFamily="sans-serif"
+                android:textSize="18sp"
+                android:textAlignment="center"
+                android:padding="10dp"/>
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/my_account_gender_group">
+
+                <RadioButton
+                    android:text="Male"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/my_account_male_radio"
+                    android:layout_weight="1"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:text="Female"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/my_account_female_radio"
+                    android:layout_weight="1" />
+            </RadioGroup>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

@@ -1,24 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+     android:checkableBehavior="single">
+    <item android:title="User">
+        <item
+            android:id="@+id/nav_main"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Home" />
+
         <item
             android:id="@+id/nav_login"
             android:icon="@drawable/ic_menu_camera"
             android:title="Login" />
+
         <item
             android:id="@+id/nav_register"
             android:icon="@drawable/ic_menu_gallery"
             android:title="Registration" />
+
         <item
-            android:id="@+id/nav_main"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Main" />
+            android:id="@+id/nav_my_account"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="My Account" />
+
+
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
             android:title="Tools" />
-    </group>
+    </item>
 
     <item android:title="Communicate">
         <menu>
