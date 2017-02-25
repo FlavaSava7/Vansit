@@ -298,7 +298,8 @@ public class Main extends Fragment
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot)
                 {
-                    holder.Name.setText(dataSnapshot.getValue(Users.class).getName());
+                    if(dataSnapshot.getValue(Users.class)!=null)
+                        holder.Name.setText(dataSnapshot.getValue(Users.class).getName());
                 }
 
                 @Override
