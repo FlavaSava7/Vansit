@@ -22,9 +22,10 @@ public class Users
     private String dateMonth;
     private String dateYear;
 
-    private int rateCount;// we use get and increaseRateCount which only increases 1 to rateCount
+    private int rateServiceCount;
     private int rateService;
     private int ratePrice;
+    private int ratePriceCount;
     private List<String> RatedFor;//lists that contains IDs of who THIS user rated for.
 
     public Users()
@@ -48,7 +49,13 @@ public class Users
         this.RatedFor = new ArrayList<>();
         this.RatedFor.add(userKey);// so the user cant rate himself
     }
+    public int getRateServiceCount() {
+        return rateServiceCount;
+    }
 
+    public int getRatePriceCount() {
+        return ratePriceCount;
+    }
     public String getGender() {
         return Gender;
     }
@@ -93,10 +100,6 @@ public class Users
 
     public List<String> getRatedFor() {
         return RatedFor;
-    }
-
-    public int getRateCount() {
-        return rateCount;
     }
 
     public String getName() {

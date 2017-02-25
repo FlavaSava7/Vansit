@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import devgam.vansit.JSON_Classes.Offers;
+import devgam.vansit.JSON_Classes.Users;
 
 
 public class AddOffer extends Fragment {
@@ -74,11 +75,11 @@ public class AddOffer extends Fragment {
             }
         });
 
-        /*DatabaseReference mRef = FirebaseDatabase.getInstance().
+        DatabaseReference mRef = FirebaseDatabase.getInstance().
                 getReference(Util.RDB_USERS);
         String newUserKey = mRef.push().getKey();
-        Users newUser = new Users("Sara","Amman",796640858L,"Male","kjsk5465","9","7","1995",newUserKey);
-        mRef.child(newUserKey).setValue(newUser);*/
+        Users newUser = new Users("Lara","Amman",796640858L,"Female","kjsk5465","9","7","1995",newUserKey);
+        mRef.child(newUserKey).setValue(newUser);
         FragmentSetUp();
     }
     private void FragmentSetUp()// some custom settings for this fragment
