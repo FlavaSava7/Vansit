@@ -75,11 +75,11 @@ public class AddOffer extends Fragment {
             }
         });
 
-        DatabaseReference mRef = FirebaseDatabase.getInstance().
+        /*DatabaseReference mRef = FirebaseDatabase.getInstance().
                 getReference(Util.RDB_USERS);
         String newUserKey = mRef.push().getKey();
-        Users newUser = new Users("Lara","Amman",796640858L,"Female","kjsk5465","9","7","1995",newUserKey);
-        mRef.child(newUserKey).setValue(newUser);
+        Users newUser = new Users("Lara","Amman","796640858L","Female","9","7","1995");
+        mRef.child(newUserKey).setValue(newUser);*/
         FragmentSetUp();
     }
     private void FragmentSetUp()// some custom settings for this fragment
