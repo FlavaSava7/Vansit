@@ -111,9 +111,8 @@ public class Registration extends Fragment {
                         {
                             //Registration done
                             //now user should complete entering his data
-
-                            //startActivity(new Intent(getActivity().getApplicationContext(), MainPage.class));
-
+                            // TODO: I THINK SOMETHING IS MISSING HERE FROM UR CODE OR CHANGED BY ME BY MISTAKE, Sorry
+                            // TODO: MYB USER GO TO myAccount Page?
                             Util.ChangeFrag(mainPage,fragmentManager);// use like this to go from fragment to other
 
                         }
@@ -121,10 +120,6 @@ public class Registration extends Fragment {
                         {
                             Log.v("Main:","userRegistration: "+task.getException());
                         }
-
-
-
-
                     }
 
                 });

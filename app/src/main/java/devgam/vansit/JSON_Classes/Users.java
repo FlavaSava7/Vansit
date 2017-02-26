@@ -12,11 +12,8 @@ public class Users
 {
     private String Name;
     private String City;
-    private long Phone;
+    private String Phone;
     private String Gender;
-    // it contains the Authentication ID from Authentication table,
-    // must be set AFTER we create a record in Authentication table then get the ID then create a User.
-    private String AuthID;
 
     private String dateDay;
     private String dateMonth;
@@ -35,20 +32,18 @@ public class Users
     }
 
     // we will use this after a new user is created in Auth. table
-    public Users(String name, String city, long phone, String gender, String authID, String dateDay, String dateMonth, String dateYear, String userKey)
+    public Users(String name, String city, String phone, String gender,
+                 String dateDay, String dateMonth, String dateYear)
     {
-
         this.Name = name;
         this.City = city;
         this.Phone = phone;
         this.Gender = gender;
-        this.AuthID = authID;
         this.dateDay = dateDay;
         this.dateMonth = dateMonth;
         this.dateYear = dateYear;
-
         this.RatedFor = new ArrayList<>();
-        this.RatedFor.add(userKey);// so the user cant rate himself
+        this.RatedFor.add(".");// garbage value, just to show it in JSON
     }
     public int getRateServiceCount() {
         return rateServiceCount;
@@ -64,9 +59,7 @@ public class Users
     public void setGender(String gender) {
         Gender = gender;
     }
-    public String getAuthID() {
-        return AuthID;
-    }
+
     public String getDateDay() {
         return dateDay;
     }
@@ -103,19 +96,6 @@ public class Users
         return RatedFor;
     }
 
-    //New Constructor add by Nimer to send user data
-
-
-    public Users(String name, String city, String phone, String gender, String dayOfBirth, String monthOfBirth, String yearOfBirth) {
-        Name = name;
-        City = city;
-        phoneNumber = phone;
-        this.gender = gender;
-        this.dayOfBirth = dayOfBirth;
-        this.monthOfBirth = monthOfBirth;
-        this.yearOfBirth = yearOfBirth;
-    }
-
     public String getName() {
         return Name;
     }
@@ -132,11 +112,11 @@ public class Users
         City = city;
     }
 
-    public long getPhone() {
+    public String getPhone() {
         return Phone;
     }
 
-    public void setPhone(long phone) {
+    public void setPhone(String phone) {
         Phone = phone;
     }
 }
