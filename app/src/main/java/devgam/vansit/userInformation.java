@@ -17,7 +17,8 @@ public class userInformation extends Dialog implements
     ImageView userImg;
     String tempUserName, tempUserAgeYear, tempUserAgeMonth, tempUserCity, tempUserGender;
 
-    public userInformation(Activity activity) {
+    public userInformation(Activity activity)
+    {
         super(activity);
         // Required empty public constructor
         this.c = activity;
