@@ -13,6 +13,9 @@ public class Offers
     private String Description;
     private String Type;
 
+    //added by Nimer for my offers activity
+    private String City;
+
     // The following variables will not be shown in the DataBase Offers Object Just to get more Information
     private String offerKey;//this is used inside the list views so we can know if a certain obj already exists or not inside the list
 
@@ -30,6 +33,13 @@ public class Offers
         this.Type = mType;
 
     }
+
+    //constructor added by Nimer for my offers activity
+    public Offers(String title, String city) {
+        Title = title;
+        City = city;
+    }
+
     public String getTitle() {
         return Title;
     }
@@ -62,6 +72,13 @@ public class Offers
         Type = type;
     }
 
+    public String getCity() {
+        return City;
+    }
+
+    public void setCity(String city) {
+        City = city;
+    }
 
     public String getOfferKey()
     {

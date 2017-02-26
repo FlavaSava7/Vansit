@@ -28,6 +28,7 @@ public class Users
     private int ratePriceCount;
     private List<String> RatedFor;//lists that contains IDs of who THIS user rated for.
 
+
     public Users()
     {
         //empty constructor for Firebase API
@@ -100,6 +101,19 @@ public class Users
 
     public List<String> getRatedFor() {
         return RatedFor;
+    }
+
+    //New Constructor add by Nimer to send user data
+
+
+    public Users(String name, String city, String phone, String gender, String dayOfBirth, String monthOfBirth, String yearOfBirth) {
+        Name = name;
+        City = city;
+        phoneNumber = phone;
+        this.gender = gender;
+        this.dayOfBirth = dayOfBirth;
+        this.monthOfBirth = monthOfBirth;
+        this.yearOfBirth = yearOfBirth;
     }
 
     public String getName() {
