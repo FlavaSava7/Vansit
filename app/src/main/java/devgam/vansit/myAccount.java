@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +17,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.Calendar;
+
+import devgam.vansit.JSON_Classes.Users;
 
 public class myAccount extends Fragment implements View.OnClickListener{
 
@@ -145,12 +150,27 @@ public class myAccount extends Fragment implements View.OnClickListener{
         if(!tempStringCheck.isEmpty() && tempStringCheck != "")
             tempPhoneNumber = phoneEdit.getText().toString();
 
-        //need code to set city & gender
+        //user object to push data on DB
+        Users userData = new Users(tempUserName, tempUserCity,
+                tempPhoneNumber, tempUserGander,
+                tempDayOfBirth + "", tempMonthOfBirth + "", tempYearOfBirth + "");
 
+        //Temp code
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        try{
+
+            final String tempUID = firebaseAuth.getCurrentUser().getUid();
+            DatabaseReference mRef = FirebaseDatabase.getInstance().
+                    getReference(Util.RDB_USERS +"/"+
+                    tempUID);
+            mRef.push().setValue(userData);
+            Util.makeToast(getContext(), "Save Successfully");
+        } catch (Exception e){
+
+        }
         return true;
-
     }
 
 
-}
 
+}

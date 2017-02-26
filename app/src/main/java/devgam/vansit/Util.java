@@ -62,6 +62,7 @@ class Util
 
 
 
+
     // TODO: Methods
     static boolean CheckConnection(Context context)//this will use isOnline or isOnlineApi18 to check for internet
     {

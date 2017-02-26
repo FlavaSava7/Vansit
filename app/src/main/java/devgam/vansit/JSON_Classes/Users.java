@@ -13,6 +13,11 @@ public class Users
     private int Age;
     private long Phone;
 
+    //New Value add by Nimer to send user data
+    private String gender;
+    private String dayOfBirth, monthOfBirth, yearOfBirth;
+    private String phoneNumber;
+
     //
 
     public Users()
@@ -25,6 +30,19 @@ public class Users
         this.City = mCity;
         this.Age = mAge;
         this.Phone = mPhone;
+    }
+
+    //New Constructor add by Nimer to send user data
+
+
+    public Users(String name, String city, String phone, String gender, String dayOfBirth, String monthOfBirth, String yearOfBirth) {
+        Name = name;
+        City = city;
+        phoneNumber = phone;
+        this.gender = gender;
+        this.dayOfBirth = dayOfBirth;
+        this.monthOfBirth = monthOfBirth;
+        this.yearOfBirth = yearOfBirth;
     }
 
     public String getName() {

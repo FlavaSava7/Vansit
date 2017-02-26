@@ -184,6 +184,10 @@ public class MainController extends AppCompatActivity
             userInformation user = new userInformation(this, "Nimer Esam", "1995", "10", "Amman","male");
             user.show();
             //Util.ChangeFrag(user, fragmentManager);
+
+        }else if(id == R.id.nav_share) {
+            myOffers myOffers = new myOffers();
+            Util.ChangeFrag(myOffers, fragmentManager);
         }
 
 
