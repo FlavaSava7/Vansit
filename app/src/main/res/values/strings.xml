@@ -49,5 +49,19 @@
         <item>Truck</item>
         <item>Taxi</item>
     </string-array>
-
+    <!-- TODO: String Array for Ratings Bars -->
+    <string-array name="rating_service">
+        <item>3adi</item>
+        <item>mshi 7alak</item>
+        <item>no9 no9</item>
+        <item>mnee7</item>
+        <item>6a8e3</item>
+    </string-array>
+    <string-array name="rating_price">
+        <item>r5ee9!</item>
+        <item>tmam</item>
+        <item>wsa6</item>
+        <item>waaal</item>
+        <item>rf3o el-2s3ar?</item>
+    </string-array>
 </resources>

@@ -2,13 +2,13 @@ package devgam.vansit.JSON_Classes;
 
 import java.lang.*;
 import java.util.*;
-
+import java.io.Serializable;
 /**
  THIS WILL CONTAIN ALL THE DESCRIPTIONS OF A USER.
 
  - Class variables will be private , thus access data using SET and GET
  */
-public class Users
+public class Users implements Serializable
 {
     private String Name;
     private String City;
@@ -19,12 +19,14 @@ public class Users
     private String dateMonth;
     private String dateYear;
 
+    private float rateService;
     private int rateServiceCount;
-    private int rateService;
-    private int ratePrice;
+    private float ratePrice;
     private int ratePriceCount;
     private List<String> RatedFor;//lists that contains IDs of who THIS user rated for.
 
+    // The following variables will not be shown in the DataBase Users Object Just to get more Information
+    private String userKey;//this is used inside the list views so we can know if a certain obj already exists or not inside the list
 
     public Users()
     {
@@ -45,6 +47,7 @@ public class Users
         this.RatedFor = new ArrayList<>();
         this.RatedFor.add(".");// garbage value, just to show it in JSON
     }
+
     public int getRateServiceCount() {
         return rateServiceCount;
     }
@@ -84,11 +87,11 @@ public class Users
         this.dateYear = dateYear;
     }
 
-    public int getRateService() {
+    public float getRateService() {
         return rateService;
     }
 
-    public int getRatePrice() {
+    public float getRatePrice() {
         return ratePrice;
     }
 
@@ -118,5 +121,13 @@ public class Users
 
     public void setPhone(String phone) {
         Phone = phone;
+    }
+
+    public String getUserKey() {
+        return userKey;
+    }
+
+    public void setUserKey(String userKey) {
+        this.userKey = userKey;
     }
 }

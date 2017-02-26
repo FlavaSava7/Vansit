@@ -42,9 +42,11 @@ public class Main extends Fragment
 
     private DatabaseReference DataBaseRoot;
     private FirebaseAuth firebaseAuth;
+    FragmentManager fragmentManager;// this is used for the ChangeFrag method
 
     private ListView listView;
     private ArrayList<Offers> offerList;// this will be refilled with Offers each time a user change City Filter
+    private ArrayList<Users> userList;// to match offer with the user it has, we are filling in inside the getView
     private ArrayAdapter offerAdapter;
     private static int listCounter = 1;
 
@@ -95,14 +97,32 @@ public class Main extends Fragment
         }
 
         DataBaseRoot = FirebaseDatabase.getInstance().getReference();//connect to DB root
-
+        fragmentManager  = getActivity().getSupportFragmentManager();
 
 
         listView = (ListView) getActivity().findViewById(R.id.frag_main_listview);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+                {
+                    // click to go to offerinfo page
+
+                    OfferInfo offerInfoPage = new OfferInfo();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("userDriver",userList.get(position));
+                    bundle.putSerializable("userOffer",offerList.get(position));
+                    offerInfoPage.setArguments(bundle);
+                    Log.v("Main","Sending to OfferInfo: "+userList.get(position).getName());
+                    Log.v("Main","Sending to OfferInfo: "+offerList.get(position).getTitle());
+
+                    Util.ChangeFrag(offerInfoPage,fragmentManager);
+                }
+        });
         ShowMoreBtn(listView);
         offerAdapter = new itemsAdapter(getContext());
         offerList = new ArrayList<>();
-
+        userList = new ArrayList<>();
 
         spinnerCity = (Spinner)getActivity().findViewById(R.id.frag_main_spinCity);
         spinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
@@ -286,21 +306,58 @@ public class Main extends Fragment
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowItem = inflater.inflate(R.layout.fragment_main_listview_items, parent, false);
 
-
             Offers tempOffer = offerList.get(position);
 
             holder.Title = (TextView) rowItem.findViewById(R.id.main_items_TitleData);
             holder.Title.setText(tempOffer.getTitle());
 
-            DatabaseReference query = DataBaseRoot.child(Util.RDB_USERS+"/"+tempOffer.getUser_ID());
-            holder.Name = (TextView) rowItem.findViewById(R.id.main_items_NameData);
+            holder.City = (TextView) rowItem.findViewById(R.id.main_items_cityData);
+            holder.City.setText(tempOffer.getCity());
 
+            holder.typeIcon = (ImageView) rowItem.findViewById(R.id.main_items_typeIcon);
+            switch(tempOffer.getType())
+            {
+                case Util.RDB_CAR:holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.car));break;
+                case Util.RDB_BUS:holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.bus));break;
+                case Util.RDB_TAXI:holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.taxi));break;
+                case Util.RDB_TRUCK:holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.truck));break;
+            }
+
+
+            holder.ratingService = (TextView) rowItem.findViewById(R.id.main_items_serviceRatingData);
+            holder.ratingPrice = (TextView) rowItem.findViewById(R.id.main_items_priceRatingData);
+
+            DatabaseReference query = DataBaseRoot.child(Util.RDB_USERS+"/"+tempOffer.getUserID());
             ValueEventListener VEL = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot)
                 {
                     if(dataSnapshot.getValue(Users.class)!=null)
-                        holder.Name.setText(dataSnapshot.getValue(Users.class).getName());
+                    {
+
+                        //Log.v("Main:","KEY "+dataSnapshot.getKey());
+                        Users tempUser = dataSnapshot.getValue(Users.class);
+                        tempUser.setUserKey(dataSnapshot.getKey());
+
+                        boolean toAdd=true;
+                        for(Users addedUser:userList)
+                            if(tempUser.getUserKey().equals(addedUser.getUserKey()))
+                                toAdd=false;
+
+                        if(toAdd)
+                            userList.add(tempUser);
+
+                        /*for(Users user:userList)
+                            Log.v("Main:","user: "+user.getName());*/
+
+                        holder.ratingService.setText("("+tempUser.getRateService()+"/5)");
+                        holder.ratingPrice.setText("("+tempUser.getRatePrice()+"/5)");
+                    }
+                    else
+                    {
+                        //Log.v("Main:","==null");
+                    }
+
                 }
 
                 @Override
@@ -310,19 +367,6 @@ public class Main extends Fragment
             };
             query.addListenerForSingleValueEvent(VEL);
 
-
-            holder.Desc = (TextView) rowItem.findViewById(R.id.main_items_DescData);
-            holder.Desc.setText(tempOffer.getDescription());
-
-            holder.typeIcon = (ImageView) rowItem.findViewById(R.id.main_items_typeIcon);
-
-            switch(tempOffer.getType())
-            {
-                case Util.RDB_CAR:holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.car));break;
-                case Util.RDB_BUS:holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.bus));break;
-                case Util.RDB_TAXI:holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.taxi));break;
-                case Util.RDB_TRUCK:holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.truck));break;
-            }
 
             // more work
 
@@ -344,7 +388,7 @@ public class Main extends Fragment
     static class ViewHolder
     {
         // this class is called in getView and assigned it all "items" layouts Views,for smooth scrolling
-        TextView Title,Name,Desc;
+        TextView Title, City, ratingService, ratingPrice;
         ImageView typeIcon;
     }
 
@@ -387,10 +431,12 @@ public class Main extends Fragment
                             if(toAdd)
                             {
                                 offerList.add(tempOffer);
-                                Log.v("MainController","ShowMoreBtn Offer: "+tempOffer.getTitle()+" is NEW");
+                                //Log.v("MainController","ShowMoreBtn Offer: "+tempOffer.getTitle()+" is NEW");
                             }
-                            else
-                                Log.v("MainController","ShowMoreBtn Offer: "+tempOffer.getTitle()+" Already exists!");
+                            else{
+                                //Log.v("MainController","ShowMoreBtn Offer: "+tempOffer.getTitle()+" Already exists!");
+                            }
+
 
                         }
 

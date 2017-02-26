@@ -9,7 +9,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/common_ic_googleplayservices"
+        app:srcCompat="@drawable/common_google_signin_btn_icon_dark"
         android:id="@+id/my_offers_list_items_img"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
