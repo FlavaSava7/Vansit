@@ -7,9 +7,16 @@ import android.net.NetworkInfo;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -162,5 +169,39 @@ class Util
     static void makeToast(Context context, String msg){
         Toast.makeText(context ,msg, Toast.LENGTH_SHORT ).show();
     }
+    static void OutsideTouchKeyBoardHider(View view, final FragmentActivity fragmentActivity)// use this so u can click outside an Editbox to hide he keyboard
+    {
 
+        //Set up touch listener for non-text box views to hide keyboard.
+        if(!(view instanceof EditText)) {
+
+            view.setOnTouchListener(new View.OnTouchListener() {
+
+                public boolean onTouch(View v, MotionEvent event) {
+                    HideKeyboard(fragmentActivity);
+                    return false;
+                }
+
+            });
+        }
+
+        //If a layout container, iterate over children and seed recursion.
+        if (view instanceof ViewGroup) {
+
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+
+                View innerView = ((ViewGroup) view).getChildAt(i);
+
+                OutsideTouchKeyBoardHider(innerView,fragmentActivity);
+            }
+        }
+    }
+    static void HideKeyboard(FragmentActivity fragmentActivity)
+    {
+
+        FrameLayout frameLayout = (FrameLayout)fragmentActivity.findViewById(R.id.FragmentContainer);
+        InputMethodManager imm = (InputMethodManager)fragmentActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(frameLayout.getWindowToken(), 0);
+
+    }
 }

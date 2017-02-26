@@ -142,11 +142,14 @@ public class Login extends Fragment {
                             Toast.makeText(getContext(), "signInWithEmailAndPassword : Authentication failed",
                                     Toast.LENGTH_SHORT).show();
 
+
                             Util.ChangeFrag(mainPage,fragmentManager);// use like this to go from fragment to other
+
 
                         }else {
                             Toast.makeText(getContext(), "Authentication successful",
                                     Toast.LENGTH_SHORT).show();
+                            Util.ChangeFrag(mainPage,fragmentManager);// use like this to go from fragment to other
                         }
 
                         // ...

@@ -37,26 +37,6 @@ public class MainController extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);// we should show this when he is logged
-        if(Util.isLogged())
-        {
-            fab.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    AddOffer addOfferPage = new AddOffer();
-                    Util.ChangeFrag(addOfferPage,fragmentManager);
-                }
-            });
-        }else
-        {
-            Log.v("Main","onCreate "+Util.isLogged());
-            fab.setVisibility(View.GONE);
-        }
-
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -136,6 +116,8 @@ public class MainController extends AppCompatActivity
 
         if (id == R.id.action_settings)
         {
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setVisibility(View.GONE);
             FirebaseAuth.getInstance().signOut();
             return true;
         }
