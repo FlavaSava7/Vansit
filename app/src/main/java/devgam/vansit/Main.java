@@ -110,10 +110,13 @@ public class Main extends Fragment
 
                     OfferInfo offerInfoPage = new OfferInfo();
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("userDriver",userList.get(position));
+
                     bundle.putSerializable("userOffer",offerList.get(position));
+                    for(Users user:userList)// cuz userList is distinct
+                        if(offerList.get(position).getUserID().equals(user.getUserKey()))
+                            bundle.putSerializable("userDriver",user);
+
                     offerInfoPage.setArguments(bundle);
-                    Log.v("Main","Sending to OfferInfo: "+userList.get(position).getName());
                     Log.v("Main","Sending to OfferInfo: "+offerList.get(position).getTitle());
 
                     Util.ChangeFrag(offerInfoPage,fragmentManager);

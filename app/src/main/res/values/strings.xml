@@ -4,7 +4,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
-
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <!-- TODO: MainController Strings-->
     <string name="city">City</string>
@@ -49,6 +50,7 @@
         <item>Truck</item>
         <item>Taxi</item>
     </string-array>
+
     <!-- TODO: String Array for Ratings Bars -->
     <string-array name="rating_service">
         <item>3adi</item>
@@ -64,4 +66,6 @@
         <item>waaal</item>
         <item>rf3o el-2s3ar?</item>
     </string-array>
+
+
 </resources>

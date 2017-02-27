@@ -167,7 +167,7 @@ public class myAccount extends Fragment implements View.OnClickListener{
                     getReference(Util.RDB_USERS +"/"+
                     tempUID);
 
-            mRef.push().setValue(userData);
+            mRef.setValue(userData);
             Util.makeToast(getContext(), "Save Successfully");
         } catch (Exception e){
 
