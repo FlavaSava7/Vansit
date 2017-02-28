@@ -32,7 +32,6 @@ public class Registration extends Fragment {
     ProgressDialog progressDialog;
 
     FirebaseAuth firebaseAuth;
-
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
 
     @Override
