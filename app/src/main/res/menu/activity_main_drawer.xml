@@ -14,11 +14,6 @@
             android:title="Login" />
 
         <item
-            android:id="@+id/nav_register"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Registration" />
-
-        <item
             android:id="@+id/nav_my_account"
             android:icon="@drawable/ic_menu_camera"
             android:title="My Account" />
