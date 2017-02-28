@@ -1,14 +1,15 @@
 package devgam.vansit.JSON_Classes;
 
+import java.io.Serializable;
 /**
  THIS CLASS WILL CONTAIN ALL OFFER DATA TO SEND TO THE DATA BASE
 
  - Class variables will be private , thus access data using SET and GET
  */
 
-public class Offers
+public class Offers implements Serializable
 {
-    private String User_ID;
+    private String userID;
     private String Title;
     private String Description;
     private String Type;
@@ -25,13 +26,13 @@ public class Offers
         //empty cons for Firebase
 
     }
-    public Offers(String mUserID, String mTitle,String mDesc,String mType)
+    public Offers(String mUserID, String mTitle,String mDesc,String mType, String mCity)
     {
-        this.User_ID = mUserID;
+        this.userID = mUserID;
         this.Title = mTitle;
         this.Description = mDesc;
         this.Type = mType;
-
+        this.City = mCity;
     }
 
     //constructor added by Nimer for my offers activity
@@ -56,12 +57,12 @@ public class Offers
         Description = description;
     }
 
-    public String getUser_ID() {
-        return User_ID;
+    public String getUserID() {
+        return userID;
     }
 
-    public void setUser_ID(String user_ID) {
-        User_ID = user_ID;
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
     public String getType() {

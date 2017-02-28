@@ -151,9 +151,12 @@ public class myAccount extends Fragment implements View.OnClickListener{
             tempPhoneNumber = phoneEdit.getText().toString();
 
         //user object to push data on DB
-        Users userData = new Users(tempUserName, tempUserCity,
-                tempPhoneNumber, tempUserGander,
+        Users userData = new Users(tempUserName,tempUserCity,tempPhoneNumber,tempUserGander,
                 tempDayOfBirth + "", tempMonthOfBirth + "", tempYearOfBirth + "");
+
+        /*Users userData = new Users(tempUserName, tempUserCity,
+                tempPhoneNumber, tempUserGander,
+                tempDayOfBirth + "", tempMonthOfBirth + "", tempYearOfBirth + "");*/
 
         //Temp code
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -163,7 +166,8 @@ public class myAccount extends Fragment implements View.OnClickListener{
             DatabaseReference mRef = FirebaseDatabase.getInstance().
                     getReference(Util.RDB_USERS +"/"+
                     tempUID);
-            mRef.push().setValue(userData);
+
+            mRef.setValue(userData);
             Util.makeToast(getContext(), "Save Successfully");
         } catch (Exception e){
 

@@ -97,7 +97,7 @@ public class Registration extends Fragment {
         //if all data are okay
         Util.ProgDialogStarter(progressDialog,"Registration");
 
-        final Main mainPage = new Main();
+        final myAccount myAccountPage = new myAccount();
 
         firebaseAuth.createUserWithEmailAndPassword(email, pass)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
@@ -110,20 +110,13 @@ public class Registration extends Fragment {
                         {
                             //Registration done
                             //now user should complete entering his data
-
-                            //startActivity(new Intent(getActivity().getApplicationContext(), MainPage.class));
-
-                            Util.ChangeFrag(mainPage,fragmentManager);// use like this to go from fragment to other
+                            Util.ChangeFrag(myAccountPage,fragmentManager);// use like this to go from fragment to other
 
                         }
                         else
                         {
                             Log.v("Main:","userRegistration: "+task.getException());
                         }
-
-
-
-
                     }
 
                 });

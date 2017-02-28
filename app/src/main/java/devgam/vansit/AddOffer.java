@@ -75,11 +75,11 @@ public class AddOffer extends Fragment {
             }
         });
 
-        DatabaseReference mRef = FirebaseDatabase.getInstance().
+       /*DatabaseReference mRef = FirebaseDatabase.getInstance().
                 getReference(Util.RDB_USERS);
         String newUserKey = mRef.push().getKey();
-        Users newUser = new Users("Lara","Amman",796640858L,"Female","kjsk5465","9","7","1995",newUserKey);
-        mRef.child(newUserKey).setValue(newUser);
+        Users newUser = new Users("Abood","Amman","796640858","Female","9","7","1995");
+        mRef.child(newUserKey).setValue(newUser);*/
         FragmentSetUp();
     }
     private void FragmentSetUp()// some custom settings for this fragment
@@ -116,10 +116,11 @@ public class AddOffer extends Fragment {
         }
 
         //for now the User Id will be inputted manually,cuz for now we dont have the User details yet
-        Offers myOffer = new Offers("-KWcMDEOBw_cKsOJhI75",
+        // TODO: CHANGE THE ID HERE
+        Offers myOffer = new Offers("-KdvBEu4iseDrQWMnuO_",
                 editTitle.getText().toString(),
                 editDesc.getText().toString(),
-                spinnerType.getSelectedItem().toString());
+                spinnerType.getSelectedItem().toString(),spinnerCity.getSelectedItem().toString());
 
         // here we will AUTO go to the child where his Country == the country he signed up in the app
         //Edit it later cuz for now we dont have the User details yet
