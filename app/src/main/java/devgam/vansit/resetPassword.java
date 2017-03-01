@@ -101,7 +101,7 @@ public class resetPassword extends Fragment implements View.OnClickListener{
         if (v == resetButton) {
             //Check if user has internet connection or not !
             if(Util.IS_USER_CONNECTED)
-                //reset process 
+                //reset process
                 resetPass();
             else
                 Util.makeToast(getContext(), "No Internet");

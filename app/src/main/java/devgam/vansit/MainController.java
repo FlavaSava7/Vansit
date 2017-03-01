@@ -199,7 +199,7 @@ public class MainController extends AppCompatActivity
         } else {
             nav_Menu.findItem(R.id.nav_login).setVisible(true);
             //nav_Menu.findItem(R.id.nav_register).setVisible(true);
-            nav_Menu.findItem(R.id.nav_my_account).setVisible(false);
+            //Temp comment :nav_Menu.findItem(R.id.nav_my_account).setVisible(false);
 
         }
     }

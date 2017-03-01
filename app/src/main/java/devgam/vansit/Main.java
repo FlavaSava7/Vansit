@@ -219,7 +219,7 @@ public class Main extends Fragment
 
 
         //Type
-        ArrayAdapter<String> typeAdapter = new ArrayAdapter<String>(getContext(),
+        ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item,
                 getResources().getStringArray(R.array.type_list));
         spinnerType.setAdapter(typeAdapter);
