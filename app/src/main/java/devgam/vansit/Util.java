@@ -3,6 +3,7 @@ package devgam.vansit;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
@@ -58,6 +59,7 @@ class Util
     static final String RDB_ZARQA = "Zarqa";
 
     // TODO: Real Time Database Variable Names FOR USERS CLASS
+
     static final String FIRST_NAME = "firstName";
     static final String LAST_NAME = "lastName";
     static final String CITY = "city";
@@ -73,10 +75,6 @@ class Util
     static final String RATE_PRICE = "ratePrice";
     static final String RATE_PRICE_COUNT = "ratePriceCount";
     static final String RATED_FOR = "ratedFor";
-
-    // TODO: Variables for sharedPreference Data to get locally As static members
-    static String userName, phoneNumber, userGender, userCity;
-    static int dayOfBirth, monthOfBirth, yearOfBirth;
 
     final static Calendar CALENDAR = Calendar.getInstance();
     //These values to get current date and open date picker on current date
@@ -224,4 +222,5 @@ class Util
         InputMethodManager imm = (InputMethodManager)fragmentActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(frameLayout.getWindowToken(), 0);
     }
+
 }

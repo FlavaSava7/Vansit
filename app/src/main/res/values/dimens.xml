@@ -6,4 +6,10 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <!-- App Dimen add for layouts -->
+    <dimen name="views_margin"> 15dp </dimen>
+    <dimen name="views_top_margin"> 5dp </dimen>
+    <dimen name="views_button_margin"> 10dp </dimen>
+
 </resources>
