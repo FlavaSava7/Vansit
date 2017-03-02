@@ -1,10 +1,8 @@
 package devgam.vansit;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -26,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Users;
@@ -110,7 +109,16 @@ public class OfferInfo extends Fragment {
 
         Title.setText(userOffer.getTitle());
         Description.setText(userOffer.getDescription());
-        Name.setText(userDriver.getName());
+        Name.setText(userDriver.getFirstName()+" "+userDriver.getLastName());
+        Name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userInformation user = new userInformation(getActivity(), userDriver.getFirstName(),
+                        userDriver.getDateYear(), userDriver.getDateMonth(), userDriver.getCity(),userDriver.getGender());
+                user.show();
+            }
+        });
+
         City.setText(userOffer.getCity());
         Phone.setText(userDriver.getPhone());
 
@@ -172,7 +180,54 @@ public class OfferInfo extends Fragment {
                         {
                             public void onClick(DialogInterface dialog, int which)
                             {
-                                commitRating();
+
+                                if(!Util.isLogged()) // user is not logged
+                                    return ;
+
+                                final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                                if(userDriver.getUserKey().equals(firebaseAuth.getCurrentUser().getUid()))// user cant vote for self.
+                                    return ;
+
+
+
+                                DatabaseReference query = DataBaseRoot.child(Util.RDB_USERS+"/"+firebaseAuth.getCurrentUser().getUid()+"/"+Util.RATED_FOR);
+                                ValueEventListener VEL = new ValueEventListener()
+                                {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot)
+                                    {
+                                        ArrayList<String> ratedForList = (ArrayList<String>) dataSnapshot.getValue();
+                                        //Log.v("Main",""+p3.toString());
+                                        if( ratedForList == null )
+                                            Util.makeToast(getContext(),"Something wrong happened!");
+                                        else
+                                        {
+                                            boolean canRate=true;
+                                            for(String value : ratedForList)
+                                            {
+                                                if(value.equals(userDriver.getUserKey()))//user already voted for this driver
+                                                    canRate = false;
+                                            }
+
+                                            if(canRate)
+                                            {
+                                                ratedForList.add(userDriver.getUserKey());
+
+                                                commitRating(ratedForList,firebaseAuth.getCurrentUser().getUid() );//apply rate and add this driver to user
+
+                                            }
+
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                };
+                                query.addListenerForSingleValueEvent(VEL);
+
                             }
                         })
                         .setNegativeButton(R.string.no, new DialogInterface.OnClickListener()
@@ -191,9 +246,9 @@ public class OfferInfo extends Fragment {
         return ContextCompat.getDrawable(getActivity().getApplicationContext(), resID);//context.compat checks the version implicitly
     }
 
-    void commitRating()
+    void commitRating(ArrayList<String> updatedRatedForList , String userKey)
     {
-
+        //current userKey so we can search and add the updatedRatedForList for user.
         if(ratingPrice.getRating() != 0)
         {
             //Log.v("Main","ratingPrice.getRating() != 0");
@@ -227,11 +282,6 @@ public class OfferInfo extends Fragment {
 
             DecimalFormat df = new DecimalFormat("#.####");
             df.setRoundingMode(RoundingMode.DOWN);
-
-            /*String temp = (totalRating / (userDriver.getRateServiceCount()+1))+"";
-            temp = temp.substring(0,temp.indexOf(".")+3);*/
-            //Log.v("Main","TEMP1: "+df.format(totalRating/ (userDriver.getRatePriceCount()+1)));
-            //Log.v("Main","TEMP2: "+Float.parseFloat(df.format(totalRating/ (userDriver.getRatePriceCount()+1))));
             DataBaseRoot.child(Util.RDB_USERS)
                     .child(userDriver.getUserKey())
                     .child(Util.RATE_SERVICE)
@@ -239,35 +289,12 @@ public class OfferInfo extends Fragment {
 
         }
 
-        // add to the current logged user that he/she voted for
-        //STILL DIDNT WORK
-        final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        DatabaseReference query = DataBaseRoot.child(Util.RDB_USERS+"/"+firebaseAuth.getCurrentUser().getUid());
-        ValueEventListener VEL = new ValueEventListener()
-        {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                if(dataSnapshot.getValue(Users.class) != null)
-                {
-                    Users tempUser = dataSnapshot.getValue(Users.class);
 
-                    if(tempUser.getRatedFor()==null)
-                        Log.v("Main","NULL");
-                    if(tempUser.getName()==null)
-                        Log.v("Main","NAME NULL");
-                    return;
-                    //tempUser.getRatedFor().add(userDriver.getUserKey());
-                    //DataBaseRoot.child(firebaseAuth.getCurrentUser().getUid()).child(Util.RATED_FOR).setValue(tempUser.getRatedFor());
+        DataBaseRoot.child(Util.RDB_USERS)
+                .child(userKey)
+                .child(Util.RATED_FOR)
+                .setValue(updatedRatedForList);
 
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-        query.addListenerForSingleValueEvent(VEL);
     }
 }

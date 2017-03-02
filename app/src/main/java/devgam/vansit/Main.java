@@ -353,7 +353,7 @@ public class Main extends Fragment
                             userList.add(tempUser);
 
                         /*for(Users user:userList)
-                            Log.v("Main:","user: "+user.getName());*/
+                            Log.v("Main:","user: "+user.getFirstName());*/
 
                         holder.ratingService.setText("("+tempUser.getRateService()+"/5)");
                         holder.ratingPrice.setText("("+tempUser.getRatePrice()+"/5)");
