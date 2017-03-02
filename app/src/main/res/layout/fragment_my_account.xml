@@ -138,8 +138,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/my_account_5th_row"
-            android:paddingTop="@dimen/views_button_margin"
-            android:paddingBottom="@dimen/views_button_margin"
+            android:paddingTop="@dimen/views_top_margin"
+            android:paddingBottom="@dimen/views_top_margin"
             android:layout_marginRight="@dimen/views_margin"
             android:layout_marginLeft="@dimen/views_margin">
 
@@ -170,8 +170,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
-            android:layout_marginLeft="@dimen/views_margin"
-            android:layout_marginRight="@dimen/views_margin"
+            android:layout_marginLeft="@dimen/views_margin_xl"
+            android:layout_marginRight="@dimen/views_margin_xl"
             android:layout_marginTop="@dimen/views_top_margin"
             android:layout_marginBottom="@dimen/views_top_margin"
             />
@@ -192,7 +192,8 @@
                 android:textSize="18sp"
                 android:textAlignment="center"
                 android:layout_marginRight="@dimen/views_top_margin"
-                android:layout_marginLeft="@dimen/views_top_margin" />
+                android:layout_marginLeft="@dimen/views_top_margin"
+                android:gravity="center_vertical" />
 
             <RadioGroup
                 android:layout_width="match_parent"
@@ -225,8 +226,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
-            android:layout_marginLeft="@dimen/views_margin"
-            android:layout_marginRight="@dimen/views_margin"
+            android:layout_marginLeft="@dimen/views_margin_xl"
+            android:layout_marginRight="@dimen/views_margin_xl"
             android:layout_marginTop="@dimen/views_top_margin"
             android:layout_marginBottom="@dimen/views_top_margin"
             android:paddingLeft="@dimen/views_margin"
@@ -236,7 +237,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/my_account_6th_row"
-            android:paddingTop="@dimen/views_top_margin"
             android:layout_marginRight="@dimen/views_margin"
             android:layout_marginLeft="@dimen/views_margin">
 

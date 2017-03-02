@@ -33,9 +33,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Calendar;
 
 import devgam.vansit.JSON_Classes.Users;
-
-import static devgam.vansit.Util.NAME;
-import static devgam.vansit.Util.PHONE;
 import static devgam.vansit.Util.makeToast;
 
 public class myAccount extends Fragment implements View.OnClickListener{
