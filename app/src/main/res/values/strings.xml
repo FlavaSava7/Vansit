@@ -30,9 +30,9 @@
 
     <!-- Strings for layouts -->
     <string name="my_account_title_text">Personal Data</string>
-    <string name="my_account_firstName_text">First Name :</string>
-    <string name="my_account_lastName_text">Last Name :</string>
-    <string name="my_account_phone_text">Phone Number :</string>
+    <string name="my_account_firstName_text">First Name</string>
+    <string name="my_account_lastName_text">Last Name </string>
+    <string name="my_account_phone_text">Phone Number </string>
     <string name="my_account_gender_text">Gender :</string>
     <string name="my_account_gender_male_text">Male</string>
     <string name="my_account_gender_female_text">Female</string>
@@ -42,6 +42,8 @@
     <!-- shared by layouts -->
     <string name="layout_button_save">save</string>
     <string name="layout_button_cancel">cancel</string>
+    <string name="hint_text_email">Email</string>
+    <string name="hint_text_password">Password</string>
     <string name="noInternetMsg">No Internet Connection</string>
 
     <!-- TODO: String Array for spinners -->
