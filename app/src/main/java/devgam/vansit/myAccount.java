@@ -28,8 +28,10 @@ import java.util.Calendar;
 
 import devgam.vansit.JSON_Classes.Users;
 
-public class myAccount extends Fragment implements View.OnClickListener{
+import static devgam.vansit.Util.NAME;
+import static devgam.vansit.Util.PHONE;
 
+public class myAccount extends Fragment implements View.OnClickListener{
 
     private EditText nameEdit, phoneEdit ;
     private TextView birthEdit;
@@ -57,13 +59,6 @@ public class myAccount extends Fragment implements View.OnClickListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
-        //shared preference initialize
-        Context context = getActivity();
-        userData = context.getSharedPreferences("Vansit user Data", Context.MODE_PRIVATE);
-        userDataEditor = userData.edit();
 
     }
 
@@ -102,9 +97,14 @@ public class myAccount extends Fragment implements View.OnClickListener{
             }
         });
 
+        //shared preferance initialize :
+        userData = getContext().getSharedPreferences("Vansit user Data", Context.MODE_PRIVATE);
+        userDataEditor = userData.edit();
+
         //if user don't set his birthday
         //temp code !!!
-        birthEdit.setText(Util.dayNow + " / " + Util.monthNow + "/ " + Util.yearNow);
+        setDataToViews();
+        //birthEdit.setText(Util.dayNow + " / " + Util.monthNow + "/ " + Util.yearNow);
 
         maleRadio = (RadioButton) getActivity().findViewById(R.id.my_account_male_radio);
         femaleRadio = (RadioButton) getActivity().findViewById(R.id.my_account_female_radio);
@@ -151,6 +151,8 @@ public class myAccount extends Fragment implements View.OnClickListener{
                 });
                 alert.show();
                 //End of temp code
+
+                saveDataToDatabase();
             } // if statement
         }
     }
@@ -186,13 +188,14 @@ public class myAccount extends Fragment implements View.OnClickListener{
             return false;
         }
 
+        return true;
+    }
+
+    private void saveDataToDatabase(){
         //user object to push data on DB
         Users userData = new Users(tempUserName,tempUserCity,tempPhoneNumber,tempUserGander,
                 tempDayOfBirth + "", tempMonthOfBirth + "", tempYearOfBirth + "");
 
-        /*Users userData = new Users(tempUserName, tempUserCity,
-                tempPhoneNumber, tempUserGander,
-                tempDayOfBirth + "", tempMonthOfBirth + "", tempYearOfBirth + "");*/
 
         //Temp code
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -201,18 +204,53 @@ public class myAccount extends Fragment implements View.OnClickListener{
             final String tempUID = firebaseAuth.getCurrentUser().getUid();
             DatabaseReference mRef = FirebaseDatabase.getInstance().
                     getReference(Util.RDB_USERS +"/"+
-                    tempUID);
+                            tempUID);
 
             mRef.setValue(userData);
             Util.makeToast(getContext(), "Save Successfully");
         } catch (Exception e){
 
         }
-        return true;
+
+        setUserData(userData);
+
     }
 
-    private void saveDataToDatabase(){
+    //Created by Nimer Esam to set user data in shared preference
+    private void setUserData( Users users){
 
+        userDataEditor.putString(Util.NAME, users.getName());
+        userDataEditor.putString(Util.PHONE, users.getPhone());
+        userDataEditor.putString(Util.GENDER, users.getGender());
+        userDataEditor.putString(Util.CITY, users.getCity());
+        userDataEditor.putString(Util.DATE_DAY, users.getDateDay());
+        userDataEditor.putString(Util.DATE_MONTH, users.getDateMonth());
+        userDataEditor.putString(Util.DATE_YEAR, users.getDateYear());
+
+        userDataEditor.commit();
+    }
+
+    //to set data to views after data set it one time
+    private void setDataToViews(){
+
+        nameEdit.setText(getPreferanceData(Util.NAME));
+        phoneEdit.setText(getPreferanceData(Util.PHONE));
+        birthEdit.setText(getPreferanceData(Util.DATE_DAY) + " / " + getPreferanceData(Util.DATE_MONTH) + "/ " + getPreferanceData(Util.DATE_YEAR));
+        /*if(getPreferanceData(Util.GENDER) == "male")
+            Util.makeToast(getContext(), "male");*/
+        //femaleRadio.setChecked(true);
+    }
+
+    //Used by static var to get data from shared preference :
+    private String getPreferanceData(String key){
+
+        try {
+            return userData.getString(key, "");
+        } catch (Exception e){
+
+        }
+
+        return "";
     }
 
 }

@@ -3,6 +3,7 @@ package devgam.vansit;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
@@ -60,6 +61,7 @@ class Util
     static final String RDB_BUS = "Bus";
     static final String RDB_TRUCK = "Truck";
     static final String RDB_TAXI = "Taxi";
+
     // TODO: Real Time Database Variable Names FOR USERS CLASS
     static final String NAME = "name";
     static final String CITY = "city";
@@ -77,8 +79,16 @@ class Util
     static final String RATED_FOR = "ratedFor";
 
     // TODO: Variables for sharedPreference Data to get locally As static members
-    static String userName, phoneNumber, userGender, userCity;
-    static int dayOfBirth, monthOfBirth, yearOfBirth;
+    /*static String userName = getPreferanceData(NAME);
+    static String phoneNumber = getPreferanceData(PHONE);
+    static String userGender = getPreferanceData(GENDER);
+    static String userCity = getPreferanceData(CITY);
+    static String dayOfBirth  = getPreferanceData(DATE_DAY);
+    static String monthOfBirth = getPreferanceData(DATE_MONTH);
+    static String yearOfBirth = getPreferanceData(DATE_MONTH);*/
+
+    static SharedPreferences userData ;
+    static SharedPreferences.Editor userDataEditor ;
 
     final static Calendar CALENDAR = Calendar.getInstance();
     //These values to get current date and open date picker on current date
@@ -226,6 +236,10 @@ class Util
         InputMethodManager imm = (InputMethodManager)fragmentActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(frameLayout.getWindowToken(), 0);
     }
+
+
+
+
 
 
 
