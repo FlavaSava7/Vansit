@@ -15,6 +15,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -25,9 +27,6 @@ public class MainController extends AppCompatActivity
 
 
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -45,6 +44,16 @@ public class MainController extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //Header text must be changed
+        View header=navigationView.getHeaderView(0);
+        TextView name = (TextView)header.findViewById(R.id.nav_header_main_name_text);
+        TextView email = (TextView)header.findViewById(R.id.nav_header_main_email_text);
+        ImageView img = (ImageView)header.findViewById(R.id.nav_header_main_img);
+        name.setText("nimer esam");
+        email.setText("nimeresam95@gmail.com");
+        img.setImageResource(R.mipmap.ic_action_male);
+
 
         fragmentManager  = getSupportFragmentManager();
 
@@ -150,11 +159,11 @@ public class MainController extends AppCompatActivity
             }
 
 
-        } else if (id == R.id.nav_register)
+        } /*else if (id == R.id.nav_register)
         {
             Registration registerPage = new Registration();
             Util.ChangeFrag(registerPage,fragmentManager);
-        } else if (id == R.id.nav_main)
+        }*/ else if (id == R.id.nav_main)
         {
             Main mainPage = new Main();
             Util.ChangeFrag(mainPage,fragmentManager);
@@ -181,17 +190,18 @@ public class MainController extends AppCompatActivity
 
     public void hideItem() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu nav_Menu = navigationView.getMenu();
 
-        //if (Util.isLogged()) {//user is logged in
-            //nav_Menu.findItem(R.id.nav_login).setVisible(false);
+        if (Util.isLogged()) {//user is logged in
+            nav_Menu.findItem(R.id.nav_login).setVisible(false);
             //nav_Menu.findItem(R.id.nav_register).setVisible(false);
-            //nav_Menu.findItem(R.id.nav_my_account).setVisible(true);
-        //} else {
-            /*nav_Menu.findItem(R.id.nav_login).setVisible(true);
-            nav_Menu.findItem(R.id.nav_register).setVisible(true);
-            nav_Menu.findItem(R.id.nav_my_account).setVisible(false);*/
+            nav_Menu.findItem(R.id.nav_my_account).setVisible(true);
+        } else {
+            nav_Menu.findItem(R.id.nav_login).setVisible(true);
+            //nav_Menu.findItem(R.id.nav_register).setVisible(true);
+            //Temp comment :nav_Menu.findItem(R.id.nav_my_account).setVisible(false);
 
-        //}
+        }
     }
 
 }

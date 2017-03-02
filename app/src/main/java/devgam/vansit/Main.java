@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -90,6 +91,7 @@ public class Main extends Fragment
                     Util.ChangeFrag(addOfferPage,fragmentManager);
                 }
             });
+
         }else
         {
             Log.v("Main","User is not logged in ");
@@ -217,7 +219,7 @@ public class Main extends Fragment
 
 
         //Type
-        ArrayAdapter<String> typeAdapter = new ArrayAdapter<String>(getContext(),
+        ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item,
                 getResources().getStringArray(R.array.type_list));
         spinnerType.setAdapter(typeAdapter);
