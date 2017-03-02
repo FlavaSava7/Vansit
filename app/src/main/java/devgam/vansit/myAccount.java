@@ -213,14 +213,15 @@ public class myAccount extends Fragment implements View.OnClickListener{
 
         }
 
-        setUserData(userData);
+        //setUserData(userData);
 
     }
 
     //Created by Nimer Esam to set user data in shared preference
-    private void setUserData( Users users){
+    private void setUserData(Users users){
 
-        userDataEditor.putString(Util.NAME, users.getName());
+        userDataEditor.putString(Util.FIRST_NAME, users.getFirstName());
+        userDataEditor.putString(Util.LAST_NAME, users.getLastName());
         userDataEditor.putString(Util.PHONE, users.getPhone());
         userDataEditor.putString(Util.GENDER, users.getGender());
         userDataEditor.putString(Util.CITY, users.getCity());

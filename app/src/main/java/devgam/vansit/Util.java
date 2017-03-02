@@ -64,6 +64,8 @@ class Util
 
     // TODO: Real Time Database Variable Names FOR USERS CLASS
     static final String NAME = "name";
+    static final String FIRST_NAME = "firstName";
+    static final String LAST_NAME = "lastName";
     static final String CITY = "city";
     static final String PHONE = "phone";
     static final String GENDER = "gender";

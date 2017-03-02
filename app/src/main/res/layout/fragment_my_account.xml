@@ -24,55 +24,176 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/my_account_title_text"
+            android:layout_margin="@dimen/views_margin"
+            android:textAlignment="center"
+            android:text="@string/my_account_title_text"
+            android:textSize="24sp"
+            android:textStyle="normal|bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+
+            android:background="@color/common_google_signin_btn_text_light_focused"
+            android:layout_marginRight="@dimen/views_margin"
+            android:layout_marginLeft="@dimen/views_margin" />
+
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/my_account_1st_row">
 
             <TextView
-                android:text="Name "
+                android:text="@string/my_account_firstName_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/my_account_name_text"
+                android:id="@+id/my_account_firstName_text"
                 android:layout_weight="0.13"
                 android:fontFamily="sans-serif"
                 android:textSize="18sp"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:layout_marginRight="@dimen/views_margin"
+                android:layout_marginLeft="@dimen/views_margin"/>
 
             <EditText
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:id="@+id/my_account_name_edit"
+                android:id="@+id/my_account_firstName_edit"
                 android:layout_weight="0.60"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:layout_marginRight="@dimen/views_margin"
+                android:layout_marginLeft="@dimen/views_margin"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/my_account_2nd_row">
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginRight="@dimen/views_margin"
+                android:layout_marginLeft="@dimen/views_margin" />
+
             <TextView
-                android:text="Phone"
+                android:text="@string/my_account_lastName_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/my_account_lastName_text"
+                android:layout_weight="0.13"
+                android:fontFamily="sans-serif"
+                android:textSize="18sp"
+                android:textAlignment="center"
+                android:layout_marginRight="@dimen/views_margin"
+                android:layout_marginLeft="@dimen/views_margin"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/my_account_lastName_edit"
+                android:layout_weight="0.60"
+                android:inputType="textPersonName"
+                android:layout_marginRight="@dimen/views_margin"
+                android:layout_marginLeft="@dimen/views_margin"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/my_account_3rd_row">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginRight="@dimen/views_margin"
+                android:layout_marginLeft="@dimen/views_margin" />
+
+            <TextView
+                android:text="@string/my_account_phone_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/my_account_phone_text"
                 android:layout_weight="0.13"
                 android:fontFamily="sans-serif"
                 android:textSize="18sp"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:layout_marginRight="@dimen/views_margin"
+                android:layout_marginLeft="@dimen/views_margin"/>
 
             <EditText
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:id="@+id/my_account_phone_edit"
                 android:layout_weight="0.54"
-                android:inputType="phone" />
+                android:inputType="phone"
+                android:layout_marginRight="@dimen/views_margin"
+                android:layout_marginLeft="@dimen/views_margin"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/my_account_4th_row">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginRight="@dimen/views_margin"
+                android:layout_marginLeft="@dimen/views_margin" />
+
+            <TextView
+                android:text="@string/my_account_gender_text"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/my_account_gender_text"
+                android:fontFamily="sans-serif"
+                android:textSize="18sp"
+                android:textAlignment="center"
+                android:layout_marginRight="@dimen/views_margin"
+                android:layout_marginLeft="@dimen/views_margin"/>
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/my_account_gender_group"
+                android:orientation="horizontal"
+                android:layout_marginRight="@dimen/views_margin"
+                android:layout_marginLeft="@dimen/views_margin">
+
+                <RadioButton
+                    android:text="@string/my_account_gender_male_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/my_account_male_radio"
+                    android:layout_weight="0.09"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:text="@string/my_account_gender_female_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/my_account_female_radio"
+                    android:layout_weight="0.22" />
+            </RadioGroup>
+
 
         </LinearLayout>
 
@@ -80,7 +201,8 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/my_account_3rd_row">
+            android:id="@+id/my_account_5th_row"
+            android:padding="@dimen/views_margin">
 
             <TextView
                 android:text="Birthday"
@@ -90,7 +212,7 @@
                 android:fontFamily="sans-serif"
                 android:textSize="18sp"
                 android:textAlignment="center"
-                android:padding="10dp"/>
+                 />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -99,7 +221,7 @@
                 android:ems="10"
                 android:id="@+id/my_account_birth_edit"
                 android:layout_weight="0.89"
-                android:padding="10dp" />
+                />
 
 
         </LinearLayout>
@@ -126,46 +248,6 @@
                 android:layout_height="match_parent"
                 android:id="@+id/my_account_city_spinner"
                 android:textAlignment="center" />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/my_account_5th_row">
-
-            <TextView
-                android:text="Gender"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/my_account_gender_text"
-                android:fontFamily="sans-serif"
-                android:textSize="18sp"
-                android:textAlignment="center"
-                android:padding="10dp"/>
-
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/my_account_gender_group">
-
-                <RadioButton
-                    android:text="Male"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/my_account_male_radio"
-                    android:layout_weight="1"
-                    android:checked="true" />
-
-                <RadioButton
-                    android:text="Female"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/my_account_female_radio"
-                    android:layout_weight="1" />
-            </RadioGroup>
 
 
         </LinearLayout>
