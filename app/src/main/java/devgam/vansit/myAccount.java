@@ -4,9 +4,14 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,22 +35,24 @@ import devgam.vansit.JSON_Classes.Users;
 
 import static devgam.vansit.Util.NAME;
 import static devgam.vansit.Util.PHONE;
+import static devgam.vansit.Util.makeToast;
 
 public class myAccount extends Fragment implements View.OnClickListener{
 
-    private EditText nameEdit, phoneEdit ;
+    private EditText firstNameEdit, lastNameEdit, phoneEdit ;
     private TextView birthEdit;
     private Button saveButton;
     private RadioButton maleRadio, femaleRadio;
     DatePickerDialog datePicker;
     private Spinner citySpinner;
     private ArrayAdapter<CharSequence> cityAdapter;
+    private Drawable errorIcon;
 
     //temp day, month, year to save data from picker until data click save
     //because may be user cancel change
     //that's will product real data on fireBase
     private int tempDayOfBirth, tempMonthOfBirth, tempYearOfBirth ;
-    private String tempUserName, tempPhoneNumber, tempUserCity, tempUserGander ;
+    private static String tempUserFirstName, tempUserLastName , tempPhoneNumber, tempUserCity, tempUserGander ;
 
 
     SharedPreferences userData ;
@@ -75,10 +82,13 @@ public class myAccount extends Fragment implements View.OnClickListener{
         super.onResume();
 
         //Views initialize
-        nameEdit = (EditText) getActivity().findViewById(R.id.my_account_name_edit);
+        firstNameEdit = (EditText) getActivity().findViewById(R.id.my_account_firstName_edit);
+        lastNameEdit = (EditText) getActivity().findViewById(R.id.my_account_lastName_edit);
         phoneEdit = (EditText) getActivity().findViewById(R.id.my_account_phone_edit);
         birthEdit = (TextView) getActivity().findViewById(R.id.my_account_birth_edit);
         saveButton = (Button) getActivity().findViewById(R.id.my_account_save_button);
+        maleRadio = (RadioButton) getActivity().findViewById(R.id.my_account_male_radio);
+        femaleRadio = (RadioButton) getActivity().findViewById(R.id.my_account_female_radio);
 
         //spinner initialize
         citySpinner = (Spinner) getActivity().findViewById(R.id.my_account_city_spinner);
@@ -101,14 +111,11 @@ public class myAccount extends Fragment implements View.OnClickListener{
         userData = getContext().getSharedPreferences("Vansit user Data", Context.MODE_PRIVATE);
         userDataEditor = userData.edit();
 
-        //if user don't set his birthday
-        //temp code !!!
+        //get data from shared to fill views :
         setDataToViews();
-        //birthEdit.setText(Util.dayNow + " / " + Util.monthNow + "/ " + Util.yearNow);
 
-        maleRadio = (RadioButton) getActivity().findViewById(R.id.my_account_male_radio);
-        femaleRadio = (RadioButton) getActivity().findViewById(R.id.my_account_female_radio);
 
+        //on click listener for buttons :
         birthEdit.setOnClickListener(this);
         saveButton.setOnClickListener(this);
 
@@ -138,7 +145,8 @@ public class myAccount extends Fragment implements View.OnClickListener{
             if(checkAndChange()) {
                 //Temp code to check data is correct :
                 final AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                alert.setMessage("User name :" + tempUserName + "\n"
+                alert.setMessage("User first name :" + tempUserFirstName + "\n"
+                        + "User last name :" + tempUserLastName + "\n"
                         + "User phone :" + tempPhoneNumber + "\n"
                         + "User birthday :" + tempDayOfBirth + " / " + tempMonthOfBirth + "/ " + tempYearOfBirth + "\n"
                         + "User city :" + tempUserCity + "\n"
@@ -152,35 +160,36 @@ public class myAccount extends Fragment implements View.OnClickListener{
                 alert.show();
                 //End of temp code
 
-                saveDataToDatabase();
+                if(Util.IS_USER_CONNECTED) {
+                    saveDataToDatabase();
+                } else {
+                    makeToast(getContext(), String.valueOf(R.string.noInternetMsg));
+                }
             } // if statement
         }
     }
 
     //Check if values is valid
     private boolean checkAndChange(){
-        String tempStringCheck = nameEdit.getText().toString();
-
-        //Check if name field is not null !
-        if(tempStringCheck.isEmpty() || tempStringCheck == "") {
-            Util.makeToast(getActivity(), "Name is required");
+        //I have declare check edit method to ..
+        // - check value of edit text and initialize it if it is not empty
+        //Check if first name field is not null !
+        if( ! checkEdit(firstNameEdit, "first name is required"))
             return false;
-        } else {
-            //that's temp code, we need to change it to first & last name
-            tempUserName = tempStringCheck;
-            Util.makeToast(getContext(), "name done");
-        }
+        else
+            tempUserFirstName = firstNameEdit.getText().toString();
+        //Check if last name field is not null !
+        if( ! checkEdit(lastNameEdit, "last name is required"))
+            return false;
+        else
+            tempUserLastName = lastNameEdit.getText().toString();
+        //Check if phone field is not null !
+        if( ! checkEdit(phoneEdit, "phone number is required"))
+            return false;
+        else
+            tempPhoneNumber = phoneEdit.getText().toString();
 
-        //set values from views to vars
-        tempStringCheck = ""; //to make it null after we have signed name value in it
-        tempStringCheck = phoneEdit.getText().toString();
-        if(!tempStringCheck.isEmpty() && tempStringCheck != "") {
-            tempPhoneNumber = tempStringCheck;
-            Util.makeToast(getContext(), "phone done");
-        }
-
-
-         if(tempYearOfBirth == 0 || Util.yearNow < tempYearOfBirth + 16) {
+        if(tempYearOfBirth == 0 || Util.yearNow < tempYearOfBirth + 16) {
             //Check if user add real birthDate not current date !
             //Just year because no body born in this year can make account
             //No one less than 16 can drive or make deal with other people
@@ -194,10 +203,11 @@ public class myAccount extends Fragment implements View.OnClickListener{
     private void saveDataToDatabase(){
         //user object to push data on DB
         //TODO: UPDATE THE VALUE HERE TO PUT FIRST NAME , LAST NAME ( constructer take one more parameter for last name now )
-        /*Users userData = new Users(tempUserName,tempUserCity,tempPhoneNumber,tempUserGander,
-                tempDayOfBirth + "", tempMonthOfBirth + "", tempYearOfBirth + "");*/
+        Users userData = new Users(tempUserFirstName, tempUserLastName,tempUserCity,tempPhoneNumber,tempUserGander,
+                tempDayOfBirth + "", tempMonthOfBirth + "", tempYearOfBirth + "");
 
-
+        //to save data in shared preferance :
+        setUserData(userData);
         //Temp code
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         try{
@@ -212,8 +222,6 @@ public class myAccount extends Fragment implements View.OnClickListener{
         } catch (Exception e){
 
         }
-
-        //setUserData(userData);
 
     }
 
@@ -234,13 +242,19 @@ public class myAccount extends Fragment implements View.OnClickListener{
 
     //to set data to views after data set it one time
     private void setDataToViews(){
-
-        nameEdit.setText(getPreferanceData(Util.NAME));
-        phoneEdit.setText(getPreferanceData(Util.PHONE));
-        birthEdit.setText(getPreferanceData(Util.DATE_DAY) + " / " + getPreferanceData(Util.DATE_MONTH) + "/ " + getPreferanceData(Util.DATE_YEAR));
+        if(getPreferanceData(Util.FIRST_NAME) != "") {
+            firstNameEdit.setText(getPreferanceData(Util.FIRST_NAME));
+            lastNameEdit.setText(getPreferanceData(Util.LAST_NAME));
+            phoneEdit.setText(getPreferanceData(Util.PHONE));
+            birthEdit.setText(getPreferanceData(Util.DATE_DAY) + " / " +
+                    getPreferanceData(Util.DATE_MONTH) + "/ " +
+                    getPreferanceData(Util.DATE_YEAR));
         /*if(getPreferanceData(Util.GENDER) == "male")
             Util.makeToast(getContext(), "male");*/
-        //femaleRadio.setChecked(true);
+            //femaleRadio.setChecked(true);
+        }
+        else //set now date for birth day ..
+            birthEdit.setText(Util.dayNow + " / " + Util.monthNow + " / " + Util.yearNow);
     }
 
     //Used by static var to get data from shared preference :
@@ -254,5 +268,26 @@ public class myAccount extends Fragment implements View.OnClickListener{
 
         return "";
     }
+
+    //To check first, last name & phone edit text is empty or not !
+    private boolean checkEdit(EditText editText, String errorMsg){
+        setErrorMsg();
+        if(! editText.getText().toString().isEmpty() && !(editText.getText().toString() == "")) {
+            //Util.makeToast(getContext(), "name done");
+            return true;
+        } else {
+            editText.setError(errorMsg, errorIcon);
+            //Util.makeToast(getActivity(), "Name is required");
+            return false;
+        }
+    }
+
+    //to set an error icon on edit text if it was empty
+    private void setErrorMsg(){
+        errorIcon = getResources().getDrawable(R.drawable.ic_error);
+        errorIcon.setBounds(new Rect(0, 0, errorIcon.getIntrinsicWidth(), errorIcon.getIntrinsicHeight()));
+        //editText.setError(null,errorIcon);
+    }
+
 
 }
