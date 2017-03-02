@@ -1,6 +1,7 @@
 package devgam.vansit.JSON_Classes;
 
 import java.lang.*;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.io.Serializable;
 /**
@@ -10,7 +11,8 @@ import java.io.Serializable;
  */
 public class Users implements Serializable
 {
-    private String Name;
+    private String firstName;
+    private String lastName;
     private String City;
     private String Phone;
     private String Gender;
@@ -23,7 +25,7 @@ public class Users implements Serializable
     private int rateServiceCount;
     private float ratePrice;
     private int ratePriceCount;
-    private List<String> RatedFor;//lists that contains IDs of who THIS user rated for.
+    private ArrayList<String> RatedFor;//lists that contains IDs of who THIS user rated for.
 
     // The following variables will not be shown in the DataBase Users Object Just to get more Information
     private String userKey;//this is used inside the list views so we can know if a certain obj already exists or not inside the list
@@ -34,10 +36,11 @@ public class Users implements Serializable
     }
 
     // we will use this after a new user is created in Auth. table
-    public Users(String name, String city, String phone, String gender,
+    public Users(String firstName,String lastName, String city, String phone, String gender,
                  String dateDay, String dateMonth, String dateYear)
     {
-        this.Name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.City = city;
         this.Phone = phone;
         this.Gender = gender;
@@ -95,16 +98,24 @@ public class Users implements Serializable
         return ratePrice;
     }
 
-    public List<String> getRatedFor() {
+    public ArrayList<String> getRatedFor() {
         return RatedFor;
     }
 
-    public String getName() {
-        return Name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        Name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getCity() {
