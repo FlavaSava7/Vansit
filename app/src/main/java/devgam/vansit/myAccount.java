@@ -193,8 +193,9 @@ public class myAccount extends Fragment implements View.OnClickListener{
 
     private void saveDataToDatabase(){
         //user object to push data on DB
-        Users userData = new Users(tempUserName,tempUserCity,tempPhoneNumber,tempUserGander,
-                tempDayOfBirth + "", tempMonthOfBirth + "", tempYearOfBirth + "");
+        //TODO: UPDATE THE VALUE HERE TO PUT FIRST NAME , LAST NAME ( constructer take one more parameter for last name now )
+        /*Users userData = new Users(tempUserName,tempUserCity,tempPhoneNumber,tempUserGander,
+                tempDayOfBirth + "", tempMonthOfBirth + "", tempYearOfBirth + "");*/
 
 
         //Temp code
