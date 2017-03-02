@@ -1,10 +1,16 @@
 package devgam.vansit;
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -35,6 +42,7 @@ public class OfferInfo extends Fragment {
     public Offers userOffer = null; // the offer itself
 
     DatabaseReference DataBaseRoot;
+    FragmentManager fragmentManager;// this is used for the ChangeFrag method
 
     ImageView typeIcon;
     TextView Title,Description,Name, City,Phone, ratingNameService, ratingNamePrice;
@@ -78,6 +86,7 @@ public class OfferInfo extends Fragment {
         }
 
         DataBaseRoot = FirebaseDatabase.getInstance().getReference();//connect to DB root
+        fragmentManager = getActivity().getSupportFragmentManager();
 
         typeIcon = (ImageView) getActivity().findViewById(R.id.offerInfo_typeIcon);
 
@@ -101,10 +110,10 @@ public class OfferInfo extends Fragment {
 
         switch(userOffer.getType())
         {
-            case Util.RDB_CAR:typeIcon.setImageDrawable(getDrawableResource(R.drawable.car));break;
-            case Util.RDB_BUS:typeIcon.setImageDrawable(getDrawableResource(R.drawable.bus));break;
-            case Util.RDB_TAXI:typeIcon.setImageDrawable(getDrawableResource(R.drawable.taxi));break;
-            case Util.RDB_TRUCK:typeIcon.setImageDrawable(getDrawableResource(R.drawable.truck));break;
+            case "Car":typeIcon.setImageDrawable(getDrawableResource(R.drawable.car));break;
+            case "Bus":typeIcon.setImageDrawable(getDrawableResource(R.drawable.bus));break;
+            case "Taxi":typeIcon.setImageDrawable(getDrawableResource(R.drawable.taxi));break;
+            case "Truck":typeIcon.setImageDrawable(getDrawableResource(R.drawable.truck));break;
         }
 
         Title.setText(userOffer.getTitle());
@@ -112,15 +121,40 @@ public class OfferInfo extends Fragment {
         Name.setText(userDriver.getFirstName()+" "+userDriver.getLastName());
         Name.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 userInformation user = new userInformation(getActivity(), userDriver.getFirstName(),
-                        userDriver.getDateYear(), userDriver.getDateMonth(), userDriver.getCity(),userDriver.getGender());
+                        userDriver.getDateYear(), userDriver.getDateMonth(),
+                        userDriver.getCity(),userDriver.getGender(),
+                        fragmentManager);
                 user.show();
             }
         });
 
         City.setText(userOffer.getCity());
         Phone.setText(userDriver.getPhone());
+        Phone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:"+Phone.getText().toString()));
+                startActivity(intent);
+            }
+        });
+        Phone.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v)
+            {
+                ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("Phone Number", Phone.getText());
+                clipboard.setPrimaryClip(clip);
+
+                Util.makeToast(getContext(),"Copied To Clipboard");
+
+                return true;
+            }
+        });
 
 
         final String[] rating_service=getResources().getStringArray(R.array.rating_service);

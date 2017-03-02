@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -80,6 +81,10 @@ public class myAccount extends Fragment implements View.OnClickListener{
     @Override
     public void onResume() {
         super.onResume();
+        // A.J.I. : Hide Fab
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        if(fab!=null)
+            fab.setVisibility(View.GONE);
 
         //Views initialize
         firstNameEdit = (EditText) getActivity().findViewById(R.id.my_account_firstName_edit);

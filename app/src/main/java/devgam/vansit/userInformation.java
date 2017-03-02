@@ -4,10 +4,15 @@ package devgam.vansit;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import devgam.vansit.JSON_Classes.Users;
+
 
 public class userInformation extends Dialog implements
         android.view.View.OnClickListener {
@@ -17,6 +22,9 @@ public class userInformation extends Dialog implements
     ImageView userImg;
     String tempUserName, tempUserAgeYear, tempUserAgeMonth, tempUserCity, tempUserGender;
 
+    // A.J.I. : to get the user offers for MoreOffers Page ( this var. is used in onClick )
+    FragmentManager tempFragmentManager;// i cant get this from this activity dialog , i need to have it in your constructor
+
     public userInformation(Activity activity)
     {
         super(activity);
@@ -24,7 +32,8 @@ public class userInformation extends Dialog implements
         this.c = activity;
     }
 
-    public userInformation(Activity activity, String name, String year, String month, String city, String gender){
+    public userInformation(Activity activity, String name, String year, String month, String city, String gender,
+                           FragmentManager fragmentManager){
         super(activity);
         // Required empty public constructor
         this.c = activity;
@@ -33,7 +42,7 @@ public class userInformation extends Dialog implements
         this.tempUserAgeMonth = month;
         this.tempUserCity = city;
         this.tempUserGender = gender;
-
+        this.tempFragmentManager = fragmentManager;
     }
 
 
@@ -82,7 +91,12 @@ public class userInformation extends Dialog implements
 
 
     @Override
-    public void onClick(View v) {
-
+    public void onClick(View v)
+    {
+        MoreOffers moreOffersPage = new MoreOffers();
+        Bundle bundle = new Bundle();
+        moreOffersPage.setArguments(bundle);
+        this.hide();
+        Util.ChangeFrag(moreOffersPage,tempFragmentManager);
     }
 }
