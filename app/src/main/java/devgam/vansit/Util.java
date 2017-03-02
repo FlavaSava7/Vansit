@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -51,17 +52,14 @@ class Util
     static final String RDB_OFFERS = "Offers";
     static final String RDB_COUNTRY = "Country";
     static final String RDB_JORDAN = "Jordan";
+    static final String RDB_TYPE = "type";
 
     static final String RDB_AMMAN = "Amman";
     static final String RDB_ZARQA = "Zarqa";
 
-
-    static final String RDB_CAR = "Car";
-    static final String RDB_BUS = "Bus";
-    static final String RDB_TRUCK = "Truck";
-    static final String RDB_TAXI = "Taxi";
     // TODO: Real Time Database Variable Names FOR USERS CLASS
-    static final String NAME = "name";
+    static final String FIRST_NAME = "firstName";
+    static final String LAST_NAME = "lastName";
     static final String CITY = "city";
     static final String PHONE = "phone";
     static final String GENDER = "gender";
@@ -226,7 +224,4 @@ class Util
         InputMethodManager imm = (InputMethodManager)fragmentActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(frameLayout.getWindowToken(), 0);
     }
-
-
-
 }

@@ -126,7 +126,8 @@ public class MainController extends AppCompatActivity
         if (id == R.id.action_settings)
         {
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-            fab.setVisibility(View.GONE);
+            if(fab!=null)
+                fab.setVisibility(View.GONE);
             FirebaseAuth.getInstance().signOut();
             return true;
         }
@@ -172,8 +173,9 @@ public class MainController extends AppCompatActivity
             Util.ChangeFrag(myAccount, fragmentManager);
         } else if(id == R.id.nav_user) {
             //Temp calling to test setter valid or not !
-            userInformation user = new userInformation(this, "Nimer Esam", "1995", "10", "Amman","male");
+            userInformation user = new userInformation(this, "Nimer Esam", "1995", "10", "Amman","male",fragmentManager);
             user.show();
+
             //Util.ChangeFrag(user, fragmentManager);
 
         }else if(id == R.id.nav_share) {

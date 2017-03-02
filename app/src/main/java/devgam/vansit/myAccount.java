@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -78,6 +79,10 @@ public class myAccount extends Fragment implements View.OnClickListener{
     @Override
     public void onResume() {
         super.onResume();
+        // A.J.I. : Hide Fab
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        if(fab!=null)
+            fab.setVisibility(View.GONE);
 
         //Views initialize
         nameEdit = (EditText) getActivity().findViewById(R.id.my_account_name_edit);

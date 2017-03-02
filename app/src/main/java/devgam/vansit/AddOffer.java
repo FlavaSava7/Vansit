@@ -1,9 +1,9 @@
 package devgam.vansit;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.DebugUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +17,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import devgam.vansit.JSON_Classes.Offers;
-import devgam.vansit.JSON_Classes.Users;
 
 
 public class AddOffer extends Fragment {
@@ -30,7 +29,7 @@ public class AddOffer extends Fragment {
     EditText editTitle,editDesc;
     Button btnSave,btnCancel;
 
-    private boolean canGoBack = false;
+    boolean doubleBackToExitPressedOnce = false;
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -52,22 +51,24 @@ public class AddOffer extends Fragment {
     public void onResume()
     {
         super.onResume();
-//        Log.v("Main","onResume");
-        spinnerCity = (Spinner)getActivity().findViewById(R.id.frag_addOffer_spinCity);
-        spinnerType = (Spinner)getActivity().findViewById(R.id.frag_addOffer_spinType);
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        if(fab!=null)
+            fab.setVisibility(View.GONE);
+        spinnerCity = (Spinner)getActivity().findViewById(R.id.addOffer_spinCity);
+        spinnerType = (Spinner)getActivity().findViewById(R.id.addOffer_spinType);
         FillSpinners();
 
-        editTitle = (EditText) getActivity().findViewById(R.id.frag_addOffer_editTitle);
-        editDesc = (EditText) getActivity().findViewById(R.id.frag_addOffer_editDesc);
+        editTitle = (EditText) getActivity().findViewById(R.id.addOffer_editTitle);
+        editDesc = (EditText) getActivity().findViewById(R.id.addOffer_editDesc);
 
-        btnSave = (Button) getActivity().findViewById(R.id.frag_addOffer_save);
+        btnSave = (Button) getActivity().findViewById(R.id.addOffer_save);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SaveOffer();
             }
         });
-        btnCancel = (Button) getActivity().findViewById(R.id.frag_addOffer_cancel);
+        btnCancel = (Button) getActivity().findViewById(R.id.addOffer_cancel);
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,9 +86,32 @@ public class AddOffer extends Fragment {
     private void FragmentSetUp()// some custom settings for this fragment
     {
 
-        /*getView().setFocusableInTouchMode(true);
+        getView().setFocusableInTouchMode(true);
         getView().requestFocus();
-        getView().setOnKeyListener(new View.OnKeyListener())*/
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event)
+            {
+                if(KeyEvent.KEYCODE_BACK == keyCode)
+                {
+                    if (doubleBackToExitPressedOnce) {
+                        return false;
+                    }
+
+                    doubleBackToExitPressedOnce = true;
+                    Util.makeToast(getContext(),"Please click BACK again to exit");
+
+                    new Handler().postDelayed(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            doubleBackToExitPressedOnce=false;
+                        }
+                    }, 5000);
+                }
+                return true;
+            }
+        });
 
         Util.OutsideTouchKeyBoardHider(getActivity().findViewById(R.id.fragParent_add_offer),getActivity());
     }
