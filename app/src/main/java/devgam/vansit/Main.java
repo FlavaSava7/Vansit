@@ -49,12 +49,13 @@ public class Main extends Fragment
     private ArrayList<Offers> offerList;// this will be refilled with Offers each time a user change City Filter
     private ArrayList<Users> userList;// to match offer with the user it has, we are filling in inside the getView
     private ArrayAdapter offerAdapter;
-    private static int listCounter = 1;
+    private static int listCounter = 5;
 
     private Spinner spinnerCity,spinnerType;
-    private static String whichCity=Util.RDB_AMMAN;// to give it a new value in a spinner to fetch new items
-    private static String whichType=Util.RDB_CAR;// to give it a new value in a spinner to fetch new items
-
+    private static String whichCity;// to give it a new value in a spinner to fetch new items
+    private static String whichType;// to give it a new value in a spinner to fetch new items
+    private static String allCities[];//this will contain the values that are in strings.xml
+    private static String allTypes[];//this will contain the values that are in strings.xml, used inside the getView to choose icon for type
 
 
 
@@ -75,9 +76,12 @@ public class Main extends Fragment
     public void onResume()
     {
         super.onResume();
+        allCities = getResources().getStringArray(R.array.city_list);
+        allTypes = getResources().getStringArray(R.array.type_list);
+        whichCity = allCities[0];//default value
+        whichType = allTypes[0];//default value
 
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);// we should show this when he is logged
-
         if(Util.isLogged())
         {
             fab.setVisibility(View.VISIBLE);
@@ -94,7 +98,7 @@ public class Main extends Fragment
 
         }else
         {
-            Log.v("Main","User is not logged in ");
+            //Log.v("Main","User is not logged in ");
             fab.setVisibility(View.GONE);
         }
 
@@ -187,6 +191,11 @@ public class Main extends Fragment
     private void FillSpinnersAndListView()
     {
         // must check for internet
+        if(!Util.IS_USER_CONNECTED)
+        {
+            // show msg
+            return;
+        }
         DatabaseReference mRef = DataBaseRoot.child(Util.RDB_COUNTRY+"/"+Util.RDB_JORDAN);
 
         //City
@@ -194,29 +203,6 @@ public class Main extends Fragment
                 android.R.layout.simple_spinner_item,
                 getResources().getStringArray(R.array.city_list));
         spinnerCity.setAdapter(cityAdapter);
-        /*
-        final ArrayList <String> cityList = new ArrayList<>();
-        ValueEventListener VEL = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                for (DataSnapshot areaSnapshot: dataSnapshot.getChildren())
-                    cityList.add(areaSnapshot.getKey());
-                ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item,cityList);
-                cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinnerCity.setAdapter(cityAdapter);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-        mRef.addListenerForSingleValueEvent(VEL);
-
-        mRef.removeEventListener(VEL); check it later
-        */
-
 
         //Type
         ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(getContext(),
@@ -224,14 +210,13 @@ public class Main extends Fragment
                 getResources().getStringArray(R.array.type_list));
         spinnerType.setAdapter(typeAdapter);
 
-        //Initial Filling of ListView
+        //Initial Filling of ListView, default
 
-        // here we will AUTO go to the child where his Country == the country he signed up in the app
-        //Edit it later cuz for now we dont have the User details yet
         Query query = DataBaseRoot.child(Util.RDB_COUNTRY+"/"+
                 Util.RDB_JORDAN+"/"+
-                Util.RDB_AMMAN+"/"+
-                Util.RDB_OFFERS).orderByChild("type").equalTo(Util.RDB_CAR).limitToFirst(listCounter);
+                whichCity+"/"+
+                Util.RDB_OFFERS).orderByChild(Util.RDB_TYPE).
+                equalTo(whichType).limitToFirst(listCounter);
         ValueEventListener QVEL= new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
@@ -265,13 +250,13 @@ public class Main extends Fragment
             return;
         }
 
-        listCounter = 1;
+        listCounter = 1;//reset
         offerList.clear();
 
         Query query = DataBaseRoot.child(Util.RDB_COUNTRY+"/"+
                 Util.RDB_JORDAN+"/"+
                 whichCity+"/"+
-                Util.RDB_OFFERS).orderByChild("type").equalTo(whichType).limitToFirst(listCounter);
+                Util.RDB_OFFERS).orderByChild(Util.RDB_TYPE).equalTo(whichType).limitToFirst(listCounter);
         ValueEventListener QVEL= new ValueEventListener()
         {
             @Override
@@ -322,10 +307,10 @@ public class Main extends Fragment
             holder.typeIcon = (ImageView) rowItem.findViewById(R.id.main_items_typeIcon);
             switch(tempOffer.getType())
             {
-                case Util.RDB_CAR:holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.car));break;
-                case Util.RDB_BUS:holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.bus));break;
-                case Util.RDB_TAXI:holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.taxi));break;
-                case Util.RDB_TRUCK:holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.truck));break;
+                case "Car":holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.car));break;
+                case "Bus":holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.bus));break;
+                case "Taxi":holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.taxi));break;
+                case "Truck":holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.truck));break;
             }
 
 
@@ -403,8 +388,13 @@ public class Main extends Fragment
         if(listView==null)
             return;
 
+        if(listView.getFooterViewsCount()>=1)// prevent duplications for show more button
+            return;
+
+
         //listCounter += 1;
         //Log.v("MainController","listCounter: "+listCounter);
+
 
         Button showMore = new Button(getContext());
         showMore.setText("Show More");
@@ -416,7 +406,7 @@ public class Main extends Fragment
                 Query query = DataBaseRoot.child(Util.RDB_COUNTRY+"/"+
                         Util.RDB_JORDAN+"/"+
                         whichCity+"/"+
-                        Util.RDB_OFFERS).orderByChild("type").equalTo(whichType).limitToFirst(listCounter);
+                        Util.RDB_OFFERS).orderByChild(Util.RDB_TYPE).equalTo(whichType).limitToFirst(listCounter);
                 ValueEventListener QVEL= new ValueEventListener()
                 {
                     @Override
