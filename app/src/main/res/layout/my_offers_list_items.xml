@@ -47,11 +47,11 @@
 
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/common_google_signin_btn_icon_dark"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@mipmap/ic_type_car"
                     android:id="@+id/main_items_typeIcon"
                     android:layout_marginTop="@dimen/views_top_margin"
-                    android:layout_marginLeft="@dimen/views_top_margin" />
+                    android:layout_marginLeft="@dimen/views_button_margin" />
 
                 <LinearLayout
                     android:orientation="vertical"
@@ -72,13 +72,15 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/textView3"
                             android:layout_marginLeft="@dimen/views_top_margin"
-                            android:textStyle="normal|bold" />
+                            android:textStyle="normal|bold"
+                            android:textSize="12sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/my_offers_list_items_city"
-                            android:layout_weight="1" />
+                            android:layout_weight="1"
+                            android:textSize="12sp" />
                     </LinearLayout>
 
                     <View
@@ -101,7 +103,7 @@
                 android:weightSum="1"
                 android:layout_marginLeft="@dimen/views_margin"
                 android:layout_marginRight="@dimen/views_button_margin"
-                android:layout_marginTop="@dimen/views_top_margin"
+                android:layout_marginTop="@dimen/views_margin"
                 android:layout_marginBottom="@dimen/views_top_margin">
 
 

@@ -2,10 +2,8 @@ package devgam.vansit;
 
 import android.os.Build;
 import android.os.Bundle;
-
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -27,6 +25,7 @@ public class MainController extends AppCompatActivity
 
 
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
+    DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -36,7 +35,9 @@ public class MainController extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        fragmentManager  = getSupportFragmentManager();
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -54,10 +55,6 @@ public class MainController extends AppCompatActivity
         email.setText("nimeresam95@gmail.com");
         img.setImageResource(R.mipmap.ic_action_male);
 
-
-        fragmentManager  = getSupportFragmentManager();
-
-
         // to check for the first time if we have internet , then internet listener will keep checking
         if(Util.CheckConnection(this)) //INTERNET IS ON
             Util.IS_USER_CONNECTED =true;
@@ -71,41 +68,16 @@ public class MainController extends AppCompatActivity
         Util.ChangeFrag(mainPage,fragmentManager);
         //Log.v("Main:","Util.IS_USER_CONNECTED: "+Util.IS_USER_CONNECTED);
 
-
-
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
         hideItem();
-
-
-
     }
 
     @Override
-    public void onBackPressed()
-    {
-        /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+    public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }*/
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-        if (drawer.isDrawerOpen(GravityCompat.START))
-        {
-            drawer.closeDrawer(GravityCompat.START);
-        }
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1)
-        {
+        }if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             finish();
-        }
-        else {
+        } else {
             super.onBackPressed();
         }
     }
@@ -119,18 +91,6 @@ public class MainController extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-
-        if (id == R.id.action_settings)
-        {
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-            if(fab!=null)
-                fab.setVisibility(View.GONE);
-            FirebaseAuth.getInstance().signOut();
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -146,26 +106,10 @@ public class MainController extends AppCompatActivity
         * Then navigate to the selected Page
         * each time u need to create new instance and call ChangeFrag method
         */
-        if (id == R.id.nav_login)
-        {
-            if(Util.isLogged())//user is logged in
-            {
-                Profile profilePage = new Profile();
-                Util.ChangeFrag(profilePage,fragmentManager);
-            }
-            else//user is logged out
-            {
-                Login loginPage = new Login();
-                Util.ChangeFrag(loginPage,fragmentManager);
-            }
-
-
-        } /*else if (id == R.id.nav_register)
-        {
-            Registration registerPage = new Registration();
-            Util.ChangeFrag(registerPage,fragmentManager);
-        }*/ else if (id == R.id.nav_main)
-        {
+        if (id == R.id.nav_login) {
+            Login loginPage = new Login();
+            Util.ChangeFrag(loginPage,fragmentManager);
+        } else if (id == R.id.nav_main) {
             Main mainPage = new Main();
             Util.ChangeFrag(mainPage,fragmentManager);
         } else if(id == R.id.nav_my_account){
@@ -175,12 +119,28 @@ public class MainController extends AppCompatActivity
             //Temp calling to test setter valid or not !
             userInformation user = new userInformation(this, "Nimer Esam", "1995", "10", "Amman","male",fragmentManager);
             user.show();
-
             //Util.ChangeFrag(user, fragmentManager);
 
-        }else if(id == R.id.nav_share) {
+        } else if(id == R.id.nav_share) {
             myOffers myOffers = new myOffers();
             Util.ChangeFrag(myOffers, fragmentManager);
+        } else if(id == R.id.nav_share) {
+            myOffers myOffers = new myOffers();
+            Util.ChangeFrag(myOffers, fragmentManager);
+        } else  if(id == R.id.nav_fav) {
+            favorite favorite = new favorite();
+            Util.ChangeFrag(favorite, fragmentManager);
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
+        } else  if(id == R.id.nav_rec) {
+            recommend rec = new recommend();
+            Util.ChangeFrag(rec, fragmentManager);
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
+        } else  if(id == R.id.nav_logout) {
+            FirebaseAuth.getInstance().signOut();
+            hideItem();
+            return true;
         }
 
 
@@ -196,12 +156,16 @@ public class MainController extends AppCompatActivity
 
         if (Util.isLogged()) {//user is logged in
             nav_Menu.findItem(R.id.nav_login).setVisible(false);
-            //nav_Menu.findItem(R.id.nav_register).setVisible(false);
+            nav_Menu.findItem(R.id.nav_rec).setVisible(true);
+            nav_Menu.findItem(R.id.nav_fav).setVisible(true);
             nav_Menu.findItem(R.id.nav_my_account).setVisible(true);
+            nav_Menu.findItem(R.id.nav_logout).setVisible(true);
         } else {
             nav_Menu.findItem(R.id.nav_login).setVisible(true);
-            //nav_Menu.findItem(R.id.nav_register).setVisible(true);
-            //Temp comment :nav_Menu.findItem(R.id.nav_my_account).setVisible(false);
+            nav_Menu.findItem(R.id.nav_rec).setVisible(false);
+            nav_Menu.findItem(R.id.nav_fav).setVisible(false);
+            nav_Menu.findItem(R.id.nav_my_account).setVisible(false);
+            nav_Menu.findItem(R.id.nav_logout).setVisible(false);
 
         }
     }

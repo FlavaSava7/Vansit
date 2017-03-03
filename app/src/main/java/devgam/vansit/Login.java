@@ -3,18 +3,18 @@ package devgam.vansit;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -115,8 +115,7 @@ public class Login extends Fragment implements View.OnClickListener{
                         //Util.ProgDialogDelay(progressDialog,1000L);// wait 1 more second
                         progressDialog.dismiss();
 
-                        if (task.isSuccessful())
-                        {
+                        if (task.isSuccessful()) {
                             //sign in done
                             Util.makeToast(getContext(), "Authentication successful");
                             Util.ChangeFrag(mainPage,fragmentManager);// use like this to go from fragment to other

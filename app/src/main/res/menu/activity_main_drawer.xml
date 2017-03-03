@@ -5,28 +5,47 @@
     <item android:title="User">
         <item
             android:id="@+id/nav_main"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Home" />
+            android:icon="@drawable/ic_menu_home"
+            android:title="@string/menu_home_text" />
 
         <item
-            android:id="@+id/nav_login"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Login" />
+            android:id="@+id/nav_rec"
+            android:icon="@drawable/ic_menu_rec"
+            android:title="@string/menu_rec_text" />
 
         <item
-            android:id="@+id/nav_my_account"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="My Account" />
+            android:id="@+id/nav_fav"
+            android:icon="@drawable/ic_menu_fav"
+            android:title="@string/menu_fav_text" />
 
-
-        <item
-            android:id="@+id/nav_user"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="user info" />
     </item>
 
-    <item android:title="Communicate">
+    <item android:title="Account">
+        <menu >
+            <item
+                android:id="@+id/nav_login"
+                android:icon="@drawable/ic_menu_login"
+                android:title="@string/menu_login_text" />
+
+            <item
+                android:id="@+id/nav_my_account"
+                android:icon="@drawable/ic_menu_account"
+                android:title="@string/menu_my_account_text" />
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_menu_logout"
+                android:title="@string/menu_logout_text" />
+
+        </menu>
+    </item>
+
+    <item android:title="just for test">
         <menu>
+            <item
+                android:id="@+id/nav_user"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="user info" />
+
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"

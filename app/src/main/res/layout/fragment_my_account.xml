@@ -238,7 +238,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/my_account_6th_row"
             android:layout_marginRight="@dimen/views_margin"
-            android:layout_marginLeft="@dimen/views_margin">
+            android:layout_marginLeft="@dimen/views_margin"
+            android:weightSum="1">
 
 
             <TextView
@@ -259,7 +260,8 @@
                 android:id="@+id/my_account_city_spinner"
                 android:textAlignment="center"
                 android:layout_marginRight="@dimen/views_margin"
-                android:layout_marginLeft="@dimen/views_margin"/>
+                android:layout_marginLeft="@dimen/views_margin"
+                android:layout_weight="0.81" />
 
 
         </LinearLayout>
