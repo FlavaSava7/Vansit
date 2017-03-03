@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,36 +6,80 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="devgam.vansit.Login">
+    tools:context="devgam.vansit.Login"
+    android:orientation="vertical"
+    android:weightSum="1">
 
     <TextView
         android:text="Login"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="27dp"
         android:id="@+id/nav_header_main_email_text"
         android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:textAlignment="center"
+        android:layout_weight="0.16" />
 
-    <EditText
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:layout_marginTop="25dp"
-        android:id="@+id/login_email_edit"
-        android:hint="E-mail"
-        android:layout_below="@+id/nav_header_main_email_text"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+    >
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:layout_marginTop="25dp"
+            android:id="@+id/login_email_edit"
+            android:hint="@string/hint_text_email"
+            android:layout_below="@+id/nav_header_main_email_text"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:inputType="textEmailAddress"
+            android:singleLine="true" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+            <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/login_pass_edit"
+            android:hint="@string/hint_text_password"
+            android:layout_below="@+id/login_email_edit"
+            android:layout_marginTop="21dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:singleLine="true" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <TextView
+        android:text="Email or password isn't correct"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/login_signin_button"
+        android:id="@+id/login_error_msg_text"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:inputType="textEmailAddress"
-        android:singleLine="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textColor="@android:color/holo_red_dark"
+        android:visibility="invisible" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="346dp"
         android:layout_height="wrap_content"
         android:id="@+id/login_signin_button"
         android:layout_centerVertical="true"
@@ -45,51 +89,24 @@
         android:layout_alignParentEnd="true"
         android:text="Sign in" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/login_pass_edit"
-        android:hint="Password"
-        android:layout_below="@+id/login_email_edit"
-        android:layout_marginTop="21dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:singleLine="true" />
-
     <TextView
         android:text="Not have account? Sign up"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
         android:id="@+id/login_signup_text"
         android:layout_below="@+id/login_signin_button"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:text="Email or password isn't correct"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/login_signin_button"
-        android:id="@+id/login_error_msg_text"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textAlignment="center"
-        android:textColor="@android:color/holo_red_dark"
-        android:visibility="invisible" />
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center" />
 
     <TextView
         android:text="Forget password ?"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/login_forget_pass_text"
         android:layout_below="@+id/login_signup_text"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center" />
 
 
-</RelativeLayout>
+</LinearLayout>

@@ -304,14 +304,14 @@ public class Main extends Fragment
             holder.City = (TextView) rowItem.findViewById(R.id.main_items_cityData);
             holder.City.setText(tempOffer.getCity());
 
-            holder.typeIcon = (ImageView) rowItem.findViewById(R.id.main_items_typeIcon);
+            /*holder.typeIcon = (ImageView) rowItem.findViewById(R.id.main_items_typeIcon);
             switch(tempOffer.getType())
             {
                 case "Car":holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.car));break;
                 case "Bus":holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.bus));break;
                 case "Taxi":holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.taxi));break;
                 case "Truck":holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.truck));break;
-            }
+            }*/
 
 
             holder.ratingService = (TextView) rowItem.findViewById(R.id.main_items_serviceRatingData);

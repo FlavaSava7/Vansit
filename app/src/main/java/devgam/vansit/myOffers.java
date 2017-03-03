@@ -8,9 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,7 +16,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import devgam.vansit.JSON_Classes.Offers;
-import devgam.vansit.R;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,8 +42,10 @@ public class myOffers extends Fragment {
     public void onResume() {
         super.onResume();
         myOffersList = (ListView) getActivity().findViewById(R.id.my_offers_listView);
+
         myOffersArray = new ArrayList<>();
         myOffersList.setAdapter(new itemAdapter());
+
 
         addOfferFloating = (FloatingActionButton) getActivity().findViewById(R.id.my_offers_add);
         addOfferFloating.setOnClickListener(new View.OnClickListener() {
@@ -57,18 +56,29 @@ public class myOffers extends Fragment {
                 Util.ChangeFrag(addOfferPage,fragmentManager);
             }
         });
-//      Test Block - delete it soon
+
         {
             Offers n = new Offers();
-            n.setTitle("My car");
+            n.setTitle("Bus for student in university st.");
             n.setCity("amman");
             myOffersArray.add(n);
-        }
 
+            Offers n1 = new Offers();
+            n1.setTitle("Bus for student in university st." );
+            n1.setCity("zarqa");
+            myOffersArray.add(n1);
+
+            Offers n2 = new Offers();
+            n2.setTitle("Bus for student in university st.");
+            n2.setCity("amman");
+            myOffersArray.add(n2);
+        }
     }
 
-    class itemAdapter extends BaseAdapter {
+    class itemAdapter extends BaseAdapter implements View.OnClickListener {
 
+        TextView titleText, cityText, editText, shareText,  deleteText;
+        ImageView itemIcon;
         @Override
         public int getCount() {
             return myOffersArray.size();
@@ -96,16 +106,33 @@ public class myOffers extends Fragment {
             );
 
             //declare & initialize list item contents
-            TextView titleText = (TextView) listRow.findViewById(R.id.my_offers_list_items_title);
-            TextView cityText = (TextView) listRow.findViewById(R.id.my_offers_list_items_city);
-            ImageView itemIcon = (ImageView) listRow.findViewById(R.id.my_offers_list_items_img);
-            ImageButton deleteButton = (ImageButton) listRow.findViewById(R.id.my_offers_list_items_delete);
+            titleText = (TextView) listRow.findViewById(R.id.my_offers_list_items_title);
+            cityText = (TextView) listRow.findViewById(R.id.my_offers_list_items_city);
+            itemIcon = (ImageView) listRow.findViewById(R.id.main_items_typeIcon);
+            editText = (TextView) listRow.findViewById(R.id.my_offers_list_items_edit);
+            shareText = (TextView) listRow.findViewById(R.id.my_offers_list_items_share);
+            deleteText = (TextView) listRow.findViewById(R.id.my_offers_list_items_delete);
 
-            Offers offers = myOffersArray.get(position);
-            titleText.setText(offers.getTitle());
-            cityText.setText(offers.getCity());
 
+            titleText.setText(myOffersArray.get(position).getTitle());
+            cityText.setText(myOffersArray.get(position).getCity());
+
+            editText.setOnClickListener(this);
+            shareText.setOnClickListener(this);
+            deleteText.setOnClickListener(this);
             return listRow;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if(v == editText)
+                Util.makeToast(getActivity(),"edit is run");
+
+            if(v == shareText)
+                Util.makeToast(getActivity(),"share is run");
+
+            if(v == deleteText)
+                Util.makeToast(getActivity(),"delete is run");
         }
     }
 }
