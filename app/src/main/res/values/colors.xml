@@ -3,5 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="buttonTextColor">#FF4081</color>
+    <color name="buttonTextColor">#ff4081</color>
+    <color name="editButtonColor">#505050</color>
+    <color name="shareButtonColor">#505050</color>
+    <color name="deleteButtonColor">#505050</color>
 </resources>
