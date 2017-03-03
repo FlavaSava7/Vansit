@@ -1,6 +1,7 @@
 package devgam.vansit;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,8 +28,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Users;
@@ -44,6 +51,7 @@ public class MoreOffers extends Fragment {
     private ArrayList<Offers> offerList;// this will be refilled with Offers each time a user change City Filter
     private ArrayAdapter offerAdapter;
 
+    Users userDriver = null;
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
     DatabaseReference DataBaseRoot;
     public MoreOffers() {
@@ -58,11 +66,11 @@ public class MoreOffers extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-       /* Bundle bundle = this.getArguments();
+        Bundle bundle = this.getArguments();
         if (bundle != null)
         {
-            userKey = bundle.getString("userKey");
-        }*/
+            userDriver = (Users) bundle.getSerializable("userDriver");
+        }
         return inflater.inflate(R.layout.fragment_more_offers, container, false);
     }
 
@@ -82,7 +90,6 @@ public class MoreOffers extends Fragment {
         listView = (ListView) getActivity().findViewById(R.id.moreOffers_offersList);
         offerAdapter = new itemsAdapter(getContext());
         offerList = new ArrayList<>();
-
         DataBaseRoot = FirebaseDatabase.getInstance().getReference();//connect to DB root
         fragmentManager = getActivity().getSupportFragmentManager();
 
@@ -98,25 +105,67 @@ public class MoreOffers extends Fragment {
             // error msg
             return;
         }
+
+        if (userDriver.getGender().equals("male"))
+            userImage.setImageResource(R.drawable.ic_user_male);
+        else
+            userImage.setImageResource(R.drawable.ic_user_female);
+
+        userName.setText(userDriver.getFirstName()+" "+userDriver.getLastName());
+
+        int age =  Util.yearNow - Integer.parseInt(userDriver.getDateYear()) ;
+        age = (Util.monthNow > Integer.parseInt(userDriver.getDateMonth()) ? age : age -1 );
+        userAge.setText("Age is " + age + " years old");
+
+        userCity.setText("City: " + userDriver.getCity());
+
+        userPhone.setText("Phone: "+ userDriver.getPhone());
+        userPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:"+userDriver.getPhone()));
+                startActivity(intent);
+            }
+        });
+
         Query query = DataBaseRoot.child(Util.RDB_COUNTRY+"/"+Util.RDB_JORDAN);// not efficient
         ValueEventListener QVEL= new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
-                Log.v("Main","TYPE IS: "+dataSnapshot.getClass().toString());
-                /*
-
-
-                for (DataSnapshot areaSnapshot: dataSnapshot.getChildren())
+                for(DataSnapshot it : dataSnapshot.getChildren())
                 {
+                    for(DataSnapshot it2 : it.getChildren())
+                    {
+                        for(DataSnapshot it3 : it2.getChildren())
+                        {
+                            //Log.v("Main",it3.getKey());
+                            Offers tempOffer = it3.getValue(Offers.class);
+                            tempOffer.setOfferKey(it3.getKey());
 
-                    Offers tempOffer = areaSnapshot.getValue(Offers.class);
-                    tempOffer.setOfferKey(areaSnapshot.getKey());
-                    offerList.add(tempOffer);
+                            boolean toAdd=true;
+                            for(Offers offer:offerList)
+                                if(offer.getOfferKey().equals(tempOffer.getOfferKey()) || !offer.getUserID().equals(userDriver.getUserKey()) )
+                                    toAdd=false;
+
+                            if(toAdd)
+                            {
+                                offerList.add(tempOffer);
+                            }
+                            else
+                                Log.v("Main","EXISTS");
+
+                        }
+                    }
                 }
-                listView.setAdapter(offerAdapter);
-                */
 
+                for(Offers offer : offerList)
+                {
+                    Log.v("Main", "offerList for this user: " + offer.getOfferKey());
+                }
+
+                //listView.setAdapter(offerAdapter);
             }
             @Override
             public void onCancelled(DatabaseError databaseError)
@@ -165,13 +214,13 @@ public class MoreOffers extends Fragment {
 
             Offers tempOffer = offerList.get(position);
 
-            holder.Title = (TextView) rowItem.findViewById(R.id.main_items_TitleData);
+            holder.Title = (TextView) rowItem.findViewById(R.id.moreOffers_items_TitleData);
             holder.Title.setText(tempOffer.getTitle());
 
-            holder.City = (TextView) rowItem.findViewById(R.id.main_items_cityData);
+            holder.City = (TextView) rowItem.findViewById(R.id.moreOffers_items_cityData);
             holder.City.setText(tempOffer.getCity());
 
-            holder.typeIcon = (ImageView) rowItem.findViewById(R.id.main_items_typeIcon);
+            holder.typeIcon = (ImageView) rowItem.findViewById(R.id.moreOffers_items_typeIcon);
             switch(tempOffer.getType())
             {
                 case "Car":holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.car));break;
