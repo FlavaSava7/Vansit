@@ -123,10 +123,7 @@ public class OfferInfo extends Fragment {
             @Override
             public void onClick(View v)
             {
-                userInformation user = new userInformation(getActivity(), userDriver.getFirstName(),
-                        userDriver.getDateYear(), userDriver.getDateMonth(),
-                        userDriver.getCity(),userDriver.getGender(),
-                        fragmentManager);
+                userInformation user = new userInformation(getActivity(),userDriver, fragmentManager);
                 user.show();
             }
         });

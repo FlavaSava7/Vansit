@@ -1,7 +1,9 @@
 package devgam.vansit;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.support.design.widget.FloatingActionButton;
@@ -123,7 +125,7 @@ public class Main extends Fragment
                             bundle.putSerializable("userDriver",user);
 
                     offerInfoPage.setArguments(bundle);
-                    Log.v("Main","Sending to OfferInfo: "+offerList.get(position).getTitle());
+                    //Log.v("Main","Sending to OfferInfo: "+offerList.get(position).getTitle());
 
                     Util.ChangeFrag(offerInfoPage,fragmentManager);
                 }
@@ -317,6 +319,12 @@ public class Main extends Fragment
             holder.ratingService = (TextView) rowItem.findViewById(R.id.main_items_serviceRatingData);
             holder.ratingPrice = (TextView) rowItem.findViewById(R.id.main_items_priceRatingData);
 
+            // TODO: LOVE , Implement it inside onDataChange
+            holder.Love =(TextView) rowItem.findViewById(R.id.my_offers_list_items_edit);
+
+            holder.Profile =(TextView) rowItem.findViewById(R.id.my_offers_list_items_share);
+            holder.Call =(TextView) rowItem.findViewById(R.id.my_offers_list_items_delete);
+
             DatabaseReference query = DataBaseRoot.child(Util.RDB_USERS+"/"+tempOffer.getUserID());
             ValueEventListener VEL = new ValueEventListener() {
                 @Override
@@ -326,7 +334,7 @@ public class Main extends Fragment
                     {
 
                         //Log.v("Main:","KEY "+dataSnapshot.getKey());
-                        Users tempUser = dataSnapshot.getValue(Users.class);
+                        final Users tempUser = dataSnapshot.getValue(Users.class);
                         tempUser.setUserKey(dataSnapshot.getKey());
 
                         boolean toAdd=true;
@@ -340,8 +348,31 @@ public class Main extends Fragment
                         /*for(Users user:userList)
                             Log.v("Main:","user: "+user.getFirstName());*/
 
+                        // TODO: Implement Love here
+                        //holder.Love
+
                         holder.ratingService.setText("("+tempUser.getRateService()+"/5)");
                         holder.ratingPrice.setText("("+tempUser.getRatePrice()+"/5)");
+
+                        holder.Profile.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                userInformation user = new userInformation(getActivity(),tempUser, fragmentManager);
+                                user.show();
+                            }
+                        });
+
+                        holder.Call.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(Intent.ACTION_DIAL);
+                                intent.setData(Uri.parse("tel:"+tempUser.getPhone()));
+                                startActivity(intent);
+                            }
+                        });
+
+
+
                     }
                     else
                     {
@@ -378,7 +409,7 @@ public class Main extends Fragment
     static class ViewHolder
     {
         // this class is called in getView and assigned it all "items" layouts Views,for smooth scrolling
-        TextView Title, City, ratingService, ratingPrice;
+        TextView Title, City, ratingService, ratingPrice, Love, Profile, Call;
         ImageView typeIcon;
     }
 

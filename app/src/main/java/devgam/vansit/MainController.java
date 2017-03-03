@@ -20,6 +20,8 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import devgam.vansit.JSON_Classes.Users;
+
 
 public class MainController extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
@@ -173,7 +175,8 @@ public class MainController extends AppCompatActivity
             Util.ChangeFrag(myAccount, fragmentManager);
         } else if(id == R.id.nav_user) {
             //Temp calling to test setter valid or not !
-            userInformation user = new userInformation(this, "Nimer Esam", "1995", "10", "Amman","male",fragmentManager);
+            Users tempUserForTest = new Users("Nimer","Esam","Amman","0796546549","male","6","6","1966");//just for testing user information
+            userInformation user = new userInformation(this,tempUserForTest,fragmentManager);
             user.show();
 
             //Util.ChangeFrag(user, fragmentManager);
