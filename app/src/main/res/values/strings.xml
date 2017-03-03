@@ -39,6 +39,17 @@
     <string name="my_account_birthday_text">Birthday :</string>
     <string name="my_account_homeCity_text">Home city :</string>
 
+    <string name="list_item_city_text">City : </string>
+    <string name="list_item_user_rating_text">User Rating : </string>
+    <string name="list_item_price_rating_text">Price Rating : </string>
+    <string name="list_item_delete_text">Delete </string>
+    <string name="list_item_edit_text"> Edit </string>
+    <string name="list_item_share_text">Share </string>
+    <string name="list_item_call_text">Call </string>
+    <string name="list_item_love_text">Love </string>
+    <string name="list_item_profile_text">Profile </string>
+
+
     <!-- shared by layouts -->
     <string name="layout_button_save">save</string>
     <string name="layout_button_cancel">cancel</string>
