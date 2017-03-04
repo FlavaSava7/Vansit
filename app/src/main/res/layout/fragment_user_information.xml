@@ -8,7 +8,7 @@
     android:background="@drawable/layout_bg"
     android:layout_marginRight="@dimen/views_margin_xl"
     android:layout_marginLeft="@dimen/views_margin_xl"
-    android:paddingTop="@dimen/views_top_margin">
+    android:paddingTop="@dimen/views_button_margin">
 
     <View
         android:layout_width="wrap_content"
@@ -114,7 +114,6 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:id="@+id/textView5"
-        android:layout_marginTop="@dimen/views_margin_s"
         android:textStyle="normal|bold"
         android:gravity="center"
         android:textColor="#cc101010"
