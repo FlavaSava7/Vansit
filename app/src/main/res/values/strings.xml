@@ -57,6 +57,9 @@
     <string name="menu_rec_text">Recommended</string>
     <string name="menu_account_text">Account</string>
     <string name="menu_my_offers_text">My Offers</string>
+    
+    <string name="main_order_city">Order by city</string>
+    <string name="main_order_type">Order by type</string>
 
 
     <!-- shared by layouts -->

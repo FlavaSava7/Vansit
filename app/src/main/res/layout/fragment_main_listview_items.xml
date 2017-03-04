@@ -179,7 +179,6 @@
                     android:text="@string/list_item_profile_text"
                     android:id="@+id/main_items_profile_text"
                     android:drawableLeft="@drawable/ic_person"
-                    android:gravity="center_vertical"
                     android:textAllCaps="true"
                     android:textStyle="normal|bold"
                     android:layout_weight="0.45"
@@ -188,7 +187,9 @@
                     android:textColor="@color/shareButtonColor"
                     android:drawableTint="@color/shareButtonColor"
                     android:drawableTintMode="src_atop"
-                    style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"/>
+                    style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity" />
 
                 <Button
                     android:layout_width="wrap_content"

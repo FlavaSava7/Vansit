@@ -2,6 +2,7 @@ package devgam.vansit;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -60,7 +61,7 @@ public class Main extends Fragment {
     private static String whichType;// to give it a new value in a spinner to fetch new items
     private static String allCities[];//this will contain the values that are in strings.xml
     private static String allTypes[];//this will contain the values that are in strings.xml, used inside the getView to choose icon for type
-
+    private ArrayAdapter<CharSequence> cityAdapter, typeAdapter;
 
 
     @Override
@@ -99,9 +100,7 @@ public class Main extends Fragment {
                     Util.ChangeFrag(addOfferPage,fragmentManager);
                 }
             });
-
-        }else
-        {
+        }else {
             //Log.v("Main","User is not logged in ");
             fab.setVisibility(View.GONE);
         }
@@ -132,12 +131,13 @@ public class Main extends Fragment {
                     Util.ChangeFrag(offerInfoPage,fragmentManager);
                 }
         });
+
         ShowMoreBtn(listView);
         offerAdapter = new itemsAdapter(getContext());
         offerList = new ArrayList<>();
         userList = new ArrayList<>();
 
-        spinnerCity = (Spinner)getActivity().findViewById(R.id.frag_main_spinCity);
+        spinnerCity = (Spinner) getActivity().findViewById(R.id.frag_main_spinCity);
         spinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             boolean stopAutoFiringCode=false;
@@ -168,7 +168,6 @@ public class Main extends Fragment {
                 if(stopAutoFiringCode)
                 {
                     whichType = parent.getSelectedItem().toString();
-                    ChangeListItems();
                     Log.v("Main", "spinnerType");
                 }
                 stopAutoFiringCode = true;
@@ -203,15 +202,17 @@ public class Main extends Fragment {
         DatabaseReference mRef = DataBaseRoot.child(Util.RDB_COUNTRY+"/"+Util.RDB_JORDAN);
 
         //City
-        ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(),
+        ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item,
                 getResources().getStringArray(R.array.city_list));
+        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCity.setAdapter(cityAdapter);
 
         //Type
         ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item,
                 getResources().getStringArray(R.array.type_list));
+        typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerType.setAdapter(typeAdapter);
 
         //Initial Filling of ListView, default
@@ -355,8 +356,7 @@ public class Main extends Fragment {
                         holder.callText.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Util.makeToast(getContext(), phoneNumber);
-                                Intent intent = new Intent(Intent.ACTION_CALL);
+                                Intent intent = new Intent(Intent.ACTION_DIAL);
                                 intent.setData(Uri.parse("tel:" +phoneNumber));
                                 startActivity(intent);
                             }
@@ -372,7 +372,9 @@ public class Main extends Fragment {
                                         tempUser.getCity(),
                                         tempUser.getGender(),
                                         getFragmentManager());
+                                userIn.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                 userIn.show();
+
                             }
                         });
                     }

@@ -17,6 +17,9 @@ import devgam.vansit.JSON_Classes.Users;
 public class userInformation extends Dialog implements
         android.view.View.OnClickListener {
 
+    //When call this dialog use this code to make it transparent :
+    //userObj.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
     public Activity c;
     TextView nameText, ageText, cityText, moreOffersText;
     ImageView userImg;
