@@ -32,6 +32,8 @@ import org.w3c.dom.Text;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -54,7 +56,7 @@ public class MoreOffers extends Fragment {
 
     Users userDriver = null;
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
-    DatabaseReference DataBaseRoot;
+
     public MoreOffers() {
         // Required empty public constructor
     }
@@ -91,7 +93,6 @@ public class MoreOffers extends Fragment {
         listView = (ListView) getActivity().findViewById(R.id.moreOffers_offersList);
         offerAdapter = new itemsAdapter(getContext());
         offerList = new ArrayList<>();
-        DataBaseRoot = FirebaseDatabase.getInstance().getReference();//connect to DB root
         fragmentManager = getActivity().getSupportFragmentManager();
 
         setUpInfo();
@@ -132,20 +133,24 @@ public class MoreOffers extends Fragment {
             }
         });
 
-        Query query = DataBaseRoot.child(Util.RDB_COUNTRY+"/"+Util.RDB_JORDAN);// not efficient
+
+        DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference()
+                .child(Util.RDB_COUNTRY+"/"+Util.RDB_JORDAN);
+
+        Query query = DataBaseRoot;
         ValueEventListener QVEL= new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
-                for(DataSnapshot it : dataSnapshot.getChildren())
+                for(DataSnapshot cityRoot : dataSnapshot.getChildren())
                 {
-                    for(DataSnapshot it2 : it.getChildren())
+                    for(DataSnapshot offerRoot : cityRoot.getChildren())
                     {
-                        for(DataSnapshot it3 : it2.getChildren())
+                        for(DataSnapshot everyOffer : offerRoot.getChildren())
                         {
                             //Log.v("Main","Key:"+it3.getKey());
-                            Offers tempOffer = it3.getValue(Offers.class);
-                            tempOffer.setOfferKey(it3.getKey());
+                            Offers tempOffer = everyOffer.getValue(Offers.class);
+                            tempOffer.setOfferKey(everyOffer.getKey());
 
                             boolean toAdd=true;
                             for(Offers offer:offerList)
@@ -163,7 +168,7 @@ public class MoreOffers extends Fragment {
                 {
                     Log.v("Main", "offerList for this user: " + offer.getOfferKey());
                 }
-
+                SortByTimeStampDesc(offerList);
                 listView.setAdapter(offerAdapter);
                 Util.ProgDialogDelay(progressDialog,1000L);
             }
@@ -253,5 +258,21 @@ public class MoreOffers extends Fragment {
     private Drawable getDrawableResource(int resID)//used in list view to set icons to rows
     {
         return ContextCompat.getDrawable(getActivity().getApplicationContext(), resID);//context.compat checks the version implicitly
+    }
+    private void SortByTimeStampDesc(ArrayList<Offers> arrayToSort)
+    {
+        Collections.sort(arrayToSort, new Comparator<Offers>() {
+            @Override
+            public int compare(Offers o1, Offers o2) {
+                return o1.getTimeStamp().compareTo(o2.getTimeStamp());
+            }
+        });
+
+        Collections.reverse(arrayToSort);
+
+        /*for(int i = 0;i<offerList.size();i++)
+            Log.v("Main","index: "+i+"|| offer:"+offerList.get(i).getTimeStamp());*/
+
+
     }
 }

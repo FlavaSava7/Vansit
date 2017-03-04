@@ -2,6 +2,7 @@ package devgam.vansit;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -141,10 +143,10 @@ public class AddOffer extends Fragment {
 
         //for now the User Id will be inputted manually,cuz for now we dont have the User details yet
         // TODO: CHANGE THE ID HERE
-        Offers myOffer = new Offers("-KdvBEu4iseDrQWMnuO_",
+        Offers myOffer = new Offers(FirebaseAuth.getInstance().getCurrentUser().getUid(),
                 editTitle.getText().toString(),
                 editDesc.getText().toString(),
-                spinnerType.getSelectedItem().toString(),spinnerCity.getSelectedItem().toString());
+                spinnerType.getSelectedItem().toString(),spinnerCity.getSelectedItem().toString(), System.currentTimeMillis());
 
         // here we will AUTO go to the child where his Country == the country he signed up in the app
         //Edit it later cuz for now we dont have the User details yet
