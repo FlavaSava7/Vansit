@@ -26,7 +26,7 @@
     </string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment">Soon Will be Available</string>
 
     <!-- Strings for layouts -->
     <string name="my_account_title_text">Personal Data</string>
@@ -48,6 +48,20 @@
     <string name="list_item_call_text">Call </string>
     <string name="list_item_love_text">Love </string>
     <string name="list_item_profile_text">Profile </string>
+
+    <string name="menu_login_text">Sign In</string>
+    <string name="menu_logout_text">Sign Out</string>
+    <string name="menu_my_account_text">My Account</string>
+    <string name="menu_home_text">Home</string>
+    <string name="menu_fav_text">Favorite</string>
+    <string name="menu_rec_text">Recommended</string>
+    <string name="menu_account_text">Account</string>
+    <string name="menu_my_offers_text">My Offers</string>
+    
+    <string name="main_order_city">Order by city</string>
+    <string name="main_order_type">Order by type</string>
+
+    <string name="user_information_title">Profile</string>
 
 
     <!-- shared by layouts -->

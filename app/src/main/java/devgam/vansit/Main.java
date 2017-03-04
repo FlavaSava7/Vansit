@@ -3,15 +3,20 @@ package devgam.vansit;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
+import android.os.Handler;
+import android.os.Vibrator;
 import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,8 +46,7 @@ import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Users;
 
 
-public class Main extends Fragment
-{
+public class Main extends Fragment {
     public Main() {
         // Required empty public constructor
     }
@@ -64,6 +68,7 @@ public class Main extends Fragment
     private static String whichType="";// to give it a new value in a spinner to fetch new items
     private static String allCities[];//this will contain the values that are in strings.xml
     private static String allTypes[];//this will contain the values that are in strings.xml, used inside the getView to choose icon for type
+
     //Long StartTime;
 
 
@@ -102,9 +107,7 @@ public class Main extends Fragment
                     Util.ChangeFrag(addOfferPage,fragmentManager);
                 }
             });
-
-        }else
-        {
+        }else {
             //Log.v("Main","User is not logged in ");
             fab.setVisibility(View.GONE);
         }
@@ -142,7 +145,6 @@ public class Main extends Fragment
         userList = new ArrayList<>();
 
         spinnerCity = (Spinner)getActivity().findViewById(R.id.frag_main_spinCity);
-
         spinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             boolean stopAutoFiringCode=false;
@@ -213,14 +215,16 @@ public class Main extends Fragment
         tempCityList.add(0," ");
         ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item,tempCityList);
+        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerCity.setAdapter(cityAdapter);
 
         //Type
         ArrayList<String> tempTypeList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.type_list)));
         tempTypeList.add(0," ");
-        ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_spinner_item, tempTypeList);
+        ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item,
+                tempTypeList);
+        typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerType.setAdapter(typeAdapter);
 
         final ProgressDialog progressDialog = new ProgressDialog(getContext(),ProgressDialog.STYLE_SPINNER);
@@ -326,8 +330,8 @@ public class Main extends Fragment
         query.addListenerForSingleValueEvent(QVEL);
     }
 
-    private class itemsAdapter extends ArrayAdapter<Offers>
-    {
+
+    private class itemsAdapter extends ArrayAdapter<Offers> {
         Context context;
         DatabaseReference databaseReference;
         itemsAdapter(Context c,DatabaseReference databaseReference)
@@ -339,13 +343,12 @@ public class Main extends Fragment
 
 
         @Override
-        public View getView(final int position, View convertView, final ViewGroup parent)
-        {
+        public View getView(final int position, View convertView, final ViewGroup parent) {
             final ViewHolder holder = new ViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowItem = inflater.inflate(R.layout.fragment_main_listview_items, parent, false);
 
-            Offers tempOffer = offerList.get(position);
+            final Offers tempOffer = offerList.get(position);
 
             holder.Title = (TextView) rowItem.findViewById(R.id.main_items_TitleData);
             holder.Title.setText(tempOffer.getTitle());
@@ -353,38 +356,34 @@ public class Main extends Fragment
             holder.City = (TextView) rowItem.findViewById(R.id.main_items_cityData);
             holder.City.setText(tempOffer.getCity());
 
-            /*holder.typeIcon = (ImageView) rowItem.findViewById(R.id.main_items_typeIcon);
-            switch(tempOffer.getType())
-            {
-                case "Car":holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.car));break;
-                case "Bus":holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.bus));break;
-                case "Taxi":holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.taxi));break;
-                case "Truck":holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.truck));break;
-            }*/
-
+            holder.typeIcon = (ImageView) rowItem.findViewById(R.id.main_items_typeIcon);
+            switch(tempOffer.getType()) {
+                case "Car":holder.typeIcon.setImageDrawable(getDrawableResource(R.mipmap.ic_type_car));break;
+                case "Bus":holder.typeIcon.setImageDrawable(getDrawableResource(R.mipmap.ic_type_bus));break;
+                case "Taxi":holder.typeIcon.setImageDrawable(getDrawableResource(R.mipmap.ic_type_taxi));break;
+                case "Truck":holder.typeIcon.setImageDrawable(getDrawableResource(R.mipmap.ic_type_truck));break;
+            }
 
             holder.ratingService = (TextView) rowItem.findViewById(R.id.main_items_serviceRatingData);
             holder.ratingPrice = (TextView) rowItem.findViewById(R.id.main_items_priceRatingData);
 
-            // TODO: LOVE , Implement it inside onDataChange
-            holder.Love =(TextView) rowItem.findViewById(R.id.my_offers_list_items_edit);
-
-            holder.Profile =(TextView) rowItem.findViewById(R.id.my_offers_list_items_share);
-            holder.Call =(TextView) rowItem.findViewById(R.id.my_offers_list_items_delete);
+            //initialized by nimer esam for text buttons on list item :
+            holder.loveText = (Button) rowItem.findViewById(R.id.main_items_love_text);
+            holder.profileText = (Button) rowItem.findViewById(R.id.main_items_profile_text);
+            holder.callText = (Button) rowItem.findViewById(R.id.main_items_call_text);
             Query query = databaseReference.child(tempOffer.getUserID());
 
             ValueEventListener VEL = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot)
                 {
-                    if(dataSnapshot.getValue(Users.class)!=null)
-                    {
+                    if(dataSnapshot.getValue(Users.class)!=null) {
 
                         //Log.v("Main:","KEY "+dataSnapshot.getKey());
                         final Users tempUser = dataSnapshot.getValue(Users.class);
                         tempUser.setUserKey(dataSnapshot.getKey());
 
-                        boolean toAdd=true;
+                        boolean toAdd = true;
                         for(Users addedUser:userList)
                             if(tempUser.getUserKey().equals(addedUser.getUserKey()))
                                 toAdd=false;
@@ -401,28 +400,31 @@ public class Main extends Fragment
                         holder.ratingService.setText("("+tempUser.getRateService()+"/5)");
                         holder.ratingPrice.setText("("+tempUser.getRatePrice()+"/5)");
 
-                        holder.Profile.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                userInformation user = new userInformation(getActivity(),tempUser, fragmentManager);
-                                user.show();
-                            }
-                        });
+                        //add by nimer esam :
+                        //To make call when user click on call text :
 
-                        holder.Call.setOnClickListener(new View.OnClickListener() {
+                        final String phoneNumber = tempUser.getPhone();
+                        holder.callText.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 Intent intent = new Intent(Intent.ACTION_DIAL);
-                                intent.setData(Uri.parse("tel:"+tempUser.getPhone()));
+                                intent.setData(Uri.parse("tel:" +phoneNumber));
                                 startActivity(intent);
                             }
                         });
 
+                        holder.profileText.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                userInformation userIn = new userInformation(getActivity(),tempUser, fragmentManager);
+                                userIn.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                userIn.show();
 
+                            }
+                        });
 
                     }
-                    else
-                    {
+                    else {
                         //Log.v("Main:","==null");
                     }
 
@@ -435,9 +437,7 @@ public class Main extends Fragment
             };
             query.addListenerForSingleValueEvent(VEL);
 
-
             // more work
-
             return rowItem;
         }
         @Override
@@ -453,11 +453,13 @@ public class Main extends Fragment
 
     }
 
-    static class ViewHolder
-    {
+    static class ViewHolder {
         // this class is called in getView and assigned it all "items" layouts Views,for smooth scrolling
         TextView Title, City, ratingService, ratingPrice, Love, Profile, Call;
         ImageView typeIcon;
+
+        //add by nimer esam for buttons :
+        Button loveText, profileText, callText;
     }
 
 

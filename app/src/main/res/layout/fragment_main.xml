@@ -1,36 +1,113 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="devgam.vansit.Main">
 
-    <Spinner
-        android:id="@+id/frag_main_spinCity"
-        android:layout_width="100dp"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:id="@+id/main_linear_layout"
+        android:background="@drawable/shadow"
+        android:paddingBottom="@dimen/views_button_margin"
+        android:paddingTop="@dimen/views_margin_s">
 
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
 
-        />
-    <Spinner
-        android:id="@+id/frag_main_spinType"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/frag_main_spinCity"
-        android:layout_marginLeft="50dp"
-        android:layout_alignTop="@id/frag_main_spinCity"
-        />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:text="@string/main_order_type"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/textView2"
+                android:layout_weight="1"
+                android:textAllCaps="true"
+                android:textStyle="normal|bold"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:textColor="#CC000000" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/frag_main_spinType"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:paddingLeft="@dimen/views_top_margin"
+                android:layout_weight="1"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:text="@string/main_order_city"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/textView4"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:textStyle="normal|bold"
+                android:textColor="#CC000000" />
+
+            <Spinner
+                android:id="@+id/frag_main_spinCity"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:dropDownWidth="match_parent" />
+        </LinearLayout>
+
+    </LinearLayout>
+
 
     <ListView
 
         android:id="@+id/frag_main_listview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/frag_main_spinCity" />
+        android:layout_below="@id/main_linear_layout" />
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:paddingBottom="@dimen/views_margin_s"
+        android:paddingTop="@dimen/views_margin_s"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            app:srcCompat="@drawable/ic_fab_add"
+            android:id="@+id/fab"
+            />
+
+    </android.support.design.widget.CoordinatorLayout>
+
+
 </RelativeLayout>

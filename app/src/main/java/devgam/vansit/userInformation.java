@@ -19,6 +19,9 @@ import devgam.vansit.JSON_Classes.Users;
 public class userInformation extends Dialog implements
         android.view.View.OnClickListener {
 
+    //When call this dialog use this code to make it transparent :
+    //userObj.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
     public Activity c;
     TextView nameText, ageText, cityText, moreOffersText;
     ImageView userImg;
@@ -79,12 +82,12 @@ public class userInformation extends Dialog implements
 
             //set user name to text on dialog
             if(tempUserCity != "" || ! tempUserCity.isEmpty())
-                cityText.setText("Lives in " + tempUserCity);
+                cityText.setText("Lives in " + tempUserCity );
 
             if(!tempUserGender.isEmpty() || tempUserGender != ""){
                 if (tempUserGender.equals("male"))
                     userImg.setImageResource(R.drawable.ic_user_male);
-                else
+                else if (tempUserGender.equals("female"))
                     userImg.setImageResource(R.drawable.ic_user_female);
             }
 

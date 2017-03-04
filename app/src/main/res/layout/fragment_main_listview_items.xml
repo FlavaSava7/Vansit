@@ -50,7 +50,7 @@
                     app:srcCompat="@drawable/common_google_signin_btn_icon_dark"
                     android:id="@+id/main_items_typeIcon"
                     android:layout_marginTop="@dimen/views_top_margin"
-                    android:layout_marginLeft="@dimen/views_top_margin" />
+                    android:layout_marginLeft="@dimen/views_button_margin" />
 
                 <LinearLayout
                     android:orientation="vertical"
@@ -154,21 +154,82 @@
                 android:layout_height="wrap_content"
                 android:weightSum="1"
                 android:layout_marginLeft="@dimen/views_margin"
-                android:layout_marginRight="@dimen/views_button_margin"
-                android:layout_marginTop="@dimen/views_top_margin"
-                android:layout_marginBottom="@dimen/views_top_margin">
+                android:layout_marginRight="@dimen/views_button_margin">
 
-
-                <TextView
+                <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/list_item_love_text"
-                    android:id="@+id/my_offers_list_items_edit"
+                    android:id="@+id/main_items_love_text"
                     android:drawableLeft="@drawable/ic_favorite_border"
                     android:gravity="center_vertical"
                     android:textAllCaps="true"
                     android:textStyle="normal|bold"
-                    android:layout_weight="0.41"
+                    android:layout_weight="0.45"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textSize="12sp"
+                    android:textColor="@color/editButtonColor"
+                    android:drawableTint="@color/editButtonColor"
+                    android:drawableTintMode="src_atop"
+                    style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/list_item_profile_text"
+                    android:id="@+id/main_items_profile_text"
+                    android:drawableLeft="@drawable/ic_person"
+                    android:textAllCaps="true"
+                    android:textStyle="normal|bold"
+                    android:layout_weight="0.45"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textSize="12sp"
+                    android:textColor="@color/shareButtonColor"
+                    android:drawableTint="@color/shareButtonColor"
+                    android:drawableTintMode="src_atop"
+                    style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/list_item_call_text"
+                    android:id="@+id/main_items_call_text"
+                    android:textAllCaps="true"
+                    android:textStyle="normal|bold"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textSize="12sp"
+                    android:textColor="@color/deleteButtonColor"
+                    android:drawableTint="@color/deleteButtonColor"
+                    android:drawableTintMode="src_atop"
+                    android:gravity="center_vertical"
+                    android:textAlignment="center"
+                    android:drawableLeft="@drawable/ic_call"
+                    style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"/>
+
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+</RelativeLayout>
+
+<!--
+<TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/list_item_love_text"
+                    android:id="@+id/main_items_love_text"
+                    android:drawableLeft="@drawable/ic_favorite_border"
+                    android:gravity="center_vertical"
+                    android:textAllCaps="true"
+                    android:textStyle="normal|bold"
+                    android:layout_weight="0.45"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textSize="12sp"
                     android:textColor="@color/editButtonColor"
@@ -179,12 +240,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/list_item_profile_text"
-                    android:id="@+id/my_offers_list_items_share"
+                    android:id="@+id/main_items_profile_text"
                     android:drawableLeft="@drawable/ic_person"
                     android:gravity="center_vertical"
                     android:textAllCaps="true"
                     android:textStyle="normal|bold"
-                    android:layout_weight="0.41"
+                    android:layout_weight="0.45"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textSize="12sp"
                     android:textColor="@color/shareButtonColor"
@@ -195,9 +256,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/list_item_call_text"
-                    android:id="@+id/my_offers_list_items_delete"
+                    android:id="@+id/main_items_call_text"
                     android:drawableLeft="@drawable/ic_call"
-                    android:gravity="center_vertical"
                     android:textAllCaps="true"
                     android:textStyle="normal|bold"
                     android:layout_weight="1"
@@ -205,13 +265,6 @@
                     android:textSize="12sp"
                     android:textColor="@color/deleteButtonColor"
                     android:drawableTint="@color/deleteButtonColor"
-                    android:drawableTintMode="src_atop"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-
-
-</RelativeLayout>
+                    android:drawableTintMode="src_atop"
+                    android:gravity="center_vertical" />
+                    -->
