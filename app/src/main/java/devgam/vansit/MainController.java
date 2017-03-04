@@ -131,6 +131,10 @@ public class MainController extends AppCompatActivity
             if(fab!=null)
                 fab.setVisibility(View.GONE);
             FirebaseAuth.getInstance().signOut();
+            Main mainPage = new Main();
+            Util.ChangeFrag(mainPage,fragmentManager);
+
+
             return true;
         }
 

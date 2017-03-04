@@ -1,5 +1,6 @@
 package devgam.vansit;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -105,6 +106,8 @@ public class MoreOffers extends Fragment {
             // error msg
             return;
         }
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(),ProgressDialog.STYLE_SPINNER);
+        Util.ProgDialogStarter(progressDialog,"Loading...");
 
         if (userDriver.getGender().equals("male"))
             userImage.setImageResource(R.drawable.ic_user_male);
@@ -140,22 +143,18 @@ public class MoreOffers extends Fragment {
                     {
                         for(DataSnapshot it3 : it2.getChildren())
                         {
-                            //Log.v("Main",it3.getKey());
+                            //Log.v("Main","Key:"+it3.getKey());
                             Offers tempOffer = it3.getValue(Offers.class);
                             tempOffer.setOfferKey(it3.getKey());
 
                             boolean toAdd=true;
                             for(Offers offer:offerList)
-                                if(offer.getOfferKey().equals(tempOffer.getOfferKey()) || !offer.getUserID().equals(userDriver.getUserKey()) )
+                                if(offer.getOfferKey().equals(tempOffer.getOfferKey()))
                                     toAdd=false;
 
                             if(toAdd)
-                            {
-                                offerList.add(tempOffer);
-                            }
-                            else
-                                Log.v("Main","EXISTS");
-
+                                if(tempOffer.getUserID().equals(userDriver.getUserKey()))
+                                    offerList.add(tempOffer);
                         }
                     }
                 }
@@ -165,7 +164,8 @@ public class MoreOffers extends Fragment {
                     Log.v("Main", "offerList for this user: " + offer.getOfferKey());
                 }
 
-                //listView.setAdapter(offerAdapter);
+                listView.setAdapter(offerAdapter);
+                Util.ProgDialogDelay(progressDialog,1000L);
             }
             @Override
             public void onCancelled(DatabaseError databaseError)
@@ -182,15 +182,15 @@ public class MoreOffers extends Fragment {
             {
                 // click to go to offerinfo page
 
-                /*OfferInfo offerInfoPage = new OfferInfo();
+                OfferInfo offerInfoPage = new OfferInfo();
                 Bundle bundle = new Bundle();
 
                 bundle.putSerializable("userOffer",offerList.get(position));
                 bundle.putSerializable("userDriver",userDriver);
                 offerInfoPage.setArguments(bundle);
-                Log.v("Main","Sending to OfferInfo: "+offerList.get(position).getTitle());
+                //Log.v("Main","Sending to OfferInfo: "+offerList.get(position).getTitle());
 
-                Util.ChangeFrag(offerInfoPage,fragmentManager);*/
+                Util.ChangeFrag(offerInfoPage,fragmentManager);
             }
         });
     }
