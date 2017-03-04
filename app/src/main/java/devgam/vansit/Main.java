@@ -1,9 +1,13 @@
 package devgam.vansit;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 
+import android.os.Handler;
+import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -36,8 +40,7 @@ import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Users;
 
 
-public class Main extends Fragment
-{
+public class Main extends Fragment {
     public Main() {
         // Required empty public constructor
     }
@@ -280,8 +283,8 @@ public class Main extends Fragment
         query.addListenerForSingleValueEvent(QVEL);
     }
 
-    private class itemsAdapter extends ArrayAdapter<Offers>
-    {
+
+    private class itemsAdapter extends ArrayAdapter<Offers> {
         Context context;
         itemsAdapter(Context c)
         {
@@ -291,13 +294,12 @@ public class Main extends Fragment
 
 
         @Override
-        public View getView(final int position, View convertView, final ViewGroup parent)
-        {
+        public View getView(final int position, View convertView, final ViewGroup parent) {
             final ViewHolder holder = new ViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowItem = inflater.inflate(R.layout.fragment_main_listview_items, parent, false);
 
-            Offers tempOffer = offerList.get(position);
+            final Offers tempOffer = offerList.get(position);
 
             holder.Title = (TextView) rowItem.findViewById(R.id.main_items_TitleData);
             holder.Title.setText(tempOffer.getTitle());
@@ -306,32 +308,33 @@ public class Main extends Fragment
             holder.City.setText(tempOffer.getCity());
 
             holder.typeIcon = (ImageView) rowItem.findViewById(R.id.main_items_typeIcon);
-            switch(tempOffer.getType())
-            {
+            switch(tempOffer.getType()) {
                 case "Car":holder.typeIcon.setImageDrawable(getDrawableResource(R.mipmap.ic_type_car));break;
                 case "Bus":holder.typeIcon.setImageDrawable(getDrawableResource(R.mipmap.ic_type_bus));break;
                 case "Taxi":holder.typeIcon.setImageDrawable(getDrawableResource(R.mipmap.ic_type_taxi));break;
                 case "Truck":holder.typeIcon.setImageDrawable(getDrawableResource(R.mipmap.ic_type_truck));break;
-
             }
-
 
             holder.ratingService = (TextView) rowItem.findViewById(R.id.main_items_serviceRatingData);
             holder.ratingPrice = (TextView) rowItem.findViewById(R.id.main_items_priceRatingData);
+
+            //initialized by nimer esam for text buttons on list item :
+            holder.loveText = (Button) rowItem.findViewById(R.id.main_items_love_text);
+            holder.profileText = (Button) rowItem.findViewById(R.id.main_items_profile_text);
+            holder.callText = (Button) rowItem.findViewById(R.id.main_items_call_text);
 
             DatabaseReference query = DataBaseRoot.child(Util.RDB_USERS+"/"+tempOffer.getUserID());
             ValueEventListener VEL = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot)
                 {
-                    if(dataSnapshot.getValue(Users.class)!=null)
-                    {
+                    if(dataSnapshot.getValue(Users.class)!=null) {
 
                         //Log.v("Main:","KEY "+dataSnapshot.getKey());
-                        Users tempUser = dataSnapshot.getValue(Users.class);
+                        final Users tempUser = dataSnapshot.getValue(Users.class);
                         tempUser.setUserKey(dataSnapshot.getKey());
 
-                        boolean toAdd=true;
+                        boolean toAdd = true;
                         for(Users addedUser:userList)
                             if(tempUser.getUserKey().equals(addedUser.getUserKey()))
                                 toAdd=false;
@@ -344,9 +347,36 @@ public class Main extends Fragment
 
                         holder.ratingService.setText("("+tempUser.getRateService()+"/5)");
                         holder.ratingPrice.setText("("+tempUser.getRatePrice()+"/5)");
+
+                        //add by nimer esam :
+                        //To make call when user click on call text :
+
+                        final String phoneNumber = tempUser.getPhone();
+                        holder.callText.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Util.makeToast(getContext(), phoneNumber);
+                                Intent intent = new Intent(Intent.ACTION_CALL);
+                                intent.setData(Uri.parse("tel:" +phoneNumber));
+                                startActivity(intent);
+                            }
+                        });
+
+                        holder.profileText.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                userInformation userIn = new userInformation(getActivity(),
+                                        tempUser.getFirstName() + " " + tempUser.getLastName(),
+                                        tempUser.getDateYear(),
+                                        tempUser.getDateMonth(),
+                                        tempUser.getCity(),
+                                        tempUser.getGender(),
+                                        getFragmentManager());
+                                userIn.show();
+                            }
+                        });
                     }
-                    else
-                    {
+                    else {
                         //Log.v("Main:","==null");
                     }
 
@@ -359,9 +389,7 @@ public class Main extends Fragment
             };
             query.addListenerForSingleValueEvent(VEL);
 
-
             // more work
-
             return rowItem;
         }
         @Override
@@ -377,11 +405,13 @@ public class Main extends Fragment
 
     }
 
-    static class ViewHolder
-    {
+    static class ViewHolder {
         // this class is called in getView and assigned it all "items" layouts Views,for smooth scrolling
         TextView Title, City, ratingService, ratingPrice;
         ImageView typeIcon;
+
+        //add by nimer esam for buttons :
+        Button loveText, profileText, callText;
     }
 
 
@@ -460,4 +490,6 @@ public class Main extends Fragment
     {
         return ContextCompat.getDrawable(getActivity().getApplicationContext(), resID);//context.compat checks the version implicitly
     }
+
+
 }

@@ -73,12 +73,12 @@ public class userInformation extends Dialog implements
 
             //set user name to text on dialog
             if(tempUserCity != "" || ! tempUserCity.isEmpty())
-                cityText.setText("Lives in " + tempUserCity);
+                cityText.setText("Lives in " + tempUserCity );
 
             if(!tempUserGender.isEmpty() || tempUserGender != ""){
-                if (tempUserGender == "male")
+                if (tempUserGender.equals("male"))
                     userImg.setImageResource(R.drawable.ic_user_male);
-                else
+                else if (tempUserGender.equals("female"))
                     userImg.setImageResource(R.drawable.ic_user_female);
             }
 

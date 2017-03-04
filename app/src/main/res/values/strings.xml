@@ -56,8 +56,7 @@
     <string name="menu_fav_text">Favorite</string>
     <string name="menu_rec_text">Recommended</string>
     <string name="menu_account_text">Account</string>
-
-
+    <string name="menu_my_offers_text">My Offers</string>
 
 
     <!-- shared by layouts -->

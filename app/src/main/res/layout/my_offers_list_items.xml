@@ -42,8 +42,7 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginBottom="@dimen/views_top_margin">
+                android:layout_weight="1">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -101,13 +100,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:weightSum="1"
-                android:layout_marginLeft="@dimen/views_margin"
-                android:layout_marginRight="@dimen/views_button_margin"
-                android:layout_marginTop="@dimen/views_margin"
-                android:layout_marginBottom="@dimen/views_top_margin">
+                android:layout_marginLeft="@dimen/views_button_margin"
+                android:layout_marginRight="@dimen/views_button_margin">
 
 
-                <TextView
+                <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/list_item_edit_text"
@@ -116,15 +113,16 @@
                     android:gravity="center_vertical"
                     android:textAllCaps="true"
                     android:textStyle="normal|bold"
-                    android:layout_weight="0.43"
+                    android:layout_weight="0.45"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textSize="12sp"
                     android:textColor="@color/editButtonColor"
                     android:drawableTint="@color/editButtonColor"
                     android:drawableTintMode="src_atop"
-                    android:duplicateParentState="false" />
+                    android:duplicateParentState="false"
+                    style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"/>
 
-                <TextView
+                <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/list_item_share_text"
@@ -133,14 +131,15 @@
                     android:gravity="center_vertical"
                     android:textAllCaps="true"
                     android:textStyle="normal|bold"
-                    android:layout_weight="0.43"
+                    android:layout_weight="0.45"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textSize="12sp"
                     android:textColor="@color/shareButtonColor"
                     android:drawableTint="@color/shareButtonColor"
-                    android:drawableTintMode="src_atop"/>
+                    android:drawableTintMode="src_atop"
+                    style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"/>
 
-                <TextView
+                <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/list_item_delete_text"
@@ -154,7 +153,8 @@
                     android:textSize="12sp"
                     android:textColor="@color/deleteButtonColor"
                     android:drawableTint="@color/deleteButtonColor"
-                    android:drawableTintMode="src_atop"/>
+                    android:drawableTintMode="src_atop"
+                    style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"/>
 
             </LinearLayout>
 

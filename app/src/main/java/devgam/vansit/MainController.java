@@ -84,14 +84,12 @@ public class MainController extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -121,12 +119,10 @@ public class MainController extends AppCompatActivity
             user.show();
             //Util.ChangeFrag(user, fragmentManager);
 
-        } else if(id == R.id.nav_share) {
+        }  else if(id == R.id.nav_my_offers) {
             myOffers myOffers = new myOffers();
             Util.ChangeFrag(myOffers, fragmentManager);
-        } else if(id == R.id.nav_share) {
-            myOffers myOffers = new myOffers();
-            Util.ChangeFrag(myOffers, fragmentManager);
+            drawer.closeDrawer(GravityCompat.START);
         } else  if(id == R.id.nav_fav) {
             favorite favorite = new favorite();
             Util.ChangeFrag(favorite, fragmentManager);
@@ -160,12 +156,14 @@ public class MainController extends AppCompatActivity
             nav_Menu.findItem(R.id.nav_fav).setVisible(true);
             nav_Menu.findItem(R.id.nav_my_account).setVisible(true);
             nav_Menu.findItem(R.id.nav_logout).setVisible(true);
+            nav_Menu.findItem(R.id.nav_my_offers).setVisible(true);
         } else {
             nav_Menu.findItem(R.id.nav_login).setVisible(true);
             nav_Menu.findItem(R.id.nav_rec).setVisible(false);
             nav_Menu.findItem(R.id.nav_fav).setVisible(false);
             nav_Menu.findItem(R.id.nav_my_account).setVisible(false);
             nav_Menu.findItem(R.id.nav_logout).setVisible(false);
+            nav_Menu.findItem(R.id.nav_my_offers).setVisible(false);
 
         }
     }
