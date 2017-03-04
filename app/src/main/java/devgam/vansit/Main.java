@@ -212,7 +212,7 @@ public class Main extends Fragment {
 
         //City
         ArrayList<String> tempCityList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.city_list)));
-        tempCityList.add(0," ");
+        tempCityList.add(0,"");
         ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item,tempCityList);
         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -221,7 +221,7 @@ public class Main extends Fragment {
 
         //Type
         ArrayList<String> tempTypeList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.type_list)));
-        tempTypeList.add(0," ");
+        tempTypeList.add(0,"");
         ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item,
                 tempTypeList);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -394,8 +394,7 @@ public class Main extends Fragment {
                         /*for(Users user:userList)
                             Log.v("Main:","user: "+user.getFirstName());*/
 
-                        // TODO: Implement Love here
-                        //holder.Love
+
 
                         holder.ratingService.setText("("+tempUser.getRateService()+"/5)");
                         holder.ratingPrice.setText("("+tempUser.getRatePrice()+"/5)");
@@ -403,6 +402,8 @@ public class Main extends Fragment {
                         //add by nimer esam :
                         //To make call when user click on call text :
 
+                        // TODO: Implement Love here
+                        //holder.Love
                         final String phoneNumber = tempUser.getPhone();
                         holder.callText.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -517,7 +518,7 @@ public class Main extends Fragment {
                         // sort desc again
                         SortByTimeStampDesc(offerList);
                         offerAdapter.notifyDataSetChanged();
-
+                        listView.smoothScrollToPosition(0);
                     }
 
                     @Override
