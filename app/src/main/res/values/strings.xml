@@ -61,6 +61,8 @@
     <string name="main_order_city">Order by city</string>
     <string name="main_order_type">Order by type</string>
 
+    <string name="user_information_title">Profile</string>
+
 
     <!-- shared by layouts -->
     <string name="layout_button_save">save</string>

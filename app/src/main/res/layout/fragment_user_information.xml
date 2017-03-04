@@ -13,7 +13,7 @@
     <View
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:background="#ccc1c1c1"
+        android:background="#cc282828"
         android:layout_marginTop="@dimen/views_margin_xl" />
 
     <!-- TODO: Update blank fragment layout -->
@@ -42,15 +42,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/user_information_name"
-            android:textColor="#ccc1c1c1"
+            android:textColor="#cc101010"
             android:layout_below="@+id/user_information_img"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:textAlignment="center"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat"
-            android:textStyle="normal|bold"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:textStyle="normal|bold" />
 
         <TextView
             android:text="Age : "
@@ -63,9 +63,8 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:textAlignment="center"
-            android:paddingBottom="5dp"
             android:paddingTop="15dp"
-            android:textColor="#ccc1c1c1"
+            android:textColor="#cc101010"
             android:gravity="center"/>
 
         <TextView
@@ -77,7 +76,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:textColor="#ccc1c1c1"
+            android:textColor="#cc101010"
             android:paddingBottom="10dp"
             android:gravity="center"/>
 
@@ -85,7 +84,7 @@
         <View
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:background="#ccc1c1c1"
+            android:background="#cc282828"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
@@ -96,7 +95,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/user_information_more"
-            android:textColor="@android:color/holo_blue_dark"
+            android:textColor="#cc008cff"
             android:layout_below="@+id/user_information_city"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
@@ -104,7 +103,25 @@
             android:gravity="center"
             android:layout_marginBottom="@dimen/views_button_margin"
             android:layout_marginTop="@dimen/views_button_margin"
-            android:textAllCaps="true" />
+            android:textAllCaps="true"
+            android:textStyle="normal|bold" />
     </LinearLayout>
+
+    <TextView
+        android:text="@string/user_information_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/textView5"
+        android:layout_marginTop="@dimen/views_margin_s"
+        android:textStyle="normal|bold"
+        android:gravity="center"
+        android:textColor="#cc101010"
+        android:drawableTint="#cc101010"
+        android:textSize="14sp"
+        android:textAllCaps="true"
+        android:drawableLeft="@drawable/ic_account_profile"
+        android:drawablePadding="@dimen/views_margin_s" />
 
 </RelativeLayout>
