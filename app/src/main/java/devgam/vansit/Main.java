@@ -1,7 +1,9 @@
 package devgam.vansit;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -9,8 +11,8 @@ import android.os.Bundle;
 
 import android.os.Handler;
 import android.os.Vibrator;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -36,6 +38,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Users;
@@ -46,8 +51,7 @@ public class Main extends Fragment {
         // Required empty public constructor
     }
 
-    private DatabaseReference DataBaseRoot;
-    private FirebaseAuth firebaseAuth;
+
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
 
     private ListView listView;
@@ -55,13 +59,17 @@ public class Main extends Fragment {
     private ArrayList<Users> userList;// to match offer with the user it has, we are filling in inside the getView
     private ArrayAdapter offerAdapter;
     private static int listCounter = 5;
+    private static final int listCounterOriginal = listCounter;
+    private static final int recentOfferCounter = 20;
+
 
     private Spinner spinnerCity,spinnerType;
-    private static String whichCity;// to give it a new value in a spinner to fetch new items
-    private static String whichType;// to give it a new value in a spinner to fetch new items
+    private static String whichCity="";// to give it a new value in a spinner to fetch new items
+    private static String whichType="";// to give it a new value in a spinner to fetch new items
     private static String allCities[];//this will contain the values that are in strings.xml
     private static String allTypes[];//this will contain the values that are in strings.xml, used inside the getView to choose icon for type
-    private ArrayAdapter<CharSequence> cityAdapter, typeAdapter;
+
+    //Long StartTime;
 
 
     @Override
@@ -81,10 +89,9 @@ public class Main extends Fragment {
     public void onResume()
     {
         super.onResume();
+        //StartTime= System.currentTimeMillis();
         allCities = getResources().getStringArray(R.array.city_list);
         allTypes = getResources().getStringArray(R.array.type_list);
-        whichCity = allCities[0];//default value
-        whichType = allTypes[0];//default value
 
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);// we should show this when he is logged
         if(Util.isLogged())
@@ -105,7 +112,7 @@ public class Main extends Fragment {
             fab.setVisibility(View.GONE);
         }
 
-        DataBaseRoot = FirebaseDatabase.getInstance().getReference();//connect to DB root
+
         fragmentManager  = getActivity().getSupportFragmentManager();
 
 
@@ -126,18 +133,18 @@ public class Main extends Fragment {
                             bundle.putSerializable("userDriver",user);
 
                     offerInfoPage.setArguments(bundle);
-                    Log.v("Main","Sending to OfferInfo: "+offerList.get(position).getTitle());
+                    //Log.v("Main","Sending to OfferInfo: "+offerList.get(position).getTitle());
 
                     Util.ChangeFrag(offerInfoPage,fragmentManager);
                 }
         });
 
-        ShowMoreBtn(listView);
-        offerAdapter = new itemsAdapter(getContext());
+        DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference().child(Util.RDB_USERS);
+        offerAdapter = new itemsAdapter(getContext(),DataBaseRoot);
         offerList = new ArrayList<>();
         userList = new ArrayList<>();
 
-        spinnerCity = (Spinner) getActivity().findViewById(R.id.frag_main_spinCity);
+        spinnerCity = (Spinner)getActivity().findViewById(R.id.frag_main_spinCity);
         spinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             boolean stopAutoFiringCode=false;
@@ -147,7 +154,7 @@ public class Main extends Fragment {
                 if(stopAutoFiringCode) {
                     whichCity = parent.getSelectedItem().toString();
                     ChangeListItems();
-                    Log.v("Main", "spinnerCity");
+                    //Log.v("Main", "spinnerCity");
                 }
                 stopAutoFiringCode = true;
             }
@@ -168,7 +175,8 @@ public class Main extends Fragment {
                 if(stopAutoFiringCode)
                 {
                     whichType = parent.getSelectedItem().toString();
-                    Log.v("Main", "spinnerType");
+                    ChangeListItems();
+                    //Log.v("Main", "spinnerType");
                 }
                 stopAutoFiringCode = true;
             }
@@ -180,10 +188,11 @@ public class Main extends Fragment {
         });
         if(!offerList.isEmpty())// if we came back to this page dont reload lists
         {
-            Log.v("Main","offerList: "+offerList);
+            //Log.v("Main","offerList: "+offerList);
 
         }else
         {
+            //Log.v("Main","offerList:isEmpty()");
             FillSpinnersAndListView();//To fill City and Type Spinners, And a default Filling of the List View.
         }
 
@@ -193,46 +202,79 @@ public class Main extends Fragment {
     }
     private void FillSpinnersAndListView()
     {
+
         // must check for internet
         if(!Util.IS_USER_CONNECTED)
         {
             // show msg
             return;
         }
-        DatabaseReference mRef = DataBaseRoot.child(Util.RDB_COUNTRY+"/"+Util.RDB_JORDAN);
 
         //City
-        ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_spinner_item,
-                getResources().getStringArray(R.array.city_list));
+        ArrayList<String> tempCityList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.city_list)));
+        tempCityList.add(0," ");
+        ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_item,tempCityList);
         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         spinnerCity.setAdapter(cityAdapter);
 
         //Type
-        ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_spinner_item,
-                getResources().getStringArray(R.array.type_list));
+        ArrayList<String> tempTypeList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.type_list)));
+        tempTypeList.add(0," ");
+        ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item,
+                tempTypeList);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerType.setAdapter(typeAdapter);
 
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(),ProgressDialog.STYLE_SPINNER);
+        Util.ProgDialogStarter(progressDialog,"Loading...");
+
         //Initial Filling of ListView, default
 
-        Query query = DataBaseRoot.child(Util.RDB_COUNTRY+"/"+
-                Util.RDB_JORDAN+"/"+
-                whichCity+"/"+
-                Util.RDB_OFFERS).orderByChild(Util.RDB_TYPE).
-                equalTo(whichType).limitToFirst(listCounter);
+        DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference()
+                .child(Util.RDB_COUNTRY +"/"+ Util.RDB_JORDAN);
+        Query query = DataBaseRoot;
         ValueEventListener QVEL= new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
-                for (DataSnapshot areaSnapshot: dataSnapshot.getChildren())
+
+                for(DataSnapshot cityRoot : dataSnapshot.getChildren())
                 {
-                    Offers tempOffer = areaSnapshot.getValue(Offers.class);
-                    tempOffer.setOfferKey(areaSnapshot.getKey());
-                    offerList.add(tempOffer);
+                    for (DataSnapshot offerRoot : cityRoot.getChildren())
+                    {
+                        for (DataSnapshot everyOffer : offerRoot.getChildren())
+                        {
+
+                            Offers tempOffer = everyOffer.getValue(Offers.class);
+                            tempOffer.setOfferKey(everyOffer.getKey());
+                            offerList.add(tempOffer);
+                        }
+                    }
                 }
+                // sort them by time desc
+                SortByTimeStampDesc(offerList);
+
+                if(offerList.size()>=recentOfferCounter)
+                {
+                    //Log.v("Main","offerList.size:"+offerList.size());
+                    for(int index =offerList.size()-1; index>=recentOfferCounter; index--)
+                    {
+
+                        //Log.v("Main","index:"+index);
+                        //Log.v("Main","removed:"+offerList.get(index).getTitle());
+                        offerList.remove(index);
+                    }
+
+                }
+
+
+                /*for (Offers offer: offerList)
+                    Log.v("Main","offerList:"+offer.getTitle());*/
+
                 listView.setAdapter(offerAdapter);
+                Util.ProgDialogDelay(progressDialog,1000L);
             }
             @Override
             public void onCancelled(DatabaseError databaseError)
@@ -254,14 +296,15 @@ public class Main extends Fragment {
         {
             return;
         }
-
-        listCounter = 1;//reset
+        ShowMoreBtn(listView);
+        listCounter = listCounterOriginal;//reset
         offerList.clear();
-
-        Query query = DataBaseRoot.child(Util.RDB_COUNTRY+"/"+
-                Util.RDB_JORDAN+"/"+
-                whichCity+"/"+
-                Util.RDB_OFFERS).orderByChild(Util.RDB_TYPE).equalTo(whichType).limitToFirst(listCounter);
+        DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference()
+                .child(Util.RDB_COUNTRY+"/"+
+                        Util.RDB_JORDAN+"/"+
+                        whichCity+"/"+
+                        Util.RDB_OFFERS);
+        Query query = DataBaseRoot.orderByChild(Util.RDB_TYPE).equalTo(whichType).limitToFirst(listCounter);
         ValueEventListener QVEL= new ValueEventListener()
         {
             @Override
@@ -273,6 +316,9 @@ public class Main extends Fragment {
                     tempOffer.setOfferKey(areaSnapshot.getKey());
                     offerList.add(tempOffer);
                 }
+
+                // sort desc
+                SortByTimeStampDesc(offerList);
                 listView.setAdapter(offerAdapter);
             }
 
@@ -287,10 +333,12 @@ public class Main extends Fragment {
 
     private class itemsAdapter extends ArrayAdapter<Offers> {
         Context context;
-        itemsAdapter(Context c)
+        DatabaseReference databaseReference;
+        itemsAdapter(Context c,DatabaseReference databaseReference)
         {
             super(c, R.layout.fragment_main_listview_items, offerList);
             this.context = c;
+            this.databaseReference = databaseReference;
         }
 
 
@@ -323,8 +371,8 @@ public class Main extends Fragment {
             holder.loveText = (Button) rowItem.findViewById(R.id.main_items_love_text);
             holder.profileText = (Button) rowItem.findViewById(R.id.main_items_profile_text);
             holder.callText = (Button) rowItem.findViewById(R.id.main_items_call_text);
+            Query query = databaseReference.child(tempOffer.getUserID());
 
-            DatabaseReference query = DataBaseRoot.child(Util.RDB_USERS+"/"+tempOffer.getUserID());
             ValueEventListener VEL = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot)
@@ -346,6 +394,9 @@ public class Main extends Fragment {
                         /*for(Users user:userList)
                             Log.v("Main:","user: "+user.getFirstName());*/
 
+                        // TODO: Implement Love here
+                        //holder.Love
+
                         holder.ratingService.setText("("+tempUser.getRateService()+"/5)");
                         holder.ratingPrice.setText("("+tempUser.getRatePrice()+"/5)");
 
@@ -365,18 +416,13 @@ public class Main extends Fragment {
                         holder.profileText.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                userInformation userIn = new userInformation(getActivity(),
-                                        tempUser.getFirstName() + " " + tempUser.getLastName(),
-                                        tempUser.getDateYear(),
-                                        tempUser.getDateMonth(),
-                                        tempUser.getCity(),
-                                        tempUser.getGender(),
-                                        getFragmentManager());
+                                userInformation userIn = new userInformation(getActivity(),tempUser, fragmentManager);
                                 userIn.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                 userIn.show();
 
                             }
                         });
+
                     }
                     else {
                         //Log.v("Main:","==null");
@@ -409,7 +455,7 @@ public class Main extends Fragment {
 
     static class ViewHolder {
         // this class is called in getView and assigned it all "items" layouts Views,for smooth scrolling
-        TextView Title, City, ratingService, ratingPrice;
+        TextView Title, City, ratingService, ratingPrice, Love, Profile, Call;
         ImageView typeIcon;
 
         //add by nimer esam for buttons :
@@ -421,7 +467,6 @@ public class Main extends Fragment {
     {
         if(listView==null)
             return;
-
         if(listView.getFooterViewsCount()>=1)// prevent duplications for show more button
             return;
 
@@ -436,11 +481,12 @@ public class Main extends Fragment {
             @Override
             public void onClick(View v)
             {
-                listCounter +=1;
-                Query query = DataBaseRoot.child(Util.RDB_COUNTRY+"/"+
+                listCounter +=listCounterOriginal;
+                DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference().child(Util.RDB_COUNTRY+"/"+
                         Util.RDB_JORDAN+"/"+
                         whichCity+"/"+
-                        Util.RDB_OFFERS).orderByChild(Util.RDB_TYPE).equalTo(whichType).limitToFirst(listCounter);
+                        Util.RDB_OFFERS);
+                Query query = DataBaseRoot.orderByChild(Util.RDB_TYPE).equalTo(whichType).limitToFirst(listCounter);
                 ValueEventListener QVEL= new ValueEventListener()
                 {
                     @Override
@@ -468,7 +514,8 @@ public class Main extends Fragment {
 
 
                         }
-
+                        // sort desc again
+                        SortByTimeStampDesc(offerList);
                         offerAdapter.notifyDataSetChanged();
 
                     }
@@ -492,6 +539,21 @@ public class Main extends Fragment {
     {
         return ContextCompat.getDrawable(getActivity().getApplicationContext(), resID);//context.compat checks the version implicitly
     }
+    private void SortByTimeStampDesc(ArrayList<Offers> arrayToSort)
+    {
+        //Log.v("Main","Before Sorting:"+ System.currentTimeMillis()/1000);
+        Collections.sort(arrayToSort, new Comparator<Offers>() {
+            @Override
+            public int compare(Offers o1, Offers o2) {
+                return o1.getTimeStamp().compareTo(o2.getTimeStamp());
+            }
+        });
 
+        Collections.reverse(arrayToSort);
 
+        /*for(int i = 0;i<offerList.size();i++)
+            Log.v("Main","index: "+i+"|| offer:"+offerList.get(i).getTitle());*/
+        //Log.v("Main","Started at: "+StartTime/1000);
+        //Log.v("Main","Finished Sorting at:"+ System.currentTimeMillis()/1000);
+    }
 }

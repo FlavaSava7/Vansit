@@ -6,6 +6,8 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.util.DebugUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -25,8 +27,9 @@ public class userInformation extends Dialog implements
     ImageView userImg;
     String tempUserName, tempUserAgeYear, tempUserAgeMonth, tempUserCity, tempUserGender;
 
-    // A.J.I. : to get the user offers for MoreOffers Page ( this var. is used in onClick )
-    FragmentManager tempFragmentManager;// i cant get this from this activity dialog , i need to have it in your constructor
+
+    FragmentManager tempFragmentManager;
+    Users tempUserDriver;//used for the above strings inside constructor and for onClick.
 
     public userInformation(Activity activity)
     {
@@ -35,16 +38,19 @@ public class userInformation extends Dialog implements
         this.c = activity;
     }
 
-    public userInformation(Activity activity, String name, String year, String month, String city, String gender,
-                           FragmentManager fragmentManager){
+    public userInformation(Activity activity, Users userDriver, FragmentManager fragmentManager){
         super(activity);
         // Required empty public constructor
         this.c = activity;
-        this.tempUserName = name;
-        this.tempUserAgeYear = year;
-        this.tempUserAgeMonth = month;
-        this.tempUserCity = city;
-        this.tempUserGender = gender;
+
+        this.tempUserDriver = userDriver;
+
+        this.tempUserName = userDriver.getFirstName()+" "+userDriver.getLastName();
+        this.tempUserAgeYear = userDriver.getDateYear();
+        this.tempUserAgeMonth = userDriver.getDateMonth();
+        this.tempUserCity = userDriver.getCity();
+        this.tempUserGender = userDriver.getGender();
+
         this.tempFragmentManager = fragmentManager;
     }
 
@@ -98,6 +104,7 @@ public class userInformation extends Dialog implements
     {
         MoreOffers moreOffersPage = new MoreOffers();
         Bundle bundle = new Bundle();
+        bundle.putSerializable("userDriver",tempUserDriver);
         moreOffersPage.setArguments(bundle);
         this.hide();
         Util.ChangeFrag(moreOffersPage,tempFragmentManager);

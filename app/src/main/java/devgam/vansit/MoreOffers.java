@@ -1,6 +1,8 @@
 package devgam.vansit;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,8 +29,16 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Users;
@@ -44,8 +54,9 @@ public class MoreOffers extends Fragment {
     private ArrayList<Offers> offerList;// this will be refilled with Offers each time a user change City Filter
     private ArrayAdapter offerAdapter;
 
+    Users userDriver = null;
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
-    DatabaseReference DataBaseRoot;
+
     public MoreOffers() {
         // Required empty public constructor
     }
@@ -58,11 +69,11 @@ public class MoreOffers extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-       /* Bundle bundle = this.getArguments();
+        Bundle bundle = this.getArguments();
         if (bundle != null)
         {
-            userKey = bundle.getString("userKey");
-        }*/
+            userDriver = (Users) bundle.getSerializable("userDriver");
+        }
         return inflater.inflate(R.layout.fragment_more_offers, container, false);
     }
 
@@ -82,8 +93,6 @@ public class MoreOffers extends Fragment {
         listView = (ListView) getActivity().findViewById(R.id.moreOffers_offersList);
         offerAdapter = new itemsAdapter(getContext());
         offerList = new ArrayList<>();
-
-        DataBaseRoot = FirebaseDatabase.getInstance().getReference();//connect to DB root
         fragmentManager = getActivity().getSupportFragmentManager();
 
         setUpInfo();
@@ -98,25 +107,70 @@ public class MoreOffers extends Fragment {
             // error msg
             return;
         }
-        Query query = DataBaseRoot.child(Util.RDB_COUNTRY+"/"+Util.RDB_JORDAN);// not efficient
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(),ProgressDialog.STYLE_SPINNER);
+        Util.ProgDialogStarter(progressDialog,"Loading...");
+
+        if (userDriver.getGender().equals("male"))
+            userImage.setImageResource(R.drawable.ic_user_male);
+        else
+            userImage.setImageResource(R.drawable.ic_user_female);
+
+        userName.setText(userDriver.getFirstName()+" "+userDriver.getLastName());
+
+        int age =  Util.yearNow - Integer.parseInt(userDriver.getDateYear()) ;
+        age = (Util.monthNow > Integer.parseInt(userDriver.getDateMonth()) ? age : age -1 );
+        userAge.setText("Age is " + age + " years old");
+
+        userCity.setText("City: " + userDriver.getCity());
+
+        userPhone.setText("Phone: "+ userDriver.getPhone());
+        userPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:"+userDriver.getPhone()));
+                startActivity(intent);
+            }
+        });
+
+
+        DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference()
+                .child(Util.RDB_COUNTRY+"/"+Util.RDB_JORDAN);
+
+        Query query = DataBaseRoot;
         ValueEventListener QVEL= new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
-                Log.v("Main","TYPE IS: "+dataSnapshot.getClass().toString());
-                /*
-
-
-                for (DataSnapshot areaSnapshot: dataSnapshot.getChildren())
+                for(DataSnapshot cityRoot : dataSnapshot.getChildren())
                 {
+                    for(DataSnapshot offerRoot : cityRoot.getChildren())
+                    {
+                        for(DataSnapshot everyOffer : offerRoot.getChildren())
+                        {
+                            //Log.v("Main","Key:"+it3.getKey());
+                            Offers tempOffer = everyOffer.getValue(Offers.class);
+                            tempOffer.setOfferKey(everyOffer.getKey());
 
-                    Offers tempOffer = areaSnapshot.getValue(Offers.class);
-                    tempOffer.setOfferKey(areaSnapshot.getKey());
-                    offerList.add(tempOffer);
+                            boolean toAdd=true;
+                            for(Offers offer:offerList)
+                                if(offer.getOfferKey().equals(tempOffer.getOfferKey()))
+                                    toAdd=false;
+
+                            if(toAdd)
+                                if(tempOffer.getUserID().equals(userDriver.getUserKey()))
+                                    offerList.add(tempOffer);
+                        }
+                    }
                 }
-                listView.setAdapter(offerAdapter);
-                */
 
+                for(Offers offer : offerList)
+                {
+                    Log.v("Main", "offerList for this user: " + offer.getOfferKey());
+                }
+                SortByTimeStampDesc(offerList);
+                listView.setAdapter(offerAdapter);
+                Util.ProgDialogDelay(progressDialog,1000L);
             }
             @Override
             public void onCancelled(DatabaseError databaseError)
@@ -133,15 +187,15 @@ public class MoreOffers extends Fragment {
             {
                 // click to go to offerinfo page
 
-                /*OfferInfo offerInfoPage = new OfferInfo();
+                OfferInfo offerInfoPage = new OfferInfo();
                 Bundle bundle = new Bundle();
 
                 bundle.putSerializable("userOffer",offerList.get(position));
                 bundle.putSerializable("userDriver",userDriver);
                 offerInfoPage.setArguments(bundle);
-                Log.v("Main","Sending to OfferInfo: "+offerList.get(position).getTitle());
+                //Log.v("Main","Sending to OfferInfo: "+offerList.get(position).getTitle());
 
-                Util.ChangeFrag(offerInfoPage,fragmentManager);*/
+                Util.ChangeFrag(offerInfoPage,fragmentManager);
             }
         });
     }
@@ -165,13 +219,13 @@ public class MoreOffers extends Fragment {
 
             Offers tempOffer = offerList.get(position);
 
-            holder.Title = (TextView) rowItem.findViewById(R.id.main_items_TitleData);
+            holder.Title = (TextView) rowItem.findViewById(R.id.moreOffers_items_TitleData);
             holder.Title.setText(tempOffer.getTitle());
 
-            holder.City = (TextView) rowItem.findViewById(R.id.main_items_cityData);
+            holder.City = (TextView) rowItem.findViewById(R.id.moreOffers_items_cityData);
             holder.City.setText(tempOffer.getCity());
 
-            holder.typeIcon = (ImageView) rowItem.findViewById(R.id.main_items_typeIcon);
+            holder.typeIcon = (ImageView) rowItem.findViewById(R.id.moreOffers_items_typeIcon);
             switch(tempOffer.getType())
             {
                 case "Car":holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.car));break;
@@ -204,5 +258,21 @@ public class MoreOffers extends Fragment {
     private Drawable getDrawableResource(int resID)//used in list view to set icons to rows
     {
         return ContextCompat.getDrawable(getActivity().getApplicationContext(), resID);//context.compat checks the version implicitly
+    }
+    private void SortByTimeStampDesc(ArrayList<Offers> arrayToSort)
+    {
+        Collections.sort(arrayToSort, new Comparator<Offers>() {
+            @Override
+            public int compare(Offers o1, Offers o2) {
+                return o1.getTimeStamp().compareTo(o2.getTimeStamp());
+            }
+        });
+
+        Collections.reverse(arrayToSort);
+
+        /*for(int i = 0;i<offerList.size();i++)
+            Log.v("Main","index: "+i+"|| offer:"+offerList.get(i).getTimeStamp());*/
+
+
     }
 }
