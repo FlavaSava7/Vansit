@@ -3,20 +3,15 @@ package devgam.vansit;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-
-import android.os.Handler;
-import android.os.Vibrator;
-import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,19 +23,17 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Set;
 
 import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Users;
@@ -69,6 +62,11 @@ public class Main extends Fragment {
     private static String allCities[];//this will contain the values that are in strings.xml
     private static String allTypes[];//this will contain the values that are in strings.xml, used inside the getView to choose icon for type
 
+    //Shared Prferance to add offer to favorite list
+    static SharedPreferences userFavoriteOffers;
+    static SharedPreferences.Editor userFavoriteEditor;
+    static int userFavoriteCount;
+
     //Long StartTime;
 
 
@@ -92,6 +90,14 @@ public class Main extends Fragment {
         //StartTime= System.currentTimeMillis();
         allCities = getResources().getStringArray(R.array.city_list);
         allTypes = getResources().getStringArray(R.array.type_list);
+
+        //shared preferance initialize :
+        userFavoriteOffers = getContext().getSharedPreferences("userFavoriteOffers", Context.MODE_PRIVATE);
+        /*userFavoriteOffersId = getContext().getSharedPreferences("userFavoriteOffersId", Context.MODE_PRIVATE);
+        userFavoriteCount = getContext().getSharedPreferences("userFavoriteCount", Context.MODE_PRIVATE);
+        userFavoriteEditor = userFavoriteOffersCity.edit();
+        userFavoriteEditor = userFavoriteOffersId.edit();*/
+        userFavoriteEditor = userFavoriteOffers.edit();
 
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);// we should show this when he is logged
         if(Util.isLogged())
@@ -195,11 +201,9 @@ public class Main extends Fragment {
             //Log.v("Main","offerList:isEmpty()");
             FillSpinnersAndListView();//To fill City and Type Spinners, And a default Filling of the List View.
         }
-
-
-
-
     }
+
+
     private void FillSpinnersAndListView()
     {
 
@@ -284,21 +288,21 @@ public class Main extends Fragment {
         query.addListenerForSingleValueEvent(QVEL);
     }
 
-    public void ChangeListItems()
-    {
+    public void ChangeListItems() {
         // every time the spinner values change , update list
         //must AUTO input the city of the User
         //must check for internet
 
-        if(whichCity.isEmpty()|| whichCity.equals("")
-                ||
-                whichType.isEmpty()|| whichType.equals("") )
-        {
+        if(whichCity.isEmpty()|| whichCity.equals("") ||
+                whichType.isEmpty()|| whichType.equals("") ) {
             return;
         }
+
         ShowMoreBtn(listView);
+
         listCounter = listCounterOriginal;//reset
         offerList.clear();
+
         DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference()
                 .child(Util.RDB_COUNTRY+"/"+
                         Util.RDB_JORDAN+"/"+
@@ -332,10 +336,11 @@ public class Main extends Fragment {
 
 
     private class itemsAdapter extends ArrayAdapter<Offers> {
+
         Context context;
         DatabaseReference databaseReference;
-        itemsAdapter(Context c,DatabaseReference databaseReference)
-        {
+
+        itemsAdapter(Context c,DatabaseReference databaseReference) {
             super(c, R.layout.fragment_main_listview_items, offerList);
             this.context = c;
             this.databaseReference = databaseReference;
@@ -357,6 +362,7 @@ public class Main extends Fragment {
             holder.City.setText(tempOffer.getCity());
 
             holder.typeIcon = (ImageView) rowItem.findViewById(R.id.main_items_typeIcon);
+
             switch(tempOffer.getType()) {
                 case "Car":holder.typeIcon.setImageDrawable(getDrawableResource(R.mipmap.ic_type_car));break;
                 case "Bus":holder.typeIcon.setImageDrawable(getDrawableResource(R.mipmap.ic_type_bus));break;
@@ -391,8 +397,6 @@ public class Main extends Fragment {
                         if(toAdd)
                             userList.add(tempUser);
 
-                        /*for(Users user:userList)
-                            Log.v("Main:","user: "+user.getFirstName());*/
 
                         // TODO: Implement Love here
                         //holder.Love
@@ -413,15 +417,33 @@ public class Main extends Fragment {
                             }
                         });
 
+                        final userInformation userIn = new userInformation(getActivity(),tempUser, fragmentManager);
                         holder.profileText.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                userInformation userIn = new userInformation(getActivity(),tempUser, fragmentManager);
                                 userIn.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                 userIn.show();
+                            }
+                        });
+
+
+                        final String offerCity = tempOffer.getCity();
+                        final String offerId = tempOffer.getOfferKey();
+                        holder.loveText.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                //to add +1 for numbers of favorite list
+                                //use method because inside listener can't use non-final vars
+                                addCount();
+                                Util.makeToast(getContext(), offerId);
+                                Util.makeToast(getContext(), offerCity);
+                                Util.makeToast(getContext(), userFavoriteCount+"");
+                                addToFavoriteList(offerId, offerCity, userFavoriteCount);
 
                             }
                         });
+
+
 
                     }
                     else {
@@ -535,12 +557,13 @@ public class Main extends Fragment {
 
     }
 
-    private Drawable getDrawableResource(int resID)//used in list view to set icons to rows
-    {
+    //used in list view to set icons to rows
+
+    private Drawable getDrawableResource(int resID) {
         return ContextCompat.getDrawable(getActivity().getApplicationContext(), resID);//context.compat checks the version implicitly
     }
-    private void SortByTimeStampDesc(ArrayList<Offers> arrayToSort)
-    {
+
+    private void SortByTimeStampDesc(ArrayList<Offers> arrayToSort) {
         //Log.v("Main","Before Sorting:"+ System.currentTimeMillis()/1000);
         Collections.sort(arrayToSort, new Comparator<Offers>() {
             @Override
@@ -556,4 +579,19 @@ public class Main extends Fragment {
         //Log.v("Main","Started at: "+StartTime/1000);
         //Log.v("Main","Finished Sorting at:"+ System.currentTimeMillis()/1000);
     }
+
+    static void addToFavoriteList(String offerId, String offerCity, int number){
+        userFavoriteEditor.putString("city" + number, offerCity );
+        userFavoriteEditor.putString("id" + number, offerId );
+        userFavoriteEditor.commit();
+    }
+
+    private static void addCount(){
+        userFavoriteCount++;
+    }
+
+
+
+
+
 }

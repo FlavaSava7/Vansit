@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="devgam.vansit.Main">
+    tools:context="devgam.vansit.Main"
+    android:background="#E0E0E0">
 
     <LinearLayout
         android:orientation="horizontal"
