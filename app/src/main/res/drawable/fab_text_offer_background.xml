@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <solid android:color="@color/fab_add_offer"/>
+
+    <padding android:bottom="@dimen/views_top_margin"
+        android:left="@dimen/fab_margin"
+        android:right="@dimen/fab_margin"
+        android:top="@dimen/views_top_margin" />
+
+    <corners android:radius="@dimen/views_top_margin" />
+
+</shape>

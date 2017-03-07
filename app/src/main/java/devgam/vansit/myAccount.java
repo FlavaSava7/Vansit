@@ -71,9 +71,9 @@ public class myAccount extends Fragment implements View.OnClickListener{
     public void onResume() {
         super.onResume();
         // A.J.I. : Hide Fab
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        if(fab!=null)
-            fab.setVisibility(View.GONE);
+        //FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        //if(fab!=null)
+            //fab.setVisibility(View.GONE);
 
         //Views initialize
         firstNameEdit = (EditText) getActivity().findViewById(R.id.my_account_firstName_edit);
@@ -102,7 +102,7 @@ public class myAccount extends Fragment implements View.OnClickListener{
         });
 
         //shared preferance initialize :
-        userData = getContext().getSharedPreferences("Vansit user Data", Context.MODE_PRIVATE);
+        userData = getContext().getSharedPreferences("userData", Context.MODE_PRIVATE);
         userDataEditor = userData.edit();
 
         //get data from shared to fill views :
@@ -221,7 +221,6 @@ public class myAccount extends Fragment implements View.OnClickListener{
 
     //Created by Nimer Esam to set user data in shared preference
     private void setUserData(Users users){
-
         userDataEditor.putString(Util.FIRST_NAME, users.getFirstName());
         userDataEditor.putString(Util.LAST_NAME, users.getLastName());
         userDataEditor.putString(Util.PHONE, users.getPhone());

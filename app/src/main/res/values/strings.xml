@@ -60,7 +60,8 @@
     
     <string name="main_order_city">Order by city</string>
     <string name="main_order_type">Order by type</string>
-
+    <string name="main_fab_text_add_request">add request</string>
+    <string name="main_fab_text_add_offer">add offer</string>
     <string name="user_information_title">Profile</string>
 
 

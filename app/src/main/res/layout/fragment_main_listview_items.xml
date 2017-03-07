@@ -50,7 +50,8 @@
                     app:srcCompat="@drawable/common_google_signin_btn_icon_dark"
                     android:id="@+id/main_items_typeIcon"
                     android:layout_marginTop="@dimen/views_top_margin"
-                    android:layout_marginLeft="@dimen/views_button_margin" />
+                    android:layout_marginLeft="@dimen/views_button_margin"
+                    android:layout_marginRight="@dimen/views_top_margin" />
 
                 <LinearLayout
                     android:orientation="vertical"

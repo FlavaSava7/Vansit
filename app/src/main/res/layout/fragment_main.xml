@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="devgam.vansit.Main">
+    tools:context="devgam.vansit.Main"
+    android:background="#E0E0E0">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -102,10 +103,86 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/fab_margin"
+            android:layout_marginBottom="@dimen/fab_margin"
+            android:layout_marginRight="@dimen/fab_margin"
             app:srcCompat="@drawable/ic_fab_add"
-            android:id="@+id/fab"
+            android:id="@+id/add_fab"
+            app:pressedTranslationZ="@dimen/views_top_margin"
+
             />
+
+        <LinearLayout
+            android:id="@+id/fab_add_offer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom|end"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/fab_add_offer_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_marginRight="@dimen/fab_margin"
+                android:layout_marginBottom="@dimen/text_fab_margin2"
+                android:text="@string/main_fab_text_add_offer"
+                android:visibility="invisible"
+                android:textAllCaps="true"
+                android:background="@drawable/fab_text_offer_background"
+                android:padding="@dimen/views_margin_s"
+                android:textColor="@color/cardview_light_background"
+                android:textStyle="normal|bold"
+                android:gravity="center_vertical" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_marginRight="@dimen/fab_margin"
+                android:layout_marginBottom="@dimen/fab_margin3"
+                app:srcCompat="@drawable/ic_add_offer"
+                android:id="@+id/fab_add_offer"
+                app:pressedTranslationZ="@dimen/views_top_margin"
+                app:backgroundTint="@color/fab_add_offer"
+                android:visibility="invisible"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/fab_add_request_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom|end"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/fab_add_request_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_marginRight="@dimen/fab_margin"
+                android:layout_marginBottom="@dimen/text_fab_margin"
+                android:text="@string/main_fab_text_add_request"
+                android:visibility="invisible"
+                android:textAllCaps="true"
+                android:background="@drawable/fab_text_request_background"
+                android:padding="@dimen/views_margin_s"
+                android:textColor="@color/cardview_light_background"
+                android:textStyle="normal|bold"
+                android:gravity="center_vertical" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_marginRight="@dimen/fab_margin"
+                android:layout_marginBottom="@dimen/fab_margin2"
+                app:srcCompat="@drawable/ic_add_request"
+                android:id="@+id/fab_add_request"
+                app:pressedTranslationZ="@dimen/views_top_margin"
+                app:backgroundTint="@color/fab_add_request"
+                android:visibility="invisible" />
+        </LinearLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 

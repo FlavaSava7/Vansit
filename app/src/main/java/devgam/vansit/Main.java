@@ -3,40 +3,36 @@ package devgam.vansit;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-
-import android.os.Handler;
-import android.os.Vibrator;
-import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.DrawerLayout;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -54,6 +50,11 @@ public class Main extends Fragment {
 
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
 
+    FloatingActionButton addFab, addOffer, addRequest;
+    Animation fabOpen, fabClose, fabClockWise, fabAntiClockWise;
+    TextView addOfferText, addRequestText;
+    boolean isFloatingActionOpen = false;
+
     private ListView listView;
     private ArrayList<Offers> offerList;// this will be refilled with Offers each time a user change City Filter
     private ArrayList<Users> userList;// to match offer with the user it has, we are filling in inside the getView
@@ -68,6 +69,11 @@ public class Main extends Fragment {
     private static String whichType="";// to give it a new value in a spinner to fetch new items
     private static String allCities[];//this will contain the values that are in strings.xml
     private static String allTypes[];//this will contain the values that are in strings.xml, used inside the getView to choose icon for type
+
+    //Shared Prferance to add offer to favorite list
+    static SharedPreferences userFavoriteOffers;
+    static SharedPreferences.Editor userFavoriteEditor;
+    static int userFavoriteCount = 0;
 
     //Long StartTime;
 
@@ -93,24 +99,80 @@ public class Main extends Fragment {
         allCities = getResources().getStringArray(R.array.city_list);
         allTypes = getResources().getStringArray(R.array.type_list);
 
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);// we should show this when he is logged
-        if(Util.isLogged())
-        {
-            fab.setVisibility(View.VISIBLE);
-            fab.setOnClickListener(new View.OnClickListener()
+        //shared preferance initialize :
+        userFavoriteOffers = getContext().getSharedPreferences("userFavoriteOffers", Context.MODE_PRIVATE);
+        /*userFavoriteOffersId = getContext().getSharedPreferences("userFavoriteOffersId", Context.MODE_PRIVATE);
+        userFavoriteCount = getContext().getSharedPreferences("userFavoriteCount", Context.MODE_PRIVATE);
+        userFavoriteEditor = userFavoriteOffersCity.edit();
+        userFavoriteEditor = userFavoriteOffersId.edit();*/
+        userFavoriteEditor = userFavoriteOffers.edit();
+
+        addFab = (FloatingActionButton) getActivity().findViewById(R.id.add_fab);// we should show this when he is logged
+        addOffer = (FloatingActionButton) getActivity().findViewById(R.id.fab_add_offer);
+        addRequest = (FloatingActionButton) getActivity().findViewById(R.id.fab_add_request);
+
+        addOfferText = (TextView) getActivity().findViewById(R.id.fab_add_offer_text);
+        addRequestText = (TextView) getActivity().findViewById(R.id.fab_add_request_text);
+
+        fabOpen = AnimationUtils.loadAnimation(getContext(), R.anim.fab_open);
+        fabClose = AnimationUtils.loadAnimation(getContext(), R.anim.fab_close);
+        fabClockWise = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_clockwise);
+        fabAntiClockWise = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_anticlockwise);
+
+        if(Util.isLogged()) {
+            addFab.setVisibility(View.VISIBLE);
+            addFab.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
                 {
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    AddOffer addOfferPage = new AddOffer();
-                    Util.ChangeFrag(addOfferPage,fragmentManager);
+                    if(isFloatingActionOpen){
+                        addFab.startAnimation(fabAntiClockWise);
+                        addRequest.startAnimation(fabClose);
+                        //addRequestText.startAnimation(fabClose);
+                        addOffer.startAnimation(fabClose);
+                        //addOfferText.startAnimation(fabClose);
+                        addRequest.setClickable(false);
+                        addOffer.setClickable(false);
+                        addRequestText.setVisibility(View.INVISIBLE);
+                        addOfferText.setVisibility(View.INVISIBLE);
+                        isFloatingActionOpen = false;
+                    }else {
+                        addFab.startAnimation(fabClockWise);
+                        addRequest.startAnimation(fabOpen);
+                        //addRequestText.startAnimation(fabOpen);
+                        addOffer.startAnimation(fabOpen);
+                        //addOfferText.startAnimation(fabClose);
+                        addRequest.setClickable(true);
+                        addOffer.setClickable(true);
+                        addRequestText.setVisibility(View.VISIBLE);
+                        addOfferText.setVisibility(View.VISIBLE);
+                        isFloatingActionOpen = true;
+                    }
                 }
             });
         }else {
             //Log.v("Main","User is not logged in ");
-            fab.setVisibility(View.GONE);
+            addFab.setVisibility(View.GONE);
         }
+
+        addOffer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                AddOffer addOfferPage = new AddOffer();
+                Util.ChangeFrag(addOfferPage, fragmentManager);
+            }
+        });
+
+        addRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                addRequest addRequestPage = new addRequest();
+                Util.ChangeFrag(addRequestPage, fragmentManager);
+            }
+        });
 
 
         fragmentManager  = getActivity().getSupportFragmentManager();
@@ -195,11 +257,9 @@ public class Main extends Fragment {
             //Log.v("Main","offerList:isEmpty()");
             FillSpinnersAndListView();//To fill City and Type Spinners, And a default Filling of the List View.
         }
-
-
-
-
     }
+
+
     private void FillSpinnersAndListView()
     {
 
@@ -284,21 +344,21 @@ public class Main extends Fragment {
         query.addListenerForSingleValueEvent(QVEL);
     }
 
-    public void ChangeListItems()
-    {
+    public void ChangeListItems() {
         // every time the spinner values change , update list
         //must AUTO input the city of the User
         //must check for internet
 
-        if(whichCity.isEmpty()|| whichCity.equals("")
-                ||
-                whichType.isEmpty()|| whichType.equals("") )
-        {
+        if(whichCity.isEmpty()|| whichCity.equals("") ||
+                whichType.isEmpty()|| whichType.equals("") ) {
             return;
         }
+
         ShowMoreBtn(listView);
+
         listCounter = listCounterOriginal;//reset
         offerList.clear();
+
         DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference()
                 .child(Util.RDB_COUNTRY+"/"+
                         Util.RDB_JORDAN+"/"+
@@ -332,10 +392,11 @@ public class Main extends Fragment {
 
 
     private class itemsAdapter extends ArrayAdapter<Offers> {
+
         Context context;
         DatabaseReference databaseReference;
-        itemsAdapter(Context c,DatabaseReference databaseReference)
-        {
+
+        itemsAdapter(Context c,DatabaseReference databaseReference) {
             super(c, R.layout.fragment_main_listview_items, offerList);
             this.context = c;
             this.databaseReference = databaseReference;
@@ -357,6 +418,7 @@ public class Main extends Fragment {
             holder.City.setText(tempOffer.getCity());
 
             holder.typeIcon = (ImageView) rowItem.findViewById(R.id.main_items_typeIcon);
+
             switch(tempOffer.getType()) {
                 case "Car":holder.typeIcon.setImageDrawable(getDrawableResource(R.mipmap.ic_type_car));break;
                 case "Bus":holder.typeIcon.setImageDrawable(getDrawableResource(R.mipmap.ic_type_bus));break;
@@ -391,8 +453,6 @@ public class Main extends Fragment {
                         if(toAdd)
                             userList.add(tempUser);
 
-                        /*for(Users user:userList)
-                            Log.v("Main:","user: "+user.getFirstName());*/
 
 
 
@@ -414,15 +474,39 @@ public class Main extends Fragment {
                             }
                         });
 
+                        final userInformation userIn = new userInformation(getActivity(),tempUser, fragmentManager);
                         holder.profileText.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                userInformation userIn = new userInformation(getActivity(),tempUser, fragmentManager);
                                 userIn.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                 userIn.show();
+                            }
+                        });
+
+
+                        final String offerCity = tempOffer.getCity();
+                        final String offerId = tempOffer.getOfferKey();
+                        holder.loveText.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                //to add +1 for numbers of favorite list
+
+                                if(getNumberOfOffer(offerId) == 0) {
+                                    //That's mean this offer not in favorite list
+                                    //use method because inside listener can't use non-final vars
+                                    userFavoriteCount++;
+                                    addToFavoriteList(offerId, offerCity, userFavoriteCount);
+                                    Util.makeToast(getContext(), getNumberOfOffer(offerId) + "");
+                                    holder.loveText.setTextColor(getResources().getColor(R.color.loveButtonColorChange));
+                                } else {
+                                    deleteFromFavoriteList(getNumberOfOffer(offerId));
+                                    holder.loveText.setTextColor(getResources().getColor(R.color.loveButtonColor));
+                                }
 
                             }
                         });
+
+
 
                     }
                     else {
@@ -456,7 +540,7 @@ public class Main extends Fragment {
 
     static class ViewHolder {
         // this class is called in getView and assigned it all "items" layouts Views,for smooth scrolling
-        TextView Title, City, ratingService, ratingPrice, Love, Profile, Call;
+        TextView Title, City, ratingService, ratingPrice;
         ImageView typeIcon;
 
         //add by nimer esam for buttons :
@@ -536,12 +620,13 @@ public class Main extends Fragment {
 
     }
 
-    private Drawable getDrawableResource(int resID)//used in list view to set icons to rows
-    {
+    //used in list view to set icons to rows
+
+    private Drawable getDrawableResource(int resID) {
         return ContextCompat.getDrawable(getActivity().getApplicationContext(), resID);//context.compat checks the version implicitly
     }
-    private void SortByTimeStampDesc(ArrayList<Offers> arrayToSort)
-    {
+
+    private void SortByTimeStampDesc(ArrayList<Offers> arrayToSort) {
         //Log.v("Main","Before Sorting:"+ System.currentTimeMillis()/1000);
         Collections.sort(arrayToSort, new Comparator<Offers>() {
             @Override
@@ -557,4 +642,35 @@ public class Main extends Fragment {
         //Log.v("Main","Started at: "+StartTime/1000);
         //Log.v("Main","Finished Sorting at:"+ System.currentTimeMillis()/1000);
     }
+
+    static void addToFavoriteList(String offerId, String offerCity, int number){
+        userFavoriteEditor.putString("city" + number, offerCity );
+        userFavoriteEditor.putString("id" + number, offerId );
+        userFavoriteEditor.commit();
+    }
+
+    int getNumberOfOffer(String key){
+        if(userFavoriteCount == 0)
+            return 0;
+
+        for(int i=1; i<= userFavoriteCount; i++)
+            if(userFavoriteOffers.getString("id" + i, "") == key)
+                return i;
+
+        return 0;
+    }
+
+    static void deleteFromFavoriteList(int count){
+        if(userFavoriteCount == 0)
+            return ;
+        for(int i= count; i< userFavoriteCount; i++) {
+            userFavoriteEditor.putString("city" + i, userFavoriteOffers.getString("city" + (i+1), "") );
+            userFavoriteEditor.putString("id" + i, userFavoriteOffers.getString("id" + (i+1), "") );
+            userFavoriteEditor.commit();
+        }
+    }
+
+
+
+
 }

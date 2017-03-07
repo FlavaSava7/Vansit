@@ -6,12 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import devgam.vansit.R;
 
+public class addRequest extends Fragment {
 
-public class recommend extends Fragment {
-
-    public recommend() {
+    public addRequest() {
         // Required empty public constructor
     }
 
@@ -26,7 +24,7 @@ public class recommend extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_recommend, container, false);
+        return inflater.inflate(R.layout.fragment_add_request, container, false);
     }
 
 }
