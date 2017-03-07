@@ -71,9 +71,9 @@ public class myAccount extends Fragment implements View.OnClickListener{
     public void onResume() {
         super.onResume();
         // A.J.I. : Hide Fab
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        if(fab!=null)
-            fab.setVisibility(View.GONE);
+        //FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        //if(fab!=null)
+            //fab.setVisibility(View.GONE);
 
         //Views initialize
         firstNameEdit = (EditText) getActivity().findViewById(R.id.my_account_firstName_edit);

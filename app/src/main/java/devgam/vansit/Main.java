@@ -12,14 +12,18 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -33,7 +37,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Set;
 
 import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Users;
@@ -46,6 +49,11 @@ public class Main extends Fragment {
 
 
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
+
+    FloatingActionButton addFab, addOffer, addRequest;
+    Animation fabOpen, fabClose, fabClockWise, fabAntiClockWise;
+    TextView addOfferText, addRequestText;
+    boolean isFloatingActionOpen = false;
 
     private ListView listView;
     private ArrayList<Offers> offerList;// this will be refilled with Offers each time a user change City Filter
@@ -65,7 +73,7 @@ public class Main extends Fragment {
     //Shared Prferance to add offer to favorite list
     static SharedPreferences userFavoriteOffers;
     static SharedPreferences.Editor userFavoriteEditor;
-    static int userFavoriteCount;
+    static int userFavoriteCount = 0;
 
     //Long StartTime;
 
@@ -99,24 +107,72 @@ public class Main extends Fragment {
         userFavoriteEditor = userFavoriteOffersId.edit();*/
         userFavoriteEditor = userFavoriteOffers.edit();
 
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);// we should show this when he is logged
-        if(Util.isLogged())
-        {
-            fab.setVisibility(View.VISIBLE);
-            fab.setOnClickListener(new View.OnClickListener()
+        addFab = (FloatingActionButton) getActivity().findViewById(R.id.add_fab);// we should show this when he is logged
+        addOffer = (FloatingActionButton) getActivity().findViewById(R.id.fab_add_offer);
+        addRequest = (FloatingActionButton) getActivity().findViewById(R.id.fab_add_request);
+
+        addOfferText = (TextView) getActivity().findViewById(R.id.fab_add_offer_text);
+        addRequestText = (TextView) getActivity().findViewById(R.id.fab_add_request_text);
+
+        fabOpen = AnimationUtils.loadAnimation(getContext(), R.anim.fab_open);
+        fabClose = AnimationUtils.loadAnimation(getContext(), R.anim.fab_close);
+        fabClockWise = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_clockwise);
+        fabAntiClockWise = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_anticlockwise);
+
+        if(Util.isLogged()) {
+            addFab.setVisibility(View.VISIBLE);
+            addFab.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
                 {
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    AddOffer addOfferPage = new AddOffer();
-                    Util.ChangeFrag(addOfferPage,fragmentManager);
+                    if(isFloatingActionOpen){
+                        addFab.startAnimation(fabAntiClockWise);
+                        addRequest.startAnimation(fabClose);
+                        //addRequestText.startAnimation(fabClose);
+                        addOffer.startAnimation(fabClose);
+                        //addOfferText.startAnimation(fabClose);
+                        addRequest.setClickable(false);
+                        addOffer.setClickable(false);
+                        addRequestText.setVisibility(View.INVISIBLE);
+                        addOfferText.setVisibility(View.INVISIBLE);
+                        isFloatingActionOpen = false;
+                    }else {
+                        addFab.startAnimation(fabClockWise);
+                        addRequest.startAnimation(fabOpen);
+                        //addRequestText.startAnimation(fabOpen);
+                        addOffer.startAnimation(fabOpen);
+                        //addOfferText.startAnimation(fabClose);
+                        addRequest.setClickable(true);
+                        addOffer.setClickable(true);
+                        addRequestText.setVisibility(View.VISIBLE);
+                        addOfferText.setVisibility(View.VISIBLE);
+                        isFloatingActionOpen = true;
+                    }
                 }
             });
         }else {
             //Log.v("Main","User is not logged in ");
-            fab.setVisibility(View.GONE);
+            addFab.setVisibility(View.GONE);
         }
+
+        addOffer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                AddOffer addOfferPage = new AddOffer();
+                Util.ChangeFrag(addOfferPage, fragmentManager);
+            }
+        });
+
+        addRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                addRequest addRequestPage = new addRequest();
+                Util.ChangeFrag(addRequestPage, fragmentManager);
+            }
+        });
 
 
         fragmentManager  = getActivity().getSupportFragmentManager();
@@ -433,12 +489,18 @@ public class Main extends Fragment {
                             @Override
                             public void onClick(View v) {
                                 //to add +1 for numbers of favorite list
-                                //use method because inside listener can't use non-final vars
-                                addCount();
-                                Util.makeToast(getContext(), offerId);
-                                Util.makeToast(getContext(), offerCity);
-                                Util.makeToast(getContext(), userFavoriteCount+"");
-                                addToFavoriteList(offerId, offerCity, userFavoriteCount);
+
+                                if(getNumberOfOffer(offerId) == 0) {
+                                    //That's mean this offer not in favorite list
+                                    //use method because inside listener can't use non-final vars
+                                    userFavoriteCount++;
+                                    addToFavoriteList(offerId, offerCity, userFavoriteCount);
+                                    Util.makeToast(getContext(), getNumberOfOffer(offerId) + "");
+                                    holder.loveText.setTextColor(getResources().getColor(R.color.loveButtonColorChange));
+                                } else {
+                                    deleteFromFavoriteList(getNumberOfOffer(offerId));
+                                    holder.loveText.setTextColor(getResources().getColor(R.color.loveButtonColor));
+                                }
 
                             }
                         });
@@ -477,7 +539,7 @@ public class Main extends Fragment {
 
     static class ViewHolder {
         // this class is called in getView and assigned it all "items" layouts Views,for smooth scrolling
-        TextView Title, City, ratingService, ratingPrice, Love, Profile, Call;
+        TextView Title, City, ratingService, ratingPrice;
         ImageView typeIcon;
 
         //add by nimer esam for buttons :
@@ -586,10 +648,26 @@ public class Main extends Fragment {
         userFavoriteEditor.commit();
     }
 
-    private static void addCount(){
-        userFavoriteCount++;
+    int getNumberOfOffer(String key){
+        if(userFavoriteCount == 0)
+            return 0;
+
+        for(int i=1; i<= userFavoriteCount; i++)
+            if(userFavoriteOffers.getString("id" + i, "") == key)
+                return i;
+
+        return 0;
     }
 
+    static void deleteFromFavoriteList(int count){
+        if(userFavoriteCount == 0)
+            return ;
+        for(int i= count; i< userFavoriteCount; i++) {
+            userFavoriteEditor.putString("city" + i, userFavoriteOffers.getString("city" + (i+1), "") );
+            userFavoriteEditor.putString("id" + i, userFavoriteOffers.getString("id" + (i+1), "") );
+            userFavoriteEditor.commit();
+        }
+    }
 
 
 

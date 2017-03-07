@@ -4,7 +4,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
-import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -93,21 +92,21 @@ public class MainController extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
 
-
-        if (id == R.id.action_settings)
+        //replaced code in navigation menu
+        //int id = item.getItemId();
+        /*if (id == R.id.logout_menu_item)
         {
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-            if(fab!=null)
-                fab.setVisibility(View.GONE);
+            FloatingActionButton fabMain = (FloatingActionButton) findViewById(R.id.add_fab);
+            if(fabMain!=null)
+                fabMain.setVisibility(View.GONE);
             FirebaseAuth.getInstance().signOut();
             Main mainPage = new Main();
             Util.ChangeFrag(mainPage,fragmentManager);
 
 
             return true;
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 
@@ -148,12 +147,17 @@ public class MainController extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
             return true;
         } else  if(id == R.id.nav_rec) {
-            recommend rec = new recommend();
+            addRequest rec = new addRequest();
             Util.ChangeFrag(rec, fragmentManager);
             drawer.closeDrawer(GravityCompat.START);
             return true;
         } else  if(id == R.id.nav_logout) {
+            FloatingActionButton fabMain = (FloatingActionButton) findViewById(R.id.add_fab);
+            if(fabMain!=null)
+                fabMain.setVisibility(View.GONE);
             FirebaseAuth.getInstance().signOut();
+            Main mainPage = new Main();
+            Util.ChangeFrag(mainPage,fragmentManager);
             hideItem();
             return true;
         }

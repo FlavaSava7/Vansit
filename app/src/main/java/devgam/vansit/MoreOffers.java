@@ -81,9 +81,9 @@ public class MoreOffers extends Fragment {
     public void onResume()
     {
         super.onResume();
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        if(fab!=null)
-            fab.setVisibility(View.GONE);
+        //FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        //if(fab!=null)
+            //fab.setVisibility(View.GONE);
 
         userImage = (ImageView) getActivity().findViewById(R.id.moreOffers_img);
         userName = (TextView) getActivity().findViewById(R.id.moreOffers_name);

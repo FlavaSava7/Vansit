@@ -53,9 +53,9 @@ public class AddOffer extends Fragment {
     public void onResume()
     {
         super.onResume();
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        if(fab!=null)
-            fab.setVisibility(View.GONE);
+        //FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        //if(fab!=null)
+            //fab.setVisibility(View.GONE);
         spinnerCity = (Spinner)getActivity().findViewById(R.id.addOffer_spinCity);
         spinnerType = (Spinner)getActivity().findViewById(R.id.addOffer_spinType);
         FillSpinners();
