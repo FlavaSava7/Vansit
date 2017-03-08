@@ -11,4 +11,5 @@
     <color name="deleteButtonColor">#505050</color>
     <color name="fab_add_offer">#00b5d1</color>
     <color name="fab_add_request">#00b135</color>
+    <color name="fragment_background">#E0E0E0</color>
 </resources>

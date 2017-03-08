@@ -1,9 +1,11 @@
 package devgam.vansit;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
@@ -13,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +54,7 @@ class Util
     // TODO: Real Time Database Variable Names
     static final String RDB_USERS = "Users";
     static final String RDB_OFFERS = "Offers";
+    static final String RDB_FAVORITE = "favorite";
     static final String RDB_COUNTRY = "Country";
     static final String RDB_JORDAN = "Jordan";
     static final String RDB_TYPE = "type";
@@ -221,6 +225,31 @@ class Util
         FrameLayout frameLayout = (FrameLayout)fragmentActivity.findViewById(R.id.FragmentContainer);
         InputMethodManager imm = (InputMethodManager)fragmentActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(frameLayout.getWindowToken(), 0);
+    }
+
+    //used in list view to set icons to rows
+    static Drawable getDrawableResource(Activity activity, int resID) {
+        return ContextCompat.getDrawable(activity.getApplicationContext(), resID);//context.compat checks the version implicitly
+    }
+
+    static int changeIcon(String type){
+        int typeIcon = R.drawable.common_google_signin_btn_icon_dark;
+        switch(type) {
+            case "Car":
+                typeIcon = R.mipmap.ic_type_car;
+                break;
+            case "Bus":
+                typeIcon = R.mipmap.ic_type_bus;
+                break;
+            case "Taxi":
+                typeIcon = R.mipmap.ic_type_taxi;
+                break;
+            case "Truck":
+                typeIcon = R.mipmap.ic_type_truck;
+                break;
+        }
+
+        return typeIcon;
     }
 
 }

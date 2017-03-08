@@ -27,6 +27,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,12 +39,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-
 import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Users;
 
 
-public class Main extends Fragment {
+public class Main extends Fragment implements View.OnClickListener{
     public Main() {
         // Required empty public constructor
     }
@@ -156,27 +157,13 @@ public class Main extends Fragment {
             addFab.setVisibility(View.GONE);
         }
 
-        addOffer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                AddOffer addOfferPage = new AddOffer();
-                Util.ChangeFrag(addOfferPage, fragmentManager);
-            }
-        });
-
-        addRequest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                addRequest addRequestPage = new addRequest();
-                Util.ChangeFrag(addRequestPage, fragmentManager);
-            }
-        });
-
+        //FAB On Click Listener from overriden method :
+        addOffer.setOnClickListener(this);
+        addOfferText.setOnClickListener(this);
+        addRequest.setOnClickListener(this);
+        addRequestText.setOnClickListener(this);
 
         fragmentManager  = getActivity().getSupportFragmentManager();
-
 
         listView = (ListView) getActivity().findViewById(R.id.frag_main_listview);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -258,7 +245,6 @@ public class Main extends Fragment {
             FillSpinnersAndListView();//To fill City and Type Spinners, And a default Filling of the List View.
         }
     }
-
 
     private void FillSpinnersAndListView()
     {
@@ -390,6 +376,19 @@ public class Main extends Fragment {
         query.addListenerForSingleValueEvent(QVEL);
     }
 
+    @Override
+    public void onClick(View v) {
+        if(v == addRequest || v == addRequestText){
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            addRequest addRequestPage = new addRequest();
+            Util.ChangeFrag(addRequestPage, fragmentManager);
+        } if( v == addOffer || v == addOfferText){
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            AddOffer addOfferPage = new AddOffer();
+            Util.ChangeFrag(addOfferPage, fragmentManager);
+        }
+    }
+
 
     private class itemsAdapter extends ArrayAdapter<Offers> {
 
@@ -418,13 +417,7 @@ public class Main extends Fragment {
             holder.City.setText(tempOffer.getCity());
 
             holder.typeIcon = (ImageView) rowItem.findViewById(R.id.main_items_typeIcon);
-
-            switch(tempOffer.getType()) {
-                case "Car":holder.typeIcon.setImageDrawable(getDrawableResource(R.mipmap.ic_type_car));break;
-                case "Bus":holder.typeIcon.setImageDrawable(getDrawableResource(R.mipmap.ic_type_bus));break;
-                case "Taxi":holder.typeIcon.setImageDrawable(getDrawableResource(R.mipmap.ic_type_taxi));break;
-                case "Truck":holder.typeIcon.setImageDrawable(getDrawableResource(R.mipmap.ic_type_truck));break;
-            }
+            holder.typeIcon.setImageDrawable(Util.getDrawableResource(getActivity(), Util.changeIcon(tempOffer.getType())));
 
             holder.ratingService = (TextView) rowItem.findViewById(R.id.main_items_serviceRatingData);
             holder.ratingPrice = (TextView) rowItem.findViewById(R.id.main_items_priceRatingData);
@@ -488,20 +481,7 @@ public class Main extends Fragment {
                         holder.loveText.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                //to add +1 for numbers of favorite list
-
-                                if(getNumberOfOffer(offerId) == 0) {
-                                    //That's mean this offer not in favorite list
-                                    //use method because inside listener can't use non-final vars
-                                    userFavoriteCount++;
-                                    addToFavoriteList(offerId, offerCity, userFavoriteCount);
-                                    Util.makeToast(getContext(), getNumberOfOffer(offerId) + "");
-                                    holder.loveText.setTextColor(getResources().getColor(R.color.loveButtonColorChange));
-                                } else {
-                                    deleteFromFavoriteList(getNumberOfOffer(offerId));
-                                    holder.loveText.setTextColor(getResources().getColor(R.color.loveButtonColor));
-                                }
-
+                                addToFavoriteList(offerId, offerCity);
                             }
                         });
 
@@ -545,7 +525,6 @@ public class Main extends Fragment {
         //add by nimer esam for buttons :
         Button loveText, profileText, callText;
     }
-
 
     public void ShowMoreBtn(final ListView listView)
     {
@@ -619,12 +598,6 @@ public class Main extends Fragment {
 
     }
 
-    //used in list view to set icons to rows
-
-    private Drawable getDrawableResource(int resID) {
-        return ContextCompat.getDrawable(getActivity().getApplicationContext(), resID);//context.compat checks the version implicitly
-    }
-
     private void SortByTimeStampDesc(ArrayList<Offers> arrayToSort) {
         //Log.v("Main","Before Sorting:"+ System.currentTimeMillis()/1000);
         Collections.sort(arrayToSort, new Comparator<Offers>() {
@@ -642,12 +615,12 @@ public class Main extends Fragment {
         //Log.v("Main","Finished Sorting at:"+ System.currentTimeMillis()/1000);
     }
 
-    static void addToFavoriteList(String offerId, String offerCity, int number){
-        userFavoriteEditor.putString("city" + number, offerCity );
-        userFavoriteEditor.putString("id" + number, offerId );
-        userFavoriteEditor.commit();
+    //temp code :
+    static void addToFavoriteList(String offerId, String offerCity){
+        //TODO : add offer to favorite list
     }
 
+    /*//temp code :
     int getNumberOfOffer(String key){
         if(userFavoriteCount == 0)
             return 0;
@@ -659,6 +632,7 @@ public class Main extends Fragment {
         return 0;
     }
 
+    //temp code :
     static void deleteFromFavoriteList(int count){
         if(userFavoriteCount == 0)
             return ;
@@ -667,7 +641,7 @@ public class Main extends Fragment {
             userFavoriteEditor.putString("id" + i, userFavoriteOffers.getString("id" + (i+1), "") );
             userFavoriteEditor.commit();
         }
-    }
+    }*/
 
 
 

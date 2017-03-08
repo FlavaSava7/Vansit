@@ -221,6 +221,7 @@ public class myAccount extends Fragment implements View.OnClickListener{
 
     //Created by Nimer Esam to set user data in shared preference
     private void setUserData(Users users){
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         userDataEditor.putString(Util.FIRST_NAME, users.getFirstName());
         userDataEditor.putString(Util.LAST_NAME, users.getLastName());
         userDataEditor.putString(Util.PHONE, users.getPhone());
