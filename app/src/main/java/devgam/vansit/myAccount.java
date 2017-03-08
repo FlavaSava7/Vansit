@@ -22,8 +22,12 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import devgam.vansit.JSON_Classes.Users;
 import static devgam.vansit.Util.makeToast;
 
@@ -38,15 +42,16 @@ public class myAccount extends Fragment implements View.OnClickListener{
     private ArrayAdapter<CharSequence> cityAdapter;
     private Drawable errorIcon;
 
+    FirebaseAuth firebaseAuth;
+    DatabaseReference mRef;
+    String tempUID;
+
+
     //temp day, month, year to save data from picker until data click save
     //because may be user cancel change
     //that's will product real data on fireBase
     private int tempDayOfBirth, tempMonthOfBirth, tempYearOfBirth ;
     private static String tempUserFirstName, tempUserLastName , tempPhoneNumber, tempUserCity, tempUserGander ;
-
-
-    SharedPreferences userData ;
-    SharedPreferences.Editor userDataEditor ;
 
     public myAccount() {
         // Required empty public constructor
@@ -101,9 +106,12 @@ public class myAccount extends Fragment implements View.OnClickListener{
             }
         });
 
-        //shared preferance initialize :
-        userData = getContext().getSharedPreferences("userData", Context.MODE_PRIVATE);
-        userDataEditor = userData.edit();
+        firebaseAuth = FirebaseAuth.getInstance();
+        tempUID = firebaseAuth.getCurrentUser().getUid();
+        mRef = FirebaseDatabase.getInstance().
+                getReference(Util.RDB_USERS +"/"+
+                        tempUID);
+
 
         //get data from shared to fill views :
         setDataToViews();
@@ -167,21 +175,24 @@ public class myAccount extends Fragment implements View.OnClickListener{
     private boolean checkAndChange(){
         //I have declare check edit method to ..
         // - check value of edit text and initialize it if it is not empty
-        //Check if first name field is not null !
-        if( ! checkEdit(firstNameEdit, "first name is required"))
-            return false;
-        else
-            tempUserFirstName = firstNameEdit.getText().toString();
-        //Check if last name field is not null !
-        if( ! checkEdit(lastNameEdit, "last name is required"))
-            return false;
-        else
-            tempUserLastName = lastNameEdit.getText().toString();
+
         //Check if phone field is not null !
-        if( ! checkEdit(phoneEdit, "phone number is required"))
+        if( ! Util.checkEdit(getActivity(), errorIcon, phoneEdit, "phone number is required"))
             return false;
         else
             tempPhoneNumber = phoneEdit.getText().toString();
+
+        //Check if last name field is not null !
+        if( ! Util.checkEdit(getActivity(), errorIcon, lastNameEdit, "last name is required"))
+            return false;
+        else
+            tempUserLastName = lastNameEdit.getText().toString();
+
+        //Check if first name field is not null !
+        if( ! Util.checkEdit(getActivity(), errorIcon, firstNameEdit, "first name is required"))
+            return false;
+        else
+            tempUserFirstName = firstNameEdit.getText().toString();
 
         if(tempYearOfBirth == 0 || Util.yearNow < tempYearOfBirth + 16) {
             //Check if user add real birthDate not current date !
@@ -201,16 +212,10 @@ public class myAccount extends Fragment implements View.OnClickListener{
                 tempDayOfBirth + "", tempMonthOfBirth + "", tempYearOfBirth + "");
 
         //to save data in shared preferance :
-        setUserData(userData);
+        //setUserData(userData);
+
         //Temp code
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         try{
-
-            final String tempUID = firebaseAuth.getCurrentUser().getUid();
-            DatabaseReference mRef = FirebaseDatabase.getInstance().
-                    getReference(Util.RDB_USERS +"/"+
-                            tempUID);
-
             mRef.setValue(userData);
             Util.makeToast(getContext(), "Save Successfully");
         } catch (Exception e){
@@ -220,8 +225,8 @@ public class myAccount extends Fragment implements View.OnClickListener{
     }
 
     //Created by Nimer Esam to set user data in shared preference
-    private void setUserData(Users users){
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    //temp code
+    /*private void setUserData(Users users){
         userDataEditor.putString(Util.FIRST_NAME, users.getFirstName());
         userDataEditor.putString(Util.LAST_NAME, users.getLastName());
         userDataEditor.putString(Util.PHONE, users.getPhone());
@@ -232,27 +237,40 @@ public class myAccount extends Fragment implements View.OnClickListener{
         userDataEditor.putString(Util.DATE_YEAR, users.getDateYear());
 
         userDataEditor.commit();
-    }
+    }*/
 
     //to set data to views after data set it one time
     private void setDataToViews(){
-        if(getPreferanceData(Util.FIRST_NAME) != "") {
-            firstNameEdit.setText(getPreferanceData(Util.FIRST_NAME));
-            lastNameEdit.setText(getPreferanceData(Util.LAST_NAME));
-            phoneEdit.setText(getPreferanceData(Util.PHONE));
-            birthEdit.setText(getPreferanceData(Util.DATE_DAY) + " / " +
-                    getPreferanceData(Util.DATE_MONTH) + "/ " +
-                    getPreferanceData(Util.DATE_YEAR));
-        /*if(getPreferanceData(Util.GENDER) == "male")
-            Util.makeToast(getContext(), "male");*/
-            //femaleRadio.setChecked(true);
-        }
-        else //set now date for birth day ..
-            birthEdit.setText(Util.dayNow + " / " + Util.monthNow + " / " + Util.yearNow);
+
+        //temp code:
+        mRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final Users tempUser = dataSnapshot.getValue(Users.class);
+                firstNameEdit.setText(tempUser.getFirstName());
+                lastNameEdit.setText(tempUser.getLastName());
+                phoneEdit.setText(tempUser.getPhone());
+                birthEdit.setText(tempUser.getDateDay() + " / " +
+                        tempUser.getDateMonth() + "/ " +
+                        tempUser.getDateYear());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        firstNameEdit.setText(mRef.child(Util.FIRST_NAME).toString());
+        lastNameEdit.setText(mRef.child(Util.LAST_NAME).toString());
+        phoneEdit.setText(mRef.child(Util.PHONE).toString());
+        birthEdit.setText(mRef.child(Util.DATE_DAY).toString() + " / " +
+                mRef.child(Util.DATE_MONTH).toString() + "/ " +
+                mRef.child(Util.DATE_YEAR).toString());
+
     }
 
     //Used by static var to get data from shared preference :
-    private String getPreferanceData(String key){
+    /*private String getPreferanceData(String key){
 
         try {
             return userData.getString(key, "");
@@ -281,7 +299,7 @@ public class myAccount extends Fragment implements View.OnClickListener{
         errorIcon = getResources().getDrawable(R.drawable.ic_error);
         errorIcon.setBounds(new Rect(0, 0, errorIcon.getIntrinsicWidth(), errorIcon.getIntrinsicHeight()));
         //editText.setError(null,errorIcon);
-    }
+    }*/
 
 
 }

@@ -29,6 +29,11 @@
     <string name="hello_blank_fragment">Soon Will be Available</string>
 
     <!-- Strings for layouts -->
+    <string name="login_email_null_error">email is required</string>
+    <string name="login_email_invalid_error">incorrect email</string>
+    <string name="login_password_null_error">password is required</string>
+
+
     <string name="my_account_title_text">Personal Data</string>
     <string name="my_account_firstName_text">First Name</string>
     <string name="my_account_lastName_text">Last Name </string>

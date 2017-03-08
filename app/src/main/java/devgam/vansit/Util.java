@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -250,6 +251,36 @@ class Util
         }
 
         return typeIcon;
+    }
+
+    public final static boolean isValidEmail(CharSequence target) {
+        if (target == null) {
+            return false;
+        } else {
+            return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+        }
+    }
+
+    //To check first, last name & phone edit text is empty or not !
+    static boolean checkEdit(Activity activity,  Drawable errorIcon, EditText editText, String errorMsg){
+        Util.setErrorMsg(activity, errorIcon);
+        if(! editText.getText().toString().isEmpty() && !(editText.getText().toString() == "")) {
+            //Util.makeToast(getContext(), "name done");
+            return true;
+        } else {
+            editText.setError(errorMsg, errorIcon);
+            editText.requestFocus();
+
+            //Util.makeToast(getActivity(), "Name is required");
+            return false;
+        }
+    }
+
+    //to set an error icon on edit text if it was empty
+    private static void setErrorMsg(Activity activity, Drawable errorIcon){
+        errorIcon = activity.getResources().getDrawable(R.drawable.ic_error);
+        errorIcon.setBounds(new Rect(0, 0, errorIcon.getIntrinsicWidth(), errorIcon.getIntrinsicHeight()));
+        //editText.setError(null,errorIcon);
     }
 
 }

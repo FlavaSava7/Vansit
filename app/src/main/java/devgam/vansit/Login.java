@@ -1,9 +1,12 @@
 package devgam.vansit;
 
 import android.app.ProgressDialog;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
@@ -25,11 +28,14 @@ public class Login extends Fragment implements View.OnClickListener{
     private Button signInButton;
     private EditText emailEdit, passEdit ;
     private TextView signUpText, errorText, forgetPassText;
+    private TextInputLayout emailInput, passInput;
 
     private ProgressDialog progressDialog ;
 
     FirebaseAuth firebaseAuth;
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
+
+    private Drawable errorIcon;
 
     public Login() {
         // Required empty public constructor
@@ -63,6 +69,8 @@ public class Login extends Fragment implements View.OnClickListener{
         signUpText = (TextView) getActivity().findViewById(R.id.login_signup_text);
         errorText = (TextView) getActivity().findViewById(R.id.login_error_msg_text);
         forgetPassText = (TextView) getActivity().findViewById(R.id.login_forget_pass_text);
+        emailInput = (TextInputLayout) getActivity().findViewById(R.id.login_email_input);
+        passInput = (TextInputLayout) getActivity().findViewById(R.id.login_password_input);
 
         //to set error text not visible if user out from app and come again :
         errorText.setVisibility(View.INVISIBLE);
@@ -79,7 +87,7 @@ public class Login extends Fragment implements View.OnClickListener{
     }
 
     private void userSignIn(){
-        final String Email = emailEdit.getText().toString().trim();
+        /*final String Email = emailEdit.getText().toString().trim();
         final String password = passEdit.getText().toString().trim();
 
         //To check email is not empty :
@@ -89,6 +97,8 @@ public class Login extends Fragment implements View.OnClickListener{
             Util.makeToast(getContext(), "Email required");
             //to stop Function :
             return;
+        } else if(Util.isValidEmail(emailEdit.getText().toString())) {
+
         }
 
         //To check password is not empty :
@@ -98,7 +108,12 @@ public class Login extends Fragment implements View.OnClickListener{
             Util.makeToast(getContext(), "password required");
             //to stop Function :
             return;
-        }
+        }*/
+        if( ! checkEditText())
+            return;
+
+        final String Email = emailEdit.getText().toString().trim();
+        final String password = passEdit.getText().toString().trim();
 
         //if all data are okay
         //first progress dialog is show :
@@ -130,6 +145,42 @@ public class Login extends Fragment implements View.OnClickListener{
                 });
     }
 
+    //Check if values is valid
+    private boolean checkEditText() {
+        final String Email = emailEdit.getText().toString().trim();
+        final String password = passEdit.getText().toString().trim();
+
+        boolean isValid = true;
+
+        //To check email is not empty :
+
+        //To check password is not empty :
+        if(TextUtils.isEmpty(password)){
+            //password is empty
+            Util.checkEdit(getActivity(), errorIcon, passEdit, String.valueOf(R.string.login_password_null_error));
+            //to stop Function :
+            isValid = false;
+        }
+
+
+        if(TextUtils.isEmpty(Email) ){
+            //Email is empty
+            Util.checkEdit(getActivity(), errorIcon, emailEdit, String.valueOf(R.string.login_email_null_error));
+            //to stop Function :
+            isValid = false;
+        }
+
+        //not work until now :
+        /* else if(Util.isValidEmail(Email)) {
+            //Email is not valid
+            Util.checkEdit(getActivity(), errorIcon, emailEdit, "not valid email");
+            //to stop Function :
+            isValid = false;
+        }*/
+
+        return isValid;
+    }
+
     @Override
     public void onClick(View v){
         if(v == signInButton){
@@ -150,5 +201,6 @@ public class Login extends Fragment implements View.OnClickListener{
             Util.ChangeFrag(reset,fragmentManager);
         }
     }
+
 
 }
