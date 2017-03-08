@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +42,7 @@ public class myAccount extends Fragment implements View.OnClickListener{
     private Spinner citySpinner;
     private ArrayAdapter<CharSequence> cityAdapter;
     private Drawable errorIcon;
+    FragmentManager fragmentManager;// this is used for the ChangeFrag method
 
     FirebaseAuth firebaseAuth;
     DatabaseReference mRef;
@@ -106,6 +108,8 @@ public class myAccount extends Fragment implements View.OnClickListener{
             }
         });
 
+        fragmentManager  = getActivity().getSupportFragmentManager();
+
         firebaseAuth = FirebaseAuth.getInstance();
         tempUID = firebaseAuth.getCurrentUser().getUid();
         mRef = FirebaseDatabase.getInstance().
@@ -114,23 +118,36 @@ public class myAccount extends Fragment implements View.OnClickListener{
 
 
         //get data from shared to fill views :
-        setDataToViews();
+        try {
+            setDataToViews();
+        } catch (Exception e){
+
+        }
 
 
         //on click listener for buttons :
         birthEdit.setOnClickListener(this);
         saveButton.setOnClickListener(this);
 
+        maleRadio.setOnClickListener(this);
+        femaleRadio.setOnClickListener(this);
+
+        //may be user don't click because it's already clicked
         if(maleRadio.isChecked())
             tempUserGander = "male";
-        else if(femaleRadio.isChecked())
+        else
             tempUserGander = "female";
-
     }
 
 
     @Override
     public void onClick(View v) {
+        if (v == maleRadio)
+            tempUserGander = "male";
+
+        if (v == femaleRadio)
+            tempUserGander = "female";
+
         if (v == birthEdit) {
             datePicker = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                 @Override
@@ -146,7 +163,7 @@ public class myAccount extends Fragment implements View.OnClickListener{
         } if(v == saveButton){
             if(checkAndChange()) {
                 //Temp code to check data is correct :
-                final AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                /*final AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                 alert.setMessage("User first name :" + tempUserFirstName + "\n"
                         + "User last name :" + tempUserLastName + "\n"
                         + "User phone :" + tempPhoneNumber + "\n"
@@ -160,14 +177,17 @@ public class myAccount extends Fragment implements View.OnClickListener{
                     }
                 });
                 alert.show();
-                //End of temp code
+                //End of temp code*/
 
                 if(Util.IS_USER_CONNECTED) {
                     saveDataToDatabase();
+                    Main mainPage = new Main();
+                    Util.ChangeFrag(mainPage, fragmentManager);
                 } else {
                     makeToast(getContext(), String.valueOf(R.string.noInternetMsg));
                 }
             } // if statement
+
         }
     }
 
@@ -224,35 +244,37 @@ public class myAccount extends Fragment implements View.OnClickListener{
 
     }
 
-    //Created by Nimer Esam to set user data in shared preference
-    //temp code
-    /*private void setUserData(Users users){
-        userDataEditor.putString(Util.FIRST_NAME, users.getFirstName());
-        userDataEditor.putString(Util.LAST_NAME, users.getLastName());
-        userDataEditor.putString(Util.PHONE, users.getPhone());
-        userDataEditor.putString(Util.GENDER, users.getGender());
-        userDataEditor.putString(Util.CITY, users.getCity());
-        userDataEditor.putString(Util.DATE_DAY, users.getDateDay());
-        userDataEditor.putString(Util.DATE_MONTH, users.getDateMonth());
-        userDataEditor.putString(Util.DATE_YEAR, users.getDateYear());
-
-        userDataEditor.commit();
-    }*/
-
     //to set data to views after data set it one time
-    private void setDataToViews(){
+    private void setDataToViews() {
 
         //temp code:
         mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final Users tempUser = dataSnapshot.getValue(Users.class);
-                firstNameEdit.setText(tempUser.getFirstName());
-                lastNameEdit.setText(tempUser.getLastName());
-                phoneEdit.setText(tempUser.getPhone());
-                birthEdit.setText(tempUser.getDateDay() + " / " +
-                        tempUser.getDateMonth() + "/ " +
-                        tempUser.getDateYear());
+
+                if(! tempUser.getFirstName().isEmpty()) {
+                    //For Check method
+                    tempYearOfBirth = Integer.parseInt(tempUser.getDateYear());
+                    tempMonthOfBirth = Integer.parseInt(tempUser.getDateMonth());
+                    tempDayOfBirth = Integer.parseInt(tempUser.getDateDay());
+
+                    firstNameEdit.setText(tempUser.getFirstName());
+                    lastNameEdit.setText(tempUser.getLastName());
+                    phoneEdit.setText(tempUser.getPhone());
+                    birthEdit.setText(tempDayOfBirth + " / " +
+                            (tempMonthOfBirth + 1) + "/ " +
+                            tempYearOfBirth);
+
+                    if (tempUser.getGender().equals("male")) {
+                        maleRadio.setChecked(true);
+                    } else {
+                        femaleRadio.setChecked(true);
+                    }
+
+                }
+
+
             }
 
             @Override
@@ -260,46 +282,8 @@ public class myAccount extends Fragment implements View.OnClickListener{
 
             }
         });
-        firstNameEdit.setText(mRef.child(Util.FIRST_NAME).toString());
-        lastNameEdit.setText(mRef.child(Util.LAST_NAME).toString());
-        phoneEdit.setText(mRef.child(Util.PHONE).toString());
-        birthEdit.setText(mRef.child(Util.DATE_DAY).toString() + " / " +
-                mRef.child(Util.DATE_MONTH).toString() + "/ " +
-                mRef.child(Util.DATE_YEAR).toString());
 
     }
-
-    //Used by static var to get data from shared preference :
-    /*private String getPreferanceData(String key){
-
-        try {
-            return userData.getString(key, "");
-        } catch (Exception e){
-
-        }
-
-        return "";
-    }
-
-    //To check first, last name & phone edit text is empty or not !
-    private boolean checkEdit(EditText editText, String errorMsg){
-        setErrorMsg();
-        if(! editText.getText().toString().isEmpty() && !(editText.getText().toString() == "")) {
-            //Util.makeToast(getContext(), "name done");
-            return true;
-        } else {
-            editText.setError(errorMsg, errorIcon);
-            //Util.makeToast(getActivity(), "Name is required");
-            return false;
-        }
-    }
-
-    //to set an error icon on edit text if it was empty
-    private void setErrorMsg(){
-        errorIcon = getResources().getDrawable(R.drawable.ic_error);
-        errorIcon.setBounds(new Rect(0, 0, errorIcon.getIntrinsicWidth(), errorIcon.getIntrinsicHeight()));
-        //editText.setError(null,errorIcon);
-    }*/
 
 
 }

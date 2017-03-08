@@ -5,14 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,8 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -71,11 +66,6 @@ public class Main extends Fragment implements View.OnClickListener{
     private static String allCities[];//this will contain the values that are in strings.xml
     private static String allTypes[];//this will contain the values that are in strings.xml, used inside the getView to choose icon for type
 
-    //Shared Prferance to add offer to favorite list
-    static SharedPreferences userFavoriteOffers;
-    static SharedPreferences.Editor userFavoriteEditor;
-    static int userFavoriteCount = 0;
-
     //Long StartTime;
 
 
@@ -100,14 +90,6 @@ public class Main extends Fragment implements View.OnClickListener{
         allCities = getResources().getStringArray(R.array.city_list);
         allTypes = getResources().getStringArray(R.array.type_list);
 
-        //shared preferance initialize :
-        userFavoriteOffers = getContext().getSharedPreferences("userFavoriteOffers", Context.MODE_PRIVATE);
-        /*userFavoriteOffersId = getContext().getSharedPreferences("userFavoriteOffersId", Context.MODE_PRIVATE);
-        userFavoriteCount = getContext().getSharedPreferences("userFavoriteCount", Context.MODE_PRIVATE);
-        userFavoriteEditor = userFavoriteOffersCity.edit();
-        userFavoriteEditor = userFavoriteOffersId.edit();*/
-        userFavoriteEditor = userFavoriteOffers.edit();
-
         addFab = (FloatingActionButton) getActivity().findViewById(R.id.add_fab);// we should show this when he is logged
         addOffer = (FloatingActionButton) getActivity().findViewById(R.id.fab_add_offer);
         addRequest = (FloatingActionButton) getActivity().findViewById(R.id.fab_add_request);
@@ -130,9 +112,7 @@ public class Main extends Fragment implements View.OnClickListener{
                     if(isFloatingActionOpen){
                         addFab.startAnimation(fabAntiClockWise);
                         addRequest.startAnimation(fabClose);
-                        //addRequestText.startAnimation(fabClose);
                         addOffer.startAnimation(fabClose);
-                        //addOfferText.startAnimation(fabClose);
                         addRequest.setClickable(false);
                         addOffer.setClickable(false);
                         addRequestText.setVisibility(View.INVISIBLE);
@@ -141,9 +121,7 @@ public class Main extends Fragment implements View.OnClickListener{
                     }else {
                         addFab.startAnimation(fabClockWise);
                         addRequest.startAnimation(fabOpen);
-                        //addRequestText.startAnimation(fabOpen);
                         addOffer.startAnimation(fabOpen);
-                        //addOfferText.startAnimation(fabClose);
                         addRequest.setClickable(true);
                         addOffer.setClickable(true);
                         addRequestText.setVisibility(View.VISIBLE);
@@ -423,9 +401,9 @@ public class Main extends Fragment implements View.OnClickListener{
             holder.ratingPrice = (TextView) rowItem.findViewById(R.id.main_items_priceRatingData);
 
             //initialized by nimer esam for text buttons on list item :
-            holder.loveText = (Button) rowItem.findViewById(R.id.main_items_love_text);
-            holder.profileText = (Button) rowItem.findViewById(R.id.main_items_profile_text);
-            holder.callText = (Button) rowItem.findViewById(R.id.main_items_call_text);
+            //holder.loveText = (Button) rowItem.findViewById(R.id.main_items_love_text);
+            holder.profileText = (LinearLayout) rowItem.findViewById(R.id.main_items_profile_layout);
+            holder.callText = (LinearLayout) rowItem.findViewById(R.id.main_items_call_layout);
             Query query = databaseReference.child(tempOffer.getUserID());
 
             ValueEventListener VEL = new ValueEventListener() {
@@ -455,8 +433,8 @@ public class Main extends Fragment implements View.OnClickListener{
 
                         //add by nimer esam :
                         //To make call when user click on call text :
-
                         final String phoneNumber = tempUser.getPhone();
+
                         holder.callText.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -474,17 +452,6 @@ public class Main extends Fragment implements View.OnClickListener{
                                 userIn.show();
                             }
                         });
-
-
-                        final String offerCity = tempOffer.getCity();
-                        final String offerId = tempOffer.getOfferKey();
-                        holder.loveText.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                addToFavoriteList(offerId, offerCity);
-                            }
-                        });
-
 
 
                     }
@@ -513,8 +480,6 @@ public class Main extends Fragment implements View.OnClickListener{
         public Offers getItem(int position) {
             return offerList.get(position);
         }
-
-
     }
 
     static class ViewHolder {
@@ -523,7 +488,7 @@ public class Main extends Fragment implements View.OnClickListener{
         ImageView typeIcon;
 
         //add by nimer esam for buttons :
-        Button loveText, profileText, callText;
+        LinearLayout profileText, callText;
     }
 
     public void ShowMoreBtn(final ListView listView)

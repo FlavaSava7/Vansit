@@ -148,6 +148,7 @@ class Util
         if (!fragmentPopped)
         {
             FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.setCustomAnimations(R.anim.slide_left_in, R.anim.slide_right_out);
             ft.replace(R.id.FragmentContainer, fragment);
             ft.addToBackStack(backStateName);
             ft.commit();

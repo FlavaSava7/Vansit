@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +14,19 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import devgam.vansit.JSON_Classes.Offers;
+import devgam.vansit.JSON_Classes.Users;
+
+import static devgam.vansit.Util.makeToast;
 
 
 public class AddOffer extends Fragment {
@@ -27,9 +35,12 @@ public class AddOffer extends Fragment {
     public AddOffer() {
         // Required empty public constructor
     }
+
+    TextView nameText, phoneText, cityText;
     Spinner spinnerCity,spinnerType;
     EditText editTitle,editDesc;
     Button btnSave,btnCancel;
+    FragmentManager fragmentManager;
 
     boolean doubleBackToExitPressedOnce = false;
     @Override
@@ -63,6 +74,12 @@ public class AddOffer extends Fragment {
         editTitle = (EditText) getActivity().findViewById(R.id.addOffer_editTitle);
         editDesc = (EditText) getActivity().findViewById(R.id.addOffer_editDesc);
 
+        nameText = (TextView) getActivity().findViewById(R.id.addOffer_name_text);
+        phoneText = (TextView) getActivity().findViewById(R.id.addOffer_phone_text);
+        cityText = (TextView) getActivity().findViewById(R.id.addOffer_city_text);
+
+        fragmentManager  = getActivity().getSupportFragmentManager();
+
         btnSave = (Button) getActivity().findViewById(R.id.addOffer_save);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,12 +95,9 @@ public class AddOffer extends Fragment {
             }
         });
 
-       /*DatabaseReference mRef = FirebaseDatabase.getInstance().
-                getReference(Util.RDB_USERS);
-        String newUserKey = mRef.push().getKey();
-        Users newUser = new Users("Abood","Amman","796640858","Female","9","7","1995");
-        mRef.child(newUserKey).setValue(newUser);*/
         FragmentSetUp();
+        //to add user info under offer :
+        addUserData();
     }
     private void FragmentSetUp()// some custom settings for this fragment
     {
@@ -123,12 +137,14 @@ public class AddOffer extends Fragment {
         ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item,
                 getResources().getStringArray(R.array.city_list));
+        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCity.setAdapter(cityAdapter);
 
         //Type
         ArrayAdapter<String> typeAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item,
                 getResources().getStringArray(R.array.type_list));
+        typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerType.setAdapter(typeAdapter);
     }
     public void SaveOffer()
@@ -148,16 +164,24 @@ public class AddOffer extends Fragment {
                 editDesc.getText().toString(),
                 spinnerType.getSelectedItem().toString(),spinnerCity.getSelectedItem().toString(), System.currentTimeMillis());
 
-        // here we will AUTO go to the child where his Country == the country he signed up in the app
-        //Edit it later cuz for now we dont have the User details yet
-        DatabaseReference mRef = FirebaseDatabase.getInstance().
-                getReference(Util.RDB_COUNTRY+"/"+
-                        Util.RDB_JORDAN+"/"+
-                        spinnerCity.getSelectedItem().toString()+"/"+
-                        Util.RDB_OFFERS);
-        mRef.push().setValue(myOffer);
+        if(Util.IS_USER_CONNECTED) {
+            // here we will AUTO go to the child where his Country == the country he signed up in the app
+            //Edit it later cuz for now we dont have the User details yet
+            DatabaseReference mRef = FirebaseDatabase.getInstance().
+                    getReference(Util.RDB_COUNTRY+"/"+
+                            Util.RDB_JORDAN+"/"+
+                            spinnerCity.getSelectedItem().toString()+"/"+
+                            Util.RDB_OFFERS);
+            mRef.push().setValue(myOffer);
 
-        Util.makeToast(getContext(),"Success!");
+            Util.makeToast(getContext(),"Success!");
+
+            myOffers offer = new myOffers();
+            Util.ChangeFrag(offer, fragmentManager);
+        } else {
+            makeToast(getContext(), String.valueOf(R.string.noInternetMsg));
+        }
+
 
 
     }
@@ -165,5 +189,28 @@ public class AddOffer extends Fragment {
     {
         editDesc.setText("");
         editTitle.setText("");
+    }
+
+    private void addUserData(){
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        String tempUID = firebaseAuth.getCurrentUser().getUid();
+        DatabaseReference mRef = FirebaseDatabase.getInstance().
+                getReference(Util.RDB_USERS +"/"+
+                        tempUID);
+
+        mRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Users users = dataSnapshot.getValue(Users.class);
+                nameText.setText(users.getFirstName() + " " + users.getLastName());
+                phoneText.setText(users.getPhone());
+                cityText.setText(users.getCity());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

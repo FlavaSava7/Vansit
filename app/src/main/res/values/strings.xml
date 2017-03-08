@@ -69,6 +69,16 @@
     <string name="main_fab_text_add_offer">add offer</string>
     <string name="user_information_title">Profile</string>
 
+    <string name="add_offer_title_text">Title </string>
+    <string name="add_offer_title_hint">Example : Transport school students</string>
+    <string name="add_offer_desc_text">Description </string>
+    <string name="add_offer_desc_hint"> Here add your notes about this offer, like : \n - your work time  </string>
+    <string name="add_offer_info_offer_text">Location and Type </string>
+    <string name="add_offer_info_user_text">User  </string>
+    <string name="add_offer_user_name_text">Name : </string>
+    <string name="add_offer_user_phone_text">Phone : </string>
+
+
 
     <!-- shared by layouts -->
     <string name="layout_button_save">save</string>
@@ -76,6 +86,8 @@
     <string name="hint_text_email">Email</string>
     <string name="hint_text_password">Password</string>
     <string name="noInternetMsg">No Internet Connection</string>
+
+
 
     <!-- TODO: String Array for spinners -->
     <string-array name="city_list">

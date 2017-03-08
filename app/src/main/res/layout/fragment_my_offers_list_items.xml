@@ -86,7 +86,7 @@
                     <View
                         android:layout_width="wrap_content"
                         android:layout_height="1dp"
-                        android:background="@android:color/darker_gray"
+                        android:background="@color/fragment_background"
                         android:layout_marginLeft="@dimen/views_top_margin"
                         android:layout_marginRight="@dimen/views_margin_xl"
 
