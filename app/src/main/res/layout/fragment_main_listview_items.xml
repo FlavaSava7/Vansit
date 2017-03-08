@@ -150,12 +150,6 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/fragment_background"
-                android:layout_marginTop="@dimen/views_margin_s" />
-
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -198,12 +192,6 @@
                         android:longClickable="false" />
                 </LinearLayout>
 
-
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/fragment_background" />
 
                 <LinearLayout
                     android:orientation="horizontal"
