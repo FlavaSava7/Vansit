@@ -1,78 +1,376 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
-    android:layout_marginTop="20dp"
-    tools:context="devgam.vansit.AddOffer"
-    android:id="@+id/fragParent_add_offer">
+    android:id="@+id/fragParent_add_offer"
+    android:background="@color/fragment_background">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Choose Type"
-        android:layout_marginBottom="10dp"/>
-    <Spinner
-        android:id="@+id/addOffer_spinType"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Title"
-        android:layout_marginBottom="10dp"/>
-    <EditText
-        android:id="@+id/addOffer_editTitle"
-        android:layout_width="200dp"
-        android:layout_height="40dp"
-        style="@android:style/Holo.Light.SegmentedButton"
-        android:layout_marginBottom="40dp"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Description"
-        android:layout_marginBottom="10dp"/>
-    <EditText
-        android:id="@+id/addOffer_editDesc"
-        android:layout_width="300dp"
-        android:layout_height="70dp"
-        style="@android:style/Holo.Light.SegmentedButton"
-        android:layout_marginBottom="40dp"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="City"
-        android:layout_marginBottom="10dp"/>
-    <Spinner
-        android:id="@+id/addOffer_spinCity"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        />
-    <LinearLayout
+    <android.support.v7.widget.CardView
+
+        android:id="@+id/card_view"
+        android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal">
-        <Button
-            android:id="@+id/addOffer_save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Save"
-            />
-        <Button
-            android:id="@+id/addOffer_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:text="Cancel"
+        android:layout_marginLeft="@dimen/views_button_margin"
+        android:layout_marginRight="@dimen/views_button_margin"
+        android:layout_marginTop="@dimen/views_button_margin"
+        >
 
-            />
-    </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/views_top_margin">
 
-</LinearLayout>
+            <TextView
+                android:text="@string/add_offer_title_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/addOffer_title_text"
+                android:textStyle="normal|bold"
+                android:textSize="18sp"
+                android:layout_marginLeft="@dimen/views_button_margin"
+                android:layout_marginRight="@dimen/views_button_margin"
+                android:layout_marginTop="@dimen/views_top_margin"
+                android:textColor="@color/colorAccent" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/addOffer_editTitle"
+                android:singleLine="true"
+                android:inputType="text"
+                android:textSize="16sp"
+                android:layout_marginLeft="@dimen/views_button_margin"
+                android:layout_marginRight="@dimen/views_button_margin"
+                android:background="@color/editText_background"
+                android:layout_marginTop="@dimen/views_margin_s"
+                android:layout_marginBottom="@dimen/views_margin_s"
+                android:paddingTop="@dimen/views_button_margin"
+                android:paddingRight="@dimen/views_button_margin"
+                android:paddingLeft="@dimen/views_button_margin"
+                android:paddingBottom="@dimen/views_button_margin"
+                android:hint="@string/add_offer_title_hint" />
+
+            <TextView
+                android:text="@string/add_offer_desc_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/addOffer_title_text"
+                android:textStyle="normal|bold"
+                android:textSize="18sp"
+                android:layout_marginLeft="@dimen/views_button_margin"
+                android:layout_marginRight="@dimen/views_button_margin"
+                android:layout_marginTop="@dimen/views_top_margin"
+                android:textColor="@color/colorAccent" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:ems="10"
+                android:textSize="14sp"
+                android:id="@+id/addOffer_editDesc"
+                android:layout_marginLeft="@dimen/views_button_margin"
+                android:layout_marginRight="@dimen/views_button_margin"
+                android:minLines="4"
+                android:gravity="top"
+                android:background="@color/editText_background"
+                android:layout_marginTop="@dimen/views_margin_s"
+                android:layout_marginBottom="@dimen/views_top_margin"
+                android:paddingLeft="@dimen/views_button_margin"
+                android:paddingTop="@dimen/views_button_margin"
+                android:paddingRight="@dimen/views_button_margin"
+                android:paddingBottom="@dimen/views_button_margin"
+                android:hint="@string/add_offer_desc_hint" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+
+        android:id="@+id/card_view3"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/card_view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/views_button_margin"
+        android:layout_marginRight="@dimen/views_button_margin"
+        android:layout_marginTop="@dimen/views_button_margin">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:text="@string/add_offer_info_offer_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="normal|bold"
+                android:textAllCaps="false"
+                android:textColor="@color/colorAccent"
+                android:layout_marginLeft="@dimen/views_button_margin"
+                android:layout_marginRight="@dimen/views_button_margin"
+                android:layout_marginTop="@dimen/views_top_margin"
+                android:drawableLeft="@drawable/ic_place"
+                android:drawableTint="@color/colorAccent"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="@dimen/views_margin_s" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/views_top_margin">
+
+                <TextView
+                    android:text="@string/city"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/addOffer_title_text"
+                    android:textStyle="normal|bold"
+                    android:textSize="18sp"
+                    android:layout_marginLeft="@dimen/views_margin"
+                    android:layout_marginRight="@dimen/views_margin" />
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/addOffer_spinCity"
+                    android:textAlignment="center"
+                    android:layout_marginRight="@dimen/views_margin"
+                    android:layout_marginLeft="@dimen/views_margin"
+                    android:layout_weight="0.81"
+                    android:gravity="right|center_vertical" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/fragment_background"
+                android:layout_marginLeft="@dimen/views_margin"
+                android:layout_marginRight="@dimen/views_margin"
+                android:layout_marginTop="@dimen/views_margin_s" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/views_top_margin"
+                android:layout_marginBottom="@dimen/views_top_margin">
+
+                <TextView
+                    android:text="@string/type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/addOffer_title_text"
+                    android:textStyle="normal|bold"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="@dimen/views_top_margin"
+                    android:layout_marginLeft="@dimen/views_margin"
+                    android:layout_marginRight="@dimen/views_margin" />
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/addOffer_spinType"
+                    android:textAlignment="center"
+                    android:layout_marginRight="@dimen/views_margin"
+                    android:layout_marginLeft="@dimen/views_margin"
+                    android:layout_weight="0.81"
+                    android:gravity="right|center_vertical" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+
+        android:id="@+id/card_view4"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/card_view3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/views_button_margin"
+        android:layout_marginRight="@dimen/views_button_margin"
+        android:layout_marginTop="@dimen/views_button_margin">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:text="@string/add_offer_info_user_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/addOffer_title_text"
+                android:textStyle="normal|bold"
+                android:textSize="18sp"
+                android:textColor="@color/colorAccent"
+                android:layout_marginTop="@dimen/views_top_margin"
+                android:layout_marginLeft="@dimen/views_button_margin"
+                android:layout_marginRight="@dimen/views_button_margin"
+                android:drawableLeft="@drawable/ic_menu_account"
+                android:drawableTint="@color/colorAccent"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="@dimen/views_margin_s" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/views_top_margin">
+
+                <TextView
+                    android:text="@string/add_offer_user_name_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/addOffer_title_text"
+                    android:textStyle="normal|bold"
+                    android:textSize="18sp"
+                    android:layout_marginLeft="@dimen/views_margin"
+                    android:layout_marginRight="@dimen/views_button_margin" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/addOffer_name_text"
+                    android:textStyle="normal|bold"
+                    android:textSize="18sp"
+                    android:layout_marginRight="@dimen/views_top_margin"
+                    android:gravity="left"
+                    android:textColor="@color/colorAccent" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/fragment_background"
+                android:layout_marginLeft="@dimen/views_margin"
+                android:layout_marginRight="@dimen/views_margin"
+                android:layout_marginTop="@dimen/views_margin_s" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/views_top_margin">
+
+                <TextView
+                    android:text="@string/add_offer_user_phone_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/addOffer_title_text"
+                    android:textStyle="normal|bold"
+                    android:textSize="18sp"
+                    android:layout_marginLeft="@dimen/views_margin"
+                    android:layout_marginRight="@dimen/views_button_margin" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/addOffer_phone_text"
+                    android:textStyle="normal|bold"
+                    android:textSize="18sp"
+                    android:layout_weight="1"
+                    android:layout_marginRight="@dimen/views_margin"
+                    android:textColor="@color/colorAccent" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/fragment_background"
+                android:layout_marginLeft="@dimen/views_margin"
+                android:layout_marginRight="@dimen/views_margin"
+                android:layout_marginTop="@dimen/views_margin_s" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/views_top_margin"
+                android:layout_marginBottom="@dimen/views_top_margin">
+
+                <TextView
+                    android:text="@string/my_account_homeCity_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/addOffer_title_text"
+                    android:textStyle="normal|bold"
+                    android:textSize="18sp"
+                    android:layout_marginLeft="@dimen/views_margin"
+                    android:layout_marginRight="@dimen/views_button_margin" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/addOffer_city_text"
+                    android:textStyle="normal|bold"
+                    android:textSize="18sp"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="@dimen/views_top_margin"
+                    android:layout_marginRight="@dimen/views_margin"
+                    android:textColor="@color/colorAccent" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+
+        android:id="@+id/card_view5"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="@dimen/views_button_margin"
+        android:layout_marginRight="@dimen/views_button_margin"
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:text="@string/layout_button_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                android:layout_weight="0.90"
+                android:id="@+id/addOffer_cancel" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/fragment_background" />
+
+            <Button
+                android:text="@string/layout_button_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/addOffer_save"
+                style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</RelativeLayout>

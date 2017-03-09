@@ -100,7 +100,7 @@ public class myOffers extends Fragment {
             //declare & initialize inflater for list items
             LayoutInflater layoutInflater = getActivity().getLayoutInflater();
             View listRow = layoutInflater.inflate(
-                    R.layout.my_offers_list_items,
+                    R.layout.fragment_my_offers_list_items,
                     parent,
                     false
             );

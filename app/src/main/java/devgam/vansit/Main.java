@@ -5,14 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,12 +34,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-
 import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Users;
 
 
-public class Main extends Fragment {
+public class Main extends Fragment implements View.OnClickListener{
     public Main() {
         // Required empty public constructor
     }
@@ -70,11 +66,6 @@ public class Main extends Fragment {
     private static String allCities[];//this will contain the values that are in strings.xml
     private static String allTypes[];//this will contain the values that are in strings.xml, used inside the getView to choose icon for type
 
-    //Shared Prferance to add offer to favorite list
-    static SharedPreferences userFavoriteOffers;
-    static SharedPreferences.Editor userFavoriteEditor;
-    static int userFavoriteCount = 0;
-
     //Long StartTime;
 
 
@@ -99,14 +90,6 @@ public class Main extends Fragment {
         allCities = getResources().getStringArray(R.array.city_list);
         allTypes = getResources().getStringArray(R.array.type_list);
 
-        //shared preferance initialize :
-        userFavoriteOffers = getContext().getSharedPreferences("userFavoriteOffers", Context.MODE_PRIVATE);
-        /*userFavoriteOffersId = getContext().getSharedPreferences("userFavoriteOffersId", Context.MODE_PRIVATE);
-        userFavoriteCount = getContext().getSharedPreferences("userFavoriteCount", Context.MODE_PRIVATE);
-        userFavoriteEditor = userFavoriteOffersCity.edit();
-        userFavoriteEditor = userFavoriteOffersId.edit();*/
-        userFavoriteEditor = userFavoriteOffers.edit();
-
         addFab = (FloatingActionButton) getActivity().findViewById(R.id.add_fab);// we should show this when he is logged
         addOffer = (FloatingActionButton) getActivity().findViewById(R.id.fab_add_offer);
         addRequest = (FloatingActionButton) getActivity().findViewById(R.id.fab_add_request);
@@ -129,9 +112,7 @@ public class Main extends Fragment {
                     if(isFloatingActionOpen){
                         addFab.startAnimation(fabAntiClockWise);
                         addRequest.startAnimation(fabClose);
-                        //addRequestText.startAnimation(fabClose);
                         addOffer.startAnimation(fabClose);
-                        //addOfferText.startAnimation(fabClose);
                         addRequest.setClickable(false);
                         addOffer.setClickable(false);
                         addRequestText.setVisibility(View.INVISIBLE);
@@ -140,9 +121,7 @@ public class Main extends Fragment {
                     }else {
                         addFab.startAnimation(fabClockWise);
                         addRequest.startAnimation(fabOpen);
-                        //addRequestText.startAnimation(fabOpen);
                         addOffer.startAnimation(fabOpen);
-                        //addOfferText.startAnimation(fabClose);
                         addRequest.setClickable(true);
                         addOffer.setClickable(true);
                         addRequestText.setVisibility(View.VISIBLE);
@@ -156,27 +135,13 @@ public class Main extends Fragment {
             addFab.setVisibility(View.GONE);
         }
 
-        addOffer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                AddOffer addOfferPage = new AddOffer();
-                Util.ChangeFrag(addOfferPage, fragmentManager);
-            }
-        });
-
-        addRequest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                addRequest addRequestPage = new addRequest();
-                Util.ChangeFrag(addRequestPage, fragmentManager);
-            }
-        });
-
+        //FAB On Click Listener from overriden method :
+        addOffer.setOnClickListener(this);
+        addOfferText.setOnClickListener(this);
+        addRequest.setOnClickListener(this);
+        addRequestText.setOnClickListener(this);
 
         fragmentManager  = getActivity().getSupportFragmentManager();
-
 
         listView = (ListView) getActivity().findViewById(R.id.frag_main_listview);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -258,7 +223,6 @@ public class Main extends Fragment {
             FillSpinnersAndListView();//To fill City and Type Spinners, And a default Filling of the List View.
         }
     }
-
 
     private void FillSpinnersAndListView()
     {
@@ -390,6 +354,19 @@ public class Main extends Fragment {
         query.addListenerForSingleValueEvent(QVEL);
     }
 
+    @Override
+    public void onClick(View v) {
+        if(v == addRequest || v == addRequestText){
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            addRequest addRequestPage = new addRequest();
+            Util.ChangeFrag(addRequestPage, fragmentManager);
+        } if( v == addOffer || v == addOfferText){
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            AddOffer addOfferPage = new AddOffer();
+            Util.ChangeFrag(addOfferPage, fragmentManager);
+        }
+    }
+
 
     private class itemsAdapter extends ArrayAdapter<Offers> {
 
@@ -418,21 +395,15 @@ public class Main extends Fragment {
             holder.City.setText(tempOffer.getCity());
 
             holder.typeIcon = (ImageView) rowItem.findViewById(R.id.main_items_typeIcon);
-
-            switch(tempOffer.getType()) {
-                case "Car":holder.typeIcon.setImageDrawable(getDrawableResource(R.mipmap.ic_type_car));break;
-                case "Bus":holder.typeIcon.setImageDrawable(getDrawableResource(R.mipmap.ic_type_bus));break;
-                case "Taxi":holder.typeIcon.setImageDrawable(getDrawableResource(R.mipmap.ic_type_taxi));break;
-                case "Truck":holder.typeIcon.setImageDrawable(getDrawableResource(R.mipmap.ic_type_truck));break;
-            }
+            holder.typeIcon.setImageDrawable(Util.getDrawableResource(getActivity(), Util.changeIcon(tempOffer.getType())));
 
             holder.ratingService = (TextView) rowItem.findViewById(R.id.main_items_serviceRatingData);
             holder.ratingPrice = (TextView) rowItem.findViewById(R.id.main_items_priceRatingData);
 
             //initialized by nimer esam for text buttons on list item :
-            holder.loveText = (Button) rowItem.findViewById(R.id.main_items_love_text);
-            holder.profileText = (Button) rowItem.findViewById(R.id.main_items_profile_text);
-            holder.callText = (Button) rowItem.findViewById(R.id.main_items_call_text);
+            //holder.loveText = (Button) rowItem.findViewById(R.id.main_items_love_text);
+            holder.profileText = (LinearLayout) rowItem.findViewById(R.id.main_items_profile_layout);
+            holder.callText = (LinearLayout) rowItem.findViewById(R.id.main_items_call_layout);
             Query query = databaseReference.child(tempOffer.getUserID());
 
             ValueEventListener VEL = new ValueEventListener() {
@@ -461,10 +432,8 @@ public class Main extends Fragment {
 
                         //add by nimer esam :
                         //To make call when user click on call text :
-
-                        // TODO: Implement Love here
-                        //holder.Love
                         final String phoneNumber = tempUser.getPhone();
+
                         holder.callText.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -482,30 +451,6 @@ public class Main extends Fragment {
                                 userIn.show();
                             }
                         });
-
-
-                        final String offerCity = tempOffer.getCity();
-                        final String offerId = tempOffer.getOfferKey();
-                        holder.loveText.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                //to add +1 for numbers of favorite list
-
-                                if(getNumberOfOffer(offerId) == 0) {
-                                    //That's mean this offer not in favorite list
-                                    //use method because inside listener can't use non-final vars
-                                    userFavoriteCount++;
-                                    addToFavoriteList(offerId, offerCity, userFavoriteCount);
-                                    Util.makeToast(getContext(), getNumberOfOffer(offerId) + "");
-                                    holder.loveText.setTextColor(getResources().getColor(R.color.loveButtonColorChange));
-                                } else {
-                                    deleteFromFavoriteList(getNumberOfOffer(offerId));
-                                    holder.loveText.setTextColor(getResources().getColor(R.color.loveButtonColor));
-                                }
-
-                            }
-                        });
-
 
 
                     }
@@ -534,8 +479,6 @@ public class Main extends Fragment {
         public Offers getItem(int position) {
             return offerList.get(position);
         }
-
-
     }
 
     static class ViewHolder {
@@ -544,9 +487,8 @@ public class Main extends Fragment {
         ImageView typeIcon;
 
         //add by nimer esam for buttons :
-        Button loveText, profileText, callText;
+        LinearLayout profileText, callText;
     }
-
 
     public void ShowMoreBtn(final ListView listView)
     {
@@ -620,12 +562,6 @@ public class Main extends Fragment {
 
     }
 
-    //used in list view to set icons to rows
-
-    private Drawable getDrawableResource(int resID) {
-        return ContextCompat.getDrawable(getActivity().getApplicationContext(), resID);//context.compat checks the version implicitly
-    }
-
     private void SortByTimeStampDesc(ArrayList<Offers> arrayToSort) {
         //Log.v("Main","Before Sorting:"+ System.currentTimeMillis()/1000);
         Collections.sort(arrayToSort, new Comparator<Offers>() {
@@ -643,12 +579,12 @@ public class Main extends Fragment {
         //Log.v("Main","Finished Sorting at:"+ System.currentTimeMillis()/1000);
     }
 
-    static void addToFavoriteList(String offerId, String offerCity, int number){
-        userFavoriteEditor.putString("city" + number, offerCity );
-        userFavoriteEditor.putString("id" + number, offerId );
-        userFavoriteEditor.commit();
+    //temp code :
+    static void addToFavoriteList(String offerId, String offerCity){
+        //TODO : add offer to favorite list
     }
 
+    /*//temp code :
     int getNumberOfOffer(String key){
         if(userFavoriteCount == 0)
             return 0;
@@ -660,6 +596,7 @@ public class Main extends Fragment {
         return 0;
     }
 
+    //temp code :
     static void deleteFromFavoriteList(int count){
         if(userFavoriteCount == 0)
             return ;
@@ -668,7 +605,7 @@ public class Main extends Fragment {
             userFavoriteEditor.putString("id" + i, userFavoriteOffers.getString("id" + (i+1), "") );
             userFavoriteEditor.commit();
         }
-    }
+    }*/
 
 
 

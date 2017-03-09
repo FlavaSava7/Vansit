@@ -1,9 +1,12 @@
 package devgam.vansit;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
@@ -13,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +55,7 @@ class Util
     // TODO: Real Time Database Variable Names
     static final String RDB_USERS = "Users";
     static final String RDB_OFFERS = "Offers";
+    static final String RDB_FAVORITE = "favorite";
     static final String RDB_COUNTRY = "Country";
     static final String RDB_JORDAN = "Jordan";
     static final String RDB_TYPE = "type";
@@ -143,6 +148,7 @@ class Util
         if (!fragmentPopped)
         {
             FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.setCustomAnimations(R.anim.slide_left_in, R.anim.slide_right_out);
             ft.replace(R.id.FragmentContainer, fragment);
             ft.addToBackStack(backStateName);
             ft.commit();
@@ -221,6 +227,61 @@ class Util
         FrameLayout frameLayout = (FrameLayout)fragmentActivity.findViewById(R.id.FragmentContainer);
         InputMethodManager imm = (InputMethodManager)fragmentActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(frameLayout.getWindowToken(), 0);
+    }
+
+    //used in list view to set icons to rows
+    static Drawable getDrawableResource(Activity activity, int resID) {
+        return ContextCompat.getDrawable(activity.getApplicationContext(), resID);//context.compat checks the version implicitly
+    }
+
+    static int changeIcon(String type){
+        int typeIcon = R.drawable.common_google_signin_btn_icon_dark;
+        switch(type) {
+            case "Car":
+                typeIcon = R.mipmap.ic_type_car;
+                break;
+            case "Bus":
+                typeIcon = R.mipmap.ic_type_bus;
+                break;
+            case "Taxi":
+                typeIcon = R.mipmap.ic_type_taxi;
+                break;
+            case "Truck":
+                typeIcon = R.mipmap.ic_type_truck;
+                break;
+        }
+
+        return typeIcon;
+    }
+
+    public final static boolean isValidEmail(CharSequence target) {
+        if (target == null) {
+            return false;
+        } else {
+            return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+        }
+    }
+
+    //To check first, last name & phone edit text is empty or not !
+    static boolean checkEdit(Activity activity,  Drawable errorIcon, EditText editText, String errorMsg){
+        Util.setErrorMsg(activity, errorIcon);
+        if(! editText.getText().toString().isEmpty() && !(editText.getText().toString() == "")) {
+            //Util.makeToast(getContext(), "name done");
+            return true;
+        } else {
+            editText.setError(errorMsg, errorIcon);
+            editText.requestFocus();
+
+            //Util.makeToast(getActivity(), "Name is required");
+            return false;
+        }
+    }
+
+    //to set an error icon on edit text if it was empty
+    private static void setErrorMsg(Activity activity, Drawable errorIcon){
+        errorIcon = activity.getResources().getDrawable(R.drawable.ic_error);
+        errorIcon.setBounds(new Rect(0, 0, errorIcon.getIntrinsicWidth(), errorIcon.getIntrinsicHeight()));
+        //editText.setError(null,errorIcon);
     }
 
 }

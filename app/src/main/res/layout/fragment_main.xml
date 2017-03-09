@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="devgam.vansit.Main"
-    android:background="#E0E0E0">
+    android:background="@color/fragment_background">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -32,7 +32,9 @@
                 android:textStyle="normal|bold"
                 android:textAlignment="center"
                 android:gravity="center"
-                android:textColor="#CC000000" />
+                android:textColor="#CC000000"
+                android:textSize="14sp"
+                android:layout_marginTop="@dimen/views_top_margin" />
 
             <Spinner
                 android:layout_width="match_parent"
@@ -63,7 +65,9 @@
                 android:gravity="center"
                 android:textAllCaps="true"
                 android:textStyle="normal|bold"
-                android:textColor="#CC000000" />
+                android:textColor="#CC000000"
+                android:textSize="14sp"
+                android:layout_marginTop="@dimen/views_top_margin" />
 
             <Spinner
                 android:id="@+id/frag_main_spinCity"
@@ -132,7 +136,8 @@
                 android:padding="@dimen/views_margin_s"
                 android:textColor="@color/cardview_light_background"
                 android:textStyle="normal|bold"
-                android:gravity="center_vertical" />
+                android:gravity="center_vertical"
+                android:textSize="12sp" />
 
             <android.support.design.widget.FloatingActionButton
                 android:layout_height="wrap_content"
@@ -169,7 +174,8 @@
                 android:padding="@dimen/views_margin_s"
                 android:textColor="@color/cardview_light_background"
                 android:textStyle="normal|bold"
-                android:gravity="center_vertical" />
+                android:gravity="center_vertical"
+                android:textSize="12sp" />
 
             <android.support.design.widget.FloatingActionButton
                 android:layout_height="wrap_content"

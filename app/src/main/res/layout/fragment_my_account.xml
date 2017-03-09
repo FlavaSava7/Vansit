@@ -20,11 +20,11 @@
             android:layout_height="wrap_content"
             android:id="@+id/my_account_cancel_button"
             style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
-            android:textColor="@color/buttonTextColor"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:allowUndo="false" />
 
         <Button
             android:text="@string/layout_button_save"
@@ -32,7 +32,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/my_account_save_button"
             style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
-            android:textColor="@color/buttonTextColor"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
@@ -169,7 +168,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
+            android:background="@color/fragment_background"
             android:layout_marginLeft="@dimen/views_margin_xl"
             android:layout_marginRight="@dimen/views_margin_xl"
             android:layout_marginTop="@dimen/views_top_margin"
@@ -225,7 +224,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
+            android:background="@color/fragment_background"
             android:layout_marginLeft="@dimen/views_margin_xl"
             android:layout_marginRight="@dimen/views_margin_xl"
             android:layout_marginTop="@dimen/views_top_margin"

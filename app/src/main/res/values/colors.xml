@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#009688</color>
+    <color name="colorPrimaryDark">#00796B</color>
+    <color name="colorAccent">#009688</color>
     <color name="buttonTextColor">#ff4081</color>
     <color name="editButtonColor">#505050</color>
     <color name="loveButtonColor">#505050</color>
     <color name="loveButtonColorChange">#fc3737</color>
     <color name="shareButtonColor">#505050</color>
     <color name="deleteButtonColor">#505050</color>
-    <color name="fab_add_offer">#00b5d1</color>
-    <color name="fab_add_request">#00b135</color>
+    <color name="fab_add_offer">#03a9f4</color>
+    <color name="fab_add_request">#8BC34A</color>
+    <color name="fragment_background">#e0e0e0</color>
+    <color name="editText_background">#f2f2f2</color>
+    <color name="more_offers">#cc008cff</color>
 </resources>

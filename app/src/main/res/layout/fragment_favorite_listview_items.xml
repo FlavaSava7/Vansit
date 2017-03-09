@@ -25,7 +25,7 @@
                 android:text="TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/main_items_TitleData"
+                android:id="@+id/favorite_items_TitleData"
                 android:layout_alignParentTop="true"
                 android:layout_toRightOf="@+id/main_items_typeIcon"
                 android:layout_toEndOf="@+id/main_items_typeIcon"
@@ -48,7 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     app:srcCompat="@drawable/common_google_signin_btn_icon_dark"
-                    android:id="@+id/main_items_typeIcon"
+                    android:id="@+id/favorite_items_typeIcon"
                     android:layout_marginTop="@dimen/views_top_margin"
                     android:layout_marginLeft="@dimen/views_button_margin"
                     android:layout_marginRight="@dimen/views_top_margin" />
@@ -78,7 +78,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:id="@+id/main_items_cityData"
+                            android:id="@+id/favorite_items_cityData"
                             android:layout_weight="1"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -86,7 +86,7 @@
                     <View
                         android:layout_width="wrap_content"
                         android:layout_height="1dp"
-                        android:background="@color/fragment_background"
+                        android:background="@android:color/darker_gray"
                         android:layout_marginLeft="@dimen/views_top_margin"
                         android:layout_marginRight="@dimen/views_margin_xl" />
 
@@ -109,7 +109,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:id="@+id/main_items_serviceRatingData"
+                            android:id="@+id/favorite_items_serviceRatingData"
                             android:layout_weight="1"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -117,7 +117,7 @@
                     <View
                         android:layout_width="wrap_content"
                         android:layout_height="1dp"
-                        android:background="@color/fragment_background"
+                        android:background="@android:color/darker_gray"
                         android:layout_marginLeft="@dimen/views_top_margin"
                         android:layout_marginRight="@dimen/views_margin_xl" />
 
@@ -135,13 +135,12 @@
                             android:id="@+id/textView3"
                             android:layout_marginLeft="@dimen/views_top_margin"
                             android:textSize="12sp"
-                            android:textStyle="normal|bold"
-                            />
+                            android:textStyle="normal|bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:id="@+id/main_items_priceRatingData"
+                            android:id="@+id/favorite_items_priceRatingData"
                             android:layout_weight="1"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -155,79 +154,62 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:weightSum="1"
-                android:layout_weight="0.5"
-                android:layout_marginLeft="@dimen/views_margin_xl"
-                android:layout_marginRight="@dimen/views_margin_xl">
+                android:layout_marginLeft="@dimen/views_margin"
+                android:layout_marginRight="@dimen/views_button_margin">
 
-                <LinearLayout
-                    android:orientation="horizontal"
+                <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.9"
-                    android:id="@+id/main_items_call_layout">
+                    android:text="@string/list_item_love_text"
+                    android:id="@+id/favorite_items_love_text"
+                    android:drawableLeft="@drawable/ic_favorite_border"
+                    android:gravity="center_vertical"
+                    android:textAllCaps="true"
+                    android:textStyle="normal|bold"
+                    android:layout_weight="0.45"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textSize="12sp"
+                    android:textColor="@color/editButtonColor"
+                    android:drawableTint="@color/editButtonColor"
+                    android:drawableTintMode="src_atop"
+                    style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"/>
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        app:srcCompat="@drawable/ic_call"
-                        android:drawableTint="@color/deleteButtonColor"
-                        android:drawableTintMode="src_atop"
-                        android:id="@+id/main_items_call_img"
-                        android:layout_marginLeft="@dimen/views_margin" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/list_item_call_text"
-                        android:id="@+id/main_items_call_text"
-                        android:textAllCaps="true"
-                        android:textStyle="normal|bold"
-                        android:textAppearance="@style/TextAppearance.AppCompat"
-                        android:textSize="12sp"
-                        android:textColor="@color/deleteButtonColor"
-                        style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
-                        android:layout_weight="0.45"
-                        android:gravity="center_vertical"
-                        android:clickable="false"
-                        android:longClickable="false" />
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:orientation="horizontal"
+                <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/main_items_profile_layout"
-                    android:layout_marginLeft="@dimen/views_margin_xl">
+                    android:text="@string/list_item_profile_text"
+                    android:id="@+id/favorite_items_profile_text"
+                    android:drawableLeft="@drawable/ic_person"
+                    android:textAllCaps="true"
+                    android:textStyle="normal|bold"
+                    android:layout_weight="0.45"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textSize="12sp"
+                    android:textColor="@color/shareButtonColor"
+                    android:drawableTint="@color/shareButtonColor"
+                    android:drawableTintMode="src_atop"
+                    style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity" />
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        app:srcCompat="@drawable/ic_person"
-                        android:drawableTint="@color/deleteButtonColor"
-                        android:drawableTintMode="src_atop"
-                        android:id="@+id/imageView2"
-                        android:layout_marginLeft="@dimen/views_margin" />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/list_item_call_text"
+                    android:id="@+id/favorite_items_call_text"
+                    android:textAllCaps="true"
+                    android:textStyle="normal|bold"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textSize="12sp"
+                    android:textColor="@color/deleteButtonColor"
+                    android:drawableTint="@color/deleteButtonColor"
+                    android:drawableTintMode="src_atop"
+                    android:gravity="center_vertical"
+                    android:textAlignment="center"
+                    android:drawableLeft="@drawable/ic_call"
+                    style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:text="@string/list_item_profile_text"
-                        android:id="@+id/main_items_profile_text"
-                        android:textAllCaps="true"
-                        android:textStyle="normal|bold"
-                        android:layout_weight="0.45"
-                        android:textAppearance="@style/TextAppearance.AppCompat"
-                        android:textSize="12sp"
-                        android:textColor="@color/shareButtonColor"
-                        android:drawableTint="@color/shareButtonColor"
-                        android:drawableTintMode="src_atop"
-                        style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
-                        android:textAlignment="gravity"
-                        android:gravity="center_vertical" />
 
-                    </LinearLayout>
 
             </LinearLayout>
 
@@ -238,52 +220,52 @@
 
 </RelativeLayout>
 
-<!--
-<TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/list_item_love_text"
-                    android:id="@+id/main_items_love_text"
-                    android:drawableLeft="@drawable/ic_favorite_border"
-                    android:gravity="center_vertical"
-                    android:textAllCaps="true"
-                    android:textStyle="normal|bold"
-                    android:layout_weight="0.45"
-                    android:textAppearance="@style/TextAppearance.AppCompat"
-                    android:textSize="12sp"
-                    android:textColor="@color/editButtonColor"
-                    android:drawableTint="@color/editButtonColor"
-                    android:drawableTintMode="src_atop" />
+    <!--
+    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/list_item_love_text"
+                        android:id="@+id/main_items_love_text"
+                        android:drawableLeft="@drawable/ic_favorite_border"
+                        android:gravity="center_vertical"
+                        android:textAllCaps="true"
+                        android:textStyle="normal|bold"
+                        android:layout_weight="0.45"
+                        android:textAppearance="@style/TextAppearance.AppCompat"
+                        android:textSize="12sp"
+                        android:textColor="@color/editButtonColor"
+                        android:drawableTint="@color/editButtonColor"
+                        android:drawableTintMode="src_atop" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/list_item_profile_text"
-                    android:id="@+id/main_items_profile_text"
-                    android:drawableLeft="@drawable/ic_person"
-                    android:gravity="center_vertical"
-                    android:textAllCaps="true"
-                    android:textStyle="normal|bold"
-                    android:layout_weight="0.45"
-                    android:textAppearance="@style/TextAppearance.AppCompat"
-                    android:textSize="12sp"
-                    android:textColor="@color/shareButtonColor"
-                    android:drawableTint="@color/shareButtonColor"
-                    android:drawableTintMode="src_atop"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/list_item_profile_text"
+                        android:id="@+id/main_items_profile_text"
+                        android:drawableLeft="@drawable/ic_person"
+                        android:gravity="center_vertical"
+                        android:textAllCaps="true"
+                        android:textStyle="normal|bold"
+                        android:layout_weight="0.45"
+                        android:textAppearance="@style/TextAppearance.AppCompat"
+                        android:textSize="12sp"
+                        android:textColor="@color/shareButtonColor"
+                        android:drawableTint="@color/shareButtonColor"
+                        android:drawableTintMode="src_atop"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/list_item_call_text"
-                    android:id="@+id/main_items_call_text"
-                    android:drawableLeft="@drawable/ic_call"
-                    android:textAllCaps="true"
-                    android:textStyle="normal|bold"
-                    android:layout_weight="1"
-                    android:textAppearance="@style/TextAppearance.AppCompat"
-                    android:textSize="12sp"
-                    android:textColor="@color/deleteButtonColor"
-                    android:drawableTint="@color/deleteButtonColor"
-                    android:drawableTintMode="src_atop"
-                    android:gravity="center_vertical" />
-                    -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/list_item_call_text"
+                        android:id="@+id/main_items_call_text"
+                        android:drawableLeft="@drawable/ic_call"
+                        android:textAllCaps="true"
+                        android:textStyle="normal|bold"
+                        android:layout_weight="1"
+                        android:textAppearance="@style/TextAppearance.AppCompat"
+                        android:textSize="12sp"
+                        android:textColor="@color/deleteButtonColor"
+                        android:drawableTint="@color/deleteButtonColor"
+                        android:drawableTintMode="src_atop"
+                        android:gravity="center_vertical" />
+                        -->
