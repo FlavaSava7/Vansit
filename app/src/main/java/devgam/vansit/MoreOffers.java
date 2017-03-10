@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -27,22 +26,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Users;
-import devgam.vansit.R;
 
 public class MoreOffers extends Fragment {
 
@@ -81,10 +70,6 @@ public class MoreOffers extends Fragment {
     public void onResume()
     {
         super.onResume();
-        //FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        //if(fab!=null)
-            //fab.setVisibility(View.GONE);
-
         userImage = (ImageView) getActivity().findViewById(R.id.moreOffers_img);
         userName = (TextView) getActivity().findViewById(R.id.moreOffers_name);
         userAge = (TextView) getActivity().findViewById(R.id.moreOffers_age);
@@ -92,13 +77,8 @@ public class MoreOffers extends Fragment {
         userPhone = (TextView) getActivity().findViewById(R.id.moreOffers_phone);
         listView = (ListView) getActivity().findViewById(R.id.moreOffers_offersList);
         offerAdapter = new itemsAdapter(getContext());
-        offerList = new ArrayList<>();
         fragmentManager = getActivity().getSupportFragmentManager();
-
         setUpInfo();
-
-
-
     }
     void setUpInfo()
     {
@@ -108,7 +88,7 @@ public class MoreOffers extends Fragment {
             return;
         }
         final ProgressDialog progressDialog = new ProgressDialog(getContext(),ProgressDialog.STYLE_SPINNER);
-        Util.ProgDialogStarter(progressDialog,"Loading...");
+
 
         if (userDriver.getGender().equals("male"))
             userImage.setImageResource(R.drawable.ic_user_male);
@@ -133,51 +113,55 @@ public class MoreOffers extends Fragment {
             }
         });
 
+        if(offerList==null)
+        {
+            Util.ProgDialogStarter(progressDialog,"Loading...");
+            offerList = new ArrayList<>();
 
-        DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference()
-                .child(Util.RDB_COUNTRY+"/"+Util.RDB_JORDAN);
+            DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference()
+                    .child(Util.RDB_OFFERS+"/"+userDriver.getUserID());
 
-        Query query = DataBaseRoot;
-        ValueEventListener QVEL= new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                for(DataSnapshot cityRoot : dataSnapshot.getChildren())
+            Query query = DataBaseRoot;
+            ValueEventListener QVEL= new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot)
                 {
-                    for(DataSnapshot offerRoot : cityRoot.getChildren())
+                    for(DataSnapshot offers : dataSnapshot.getChildren())
                     {
-                        for(DataSnapshot everyOffer : offerRoot.getChildren())
-                        {
-                            //Log.v("Main","Key:"+it3.getKey());
-                            Offers tempOffer = everyOffer.getValue(Offers.class);
-                            tempOffer.setOfferKey(everyOffer.getKey());
+                        //Log.v("Main","Key:"+offers.getKey());
+                        Offers tempOffer = offers.getValue(Offers.class);
+                        tempOffer.setOfferKey(offers.getKey());
 
-                            boolean toAdd=true;
-                            for(Offers offer:offerList)
-                                if(offer.getOfferKey().equals(tempOffer.getOfferKey()))
-                                    toAdd=false;
+                        boolean toAdd = true;
+                        for (Offers offer : offerList)
+                            if (offer.getOfferKey().equals(tempOffer.getOfferKey()))
+                                toAdd = false;
 
-                            if(toAdd)
-                                if(tempOffer.getUserID().equals(userDriver.getUserKey()))
-                                    offerList.add(tempOffer);
-                        }
+                        if (toAdd)
+                            if (tempOffer.getUserID().equals(userDriver.getUserID()))
+                                offerList.add(tempOffer);
                     }
-                }
 
-                for(Offers offer : offerList)
-                {
-                    Log.v("Main", "offerList for this user: " + offer.getOfferKey());
+                    for(Offers offer : offerList)
+                    {
+                        //Log.v("Main", "offerList for this user: " + offer.getOfferKey());
+                    }
+                    Util.SortByTimeStampDesc(offerList);
+                    listView.setAdapter(offerAdapter);
+                    Util.ProgDialogDelay(progressDialog,1000L);
                 }
-                SortByTimeStampDesc(offerList);
-                listView.setAdapter(offerAdapter);
-                Util.ProgDialogDelay(progressDialog,1000L);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError)
-            {
-            }
-        };
-        query.addListenerForSingleValueEvent(QVEL);
+                @Override
+                public void onCancelled(DatabaseError databaseError)
+                {
+                }
+            };
+            query.addListenerForSingleValueEvent(QVEL);
+        }
+        else
+        {
+            listView.setAdapter(offerAdapter);
+        }
+
 
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -226,13 +210,7 @@ public class MoreOffers extends Fragment {
             holder.City.setText(tempOffer.getCity());
 
             holder.typeIcon = (ImageView) rowItem.findViewById(R.id.moreOffers_items_typeIcon);
-            switch(tempOffer.getType())
-            {
-                case "Car":holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.car));break;
-                case "Bus":holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.bus));break;
-                case "Taxi":holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.taxi));break;
-                case "Truck":holder.typeIcon.setImageDrawable(getDrawableResource(R.drawable.truck));break;
-            }
+            holder.typeIcon.setImageDrawable(Util.getDrawableResource(getActivity(), Util.changeIcon(tempOffer.getType())));
             return rowItem;
         }
         @Override
@@ -258,21 +236,5 @@ public class MoreOffers extends Fragment {
     private Drawable getDrawableResource(int resID)//used in list view to set icons to rows
     {
         return ContextCompat.getDrawable(getActivity().getApplicationContext(), resID);//context.compat checks the version implicitly
-    }
-    private void SortByTimeStampDesc(ArrayList<Offers> arrayToSort)
-    {
-        Collections.sort(arrayToSort, new Comparator<Offers>() {
-            @Override
-            public int compare(Offers o1, Offers o2) {
-                return o1.getTimeStamp().compareTo(o2.getTimeStamp());
-            }
-        });
-
-        Collections.reverse(arrayToSort);
-
-        /*for(int i = 0;i<offerList.size();i++)
-            Log.v("Main","index: "+i+"|| offer:"+offerList.get(i).getTimeStamp());*/
-
-
     }
 }

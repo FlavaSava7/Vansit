@@ -23,6 +23,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Users;
 
@@ -42,6 +46,8 @@ public class AddOffer extends Fragment {
     Button btnSave,btnCancel;
     FragmentManager fragmentManager;
 
+    public Offers editOffer = null; // this will be set of we came from myOffers pages to edit an offer
+
     boolean doubleBackToExitPressedOnce = false;
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -54,8 +60,11 @@ public class AddOffer extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-
-        //Log.v("Main","onCreateView");
+        Bundle bundle = this.getArguments();
+        if (bundle != null)
+        {
+            editOffer = (Offers) bundle.getSerializable("editOffer");
+        }
         return inflater.inflate(R.layout.fragment_add_offer, container, false);
     }
 
@@ -64,15 +73,23 @@ public class AddOffer extends Fragment {
     public void onResume()
     {
         super.onResume();
-        //FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        //if(fab!=null)
-            //fab.setVisibility(View.GONE);
         spinnerCity = (Spinner)getActivity().findViewById(R.id.addOffer_spinCity);
         spinnerType = (Spinner)getActivity().findViewById(R.id.addOffer_spinType);
-        FillSpinners();
+        FillSpinners();//default filling
 
         editTitle = (EditText) getActivity().findViewById(R.id.addOffer_editTitle);
         editDesc = (EditText) getActivity().findViewById(R.id.addOffer_editDesc);
+
+        if(editOffer!=null)//we came from myOffers so set these fields
+        {
+            editTitle.setText(editOffer.getTitle());
+            editDesc.setText(editOffer.getDescription());
+            ArrayList<String> tempCityList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.city_list)));
+            spinnerCity.setSelection(tempCityList.indexOf(editOffer.getCity()));
+
+            ArrayList<String> tempTypeList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.type_list)));
+            spinnerType.setSelection(tempTypeList.indexOf(editOffer.getType()));
+        }
 
         nameText = (TextView) getActivity().findViewById(R.id.addOffer_name_text);
         phoneText = (TextView) getActivity().findViewById(R.id.addOffer_phone_text);
@@ -83,8 +100,13 @@ public class AddOffer extends Fragment {
         btnSave = (Button) getActivity().findViewById(R.id.addOffer_save);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                SaveOffer();
+            public void onClick(View v)
+            {
+                if(editOffer==null)
+                    SaveOffer();
+                else
+                    EditOffer();
+
             }
         });
         btnCancel = (Button) getActivity().findViewById(R.id.addOffer_cancel);
@@ -146,6 +168,7 @@ public class AddOffer extends Fragment {
                 getResources().getStringArray(R.array.type_list));
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerType.setAdapter(typeAdapter);
+
     }
     public void SaveOffer()
     {
@@ -156,41 +179,83 @@ public class AddOffer extends Fragment {
         {
             return;
         }
+        if(!Util.IS_USER_CONNECTED)
+        {
+            makeToast(getContext(), String.valueOf(R.string.noInternetMsg));
+            return;
+        }
 
-        //for now the User Id will be inputted manually,cuz for now we dont have the User details yet
-        // TODO: CHANGE THE ID HERE
         Offers myOffer = new Offers(FirebaseAuth.getInstance().getCurrentUser().getUid(),
                 editTitle.getText().toString(),
                 editDesc.getText().toString(),
                 spinnerType.getSelectedItem().toString(),spinnerCity.getSelectedItem().toString(), System.currentTimeMillis());
 
-        if(Util.IS_USER_CONNECTED) {
-            // here we will AUTO go to the child where his Country == the country he signed up in the app
-            //Edit it later cuz for now we dont have the User details yet
-            DatabaseReference mRef = FirebaseDatabase.getInstance().
-                    getReference(Util.RDB_COUNTRY+"/"+
-                            Util.RDB_JORDAN+"/"+
-                            spinnerCity.getSelectedItem().toString()+"/"+
-                            Util.RDB_OFFERS);
-            mRef.push().setValue(myOffer);
+        // here we will AUTO go to the child where his Country == the country he signed up in the app
+        //Edit it later cuz for now we dont have the User details yet
+        DatabaseReference mRef = FirebaseDatabase.getInstance().
+                getReference(Util.RDB_COUNTRY+"/"+
+                        Util.RDB_JORDAN+"/"+
+                        spinnerCity.getSelectedItem().toString()+"/"+
+                        Util.RDB_OFFERS);
+        String offerKey =  mRef.push().getKey();
+        mRef.child(offerKey).setValue(myOffer);//add to offers under Country
+        mRef = FirebaseDatabase.getInstance().
+                getReference(Util.RDB_OFFERS
+                        +"/"+ FirebaseAuth.getInstance().getCurrentUser().getUid()
+                        +"/"+ offerKey);
+        mRef.setValue(myOffer);
 
-            Util.makeToast(getContext(),"Success!");
+        Util.makeToast(getContext(),"Success!");
 
-            myOffers offer = new myOffers();
-            Util.ChangeFrag(offer, fragmentManager);
-        } else {
-            makeToast(getContext(), String.valueOf(R.string.noInternetMsg));
-        }
-
-
-
+        myOffers offer = new myOffers();
+        Util.ChangeFrag(offer, fragmentManager);
     }
     public void CancelOffer()
     {
         editDesc.setText("");
         editTitle.setText("");
     }
+    public void EditOffer()
+    {
+        if(!Util.IS_USER_CONNECTED)
+        {
+            makeToast(getContext(), String.valueOf(R.string.noInternetMsg));
+            return;
+        }
+        String tempKeyHolder  = editOffer.getOfferKey();// to fix stupid bug with null keys when updating to Offers/UserKey/offer
 
+        DatabaseReference mRef = FirebaseDatabase.getInstance().
+                getReference(Util.RDB_COUNTRY+"/"+
+                        Util.RDB_JORDAN+"/"+
+                        editOffer.getCity()+"/"+
+                        Util.RDB_OFFERS+"/"+editOffer.getOfferKey());
+        mRef.removeValue();// remove the old value
+
+        mRef = FirebaseDatabase.getInstance().
+                getReference(Util.RDB_COUNTRY+"/"+
+                        Util.RDB_JORDAN+"/"+
+                        spinnerCity.getSelectedItem().toString()+"/"+
+                        Util.RDB_OFFERS+"/"+editOffer.getOfferKey());
+
+        editOffer.setTitle(editTitle.getText().toString());
+        editOffer.setDescription(editDesc.getText().toString());
+        editOffer.setCity(spinnerCity.getSelectedItem().toString());
+        editOffer.setType(spinnerType.getSelectedItem().toString());
+        editOffer.setTimeStamp(System.currentTimeMillis());
+        editOffer.setOfferKey(null);
+        mRef.setValue(editOffer);// set the new value
+
+        mRef = FirebaseDatabase.getInstance().
+                getReference(Util.RDB_OFFERS+"/"+
+                        FirebaseAuth.getInstance().getCurrentUser().getUid()+"/"+
+                        tempKeyHolder);
+        mRef.setValue(editOffer);// set the new value
+
+        editOffer= null;//reset
+
+        myOffers offer = new myOffers();
+        Util.ChangeFrag(offer, fragmentManager);
+    }
     private void addUserData(){
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         String tempUID = firebaseAuth.getCurrentUser().getUid();

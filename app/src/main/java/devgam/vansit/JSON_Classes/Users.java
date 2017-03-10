@@ -1,7 +1,6 @@
 package devgam.vansit.JSON_Classes;
 
 import java.lang.*;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.io.Serializable;
 /**
@@ -28,7 +27,7 @@ public class Users implements Serializable
     private ArrayList<String> RatedFor;//lists that contains IDs of who THIS user rated for.
 
     // The following variables will not be shown in the DataBase Users Object Just to get more Information
-    private String userKey;//this is used inside the list views so we can know if a certain obj already exists or not inside the list
+    private String userID;//this is used inside the list views so we can know if a certain obj already exists or not inside the list
 
     public Users()
     {
@@ -134,11 +133,11 @@ public class Users implements Serializable
         Phone = phone;
     }
 
-    public String getUserKey() {
-        return userKey;
+    public String getUserID() {
+        return userID;
     }
 
-    public void setUserKey(String userKey) {
-        this.userKey = userKey;
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 }
