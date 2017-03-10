@@ -3,10 +3,10 @@ package devgam.vansit;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,16 +24,21 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
+
 import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Users;
 
@@ -143,35 +148,24 @@ public class Main extends Fragment implements View.OnClickListener{
 
         fragmentManager  = getActivity().getSupportFragmentManager();
 
-        listView = (ListView) getActivity().findViewById(R.id.frag_main_listview);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-                {
-                    // click to go to offerinfo page
-
-                    OfferInfo offerInfoPage = new OfferInfo();
-                    Bundle bundle = new Bundle();
-
-                    bundle.putSerializable("userOffer",offerList.get(position));
-                    for(Users user:userList)// cuz userList is distinct
-                        if(offerList.get(position).getUserID().equals(user.getUserKey()))
-                            bundle.putSerializable("userDriver",user);
-
-                    offerInfoPage.setArguments(bundle);
-                    //Log.v("Main","Sending to OfferInfo: "+offerList.get(position).getTitle());
-
-                    Util.ChangeFrag(offerInfoPage,fragmentManager);
-                }
-        });
-
         DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference().child(Util.RDB_USERS);
         offerAdapter = new itemsAdapter(getContext(),DataBaseRoot);
-        offerList = new ArrayList<>();
-        userList = new ArrayList<>();
+        listView = (ListView) getActivity().findViewById(R.id.frag_main_listview);
 
         spinnerCity = (Spinner)getActivity().findViewById(R.id.frag_main_spinCity);
+        spinnerType = (Spinner)getActivity().findViewById(R.id.frag_main_spinType);
+
+        if(offerList==null && userList==null)
+        {
+            offerList = new ArrayList<>();
+            userList = new ArrayList<>();
+            FillSpinnersAndListView();
+        }
+        else
+        {
+            listView.setAdapter(offerAdapter);
+        }
+
         spinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             boolean stopAutoFiringCode=false;
@@ -191,8 +185,6 @@ public class Main extends Fragment implements View.OnClickListener{
 
             }
         });
-
-        spinnerType = (Spinner)getActivity().findViewById(R.id.frag_main_spinType);
         spinnerType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             boolean stopAutoFiringCode=false;
@@ -213,15 +205,27 @@ public class Main extends Fragment implements View.OnClickListener{
 
             }
         });
-        if(!offerList.isEmpty())// if we came back to this page dont reload lists
-        {
-            //Log.v("Main","offerList: "+offerList);
 
-        }else
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
-            //Log.v("Main","offerList:isEmpty()");
-            FillSpinnersAndListView();//To fill City and Type Spinners, And a default Filling of the List View.
-        }
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+                {
+                    // click to go to offerinfo page
+
+                    OfferInfo offerInfoPage = new OfferInfo();
+                    Bundle bundle = new Bundle();
+
+                    bundle.putSerializable("userOffer",offerList.get(position));
+                    for(Users user:userList)// cuz userList is distinct
+                        if(offerList.get(position).getUserID().equals(user.getUserID()))
+                            bundle.putSerializable("userDriver",user);
+
+                    offerInfoPage.setArguments(bundle);
+                    Util.ChangeFrag(offerInfoPage,fragmentManager);
+                }
+        });
     }
 
     private void FillSpinnersAndListView()
@@ -278,7 +282,7 @@ public class Main extends Fragment implements View.OnClickListener{
                     }
                 }
                 // sort them by time desc
-                SortByTimeStampDesc(offerList);
+                Util.SortByTimeStampDesc(offerList);
 
                 if(offerList.size()>=recentOfferCounter)
                 {
@@ -342,7 +346,7 @@ public class Main extends Fragment implements View.OnClickListener{
                 }
 
                 // sort desc
-                SortByTimeStampDesc(offerList);
+                Util.SortByTimeStampDesc(offerList);
                 listView.setAdapter(offerAdapter);
             }
 
@@ -356,11 +360,13 @@ public class Main extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        if(v == addRequest || v == addRequestText){
+        if(v == addRequest || v == addRequestText)
+        {
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             addRequest addRequestPage = new addRequest();
             Util.ChangeFrag(addRequestPage, fragmentManager);
-        } if( v == addOffer || v == addOfferText){
+        } if( v == addOffer || v == addOfferText)
+        {
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             AddOffer addOfferPage = new AddOffer();
             Util.ChangeFrag(addOfferPage, fragmentManager);
@@ -414,11 +420,11 @@ public class Main extends Fragment implements View.OnClickListener{
 
                         //Log.v("Main:","KEY "+dataSnapshot.getKey());
                         final Users tempUser = dataSnapshot.getValue(Users.class);
-                        tempUser.setUserKey(dataSnapshot.getKey());
+                        tempUser.setUserID(dataSnapshot.getKey());
 
                         boolean toAdd = true;
                         for(Users addedUser:userList)
-                            if(tempUser.getUserKey().equals(addedUser.getUserKey()))
+                            if(tempUser.getUserID().equals(addedUser.getUserID()))
                                 toAdd=false;
 
                         if(toAdd)
@@ -542,7 +548,7 @@ public class Main extends Fragment implements View.OnClickListener{
 
                         }
                         // sort desc again
-                        SortByTimeStampDesc(offerList);
+                        Util.SortByTimeStampDesc(offerList);
                         offerAdapter.notifyDataSetChanged();
                         listView.smoothScrollToPosition(0);
                     }
@@ -562,22 +568,7 @@ public class Main extends Fragment implements View.OnClickListener{
 
     }
 
-    private void SortByTimeStampDesc(ArrayList<Offers> arrayToSort) {
-        //Log.v("Main","Before Sorting:"+ System.currentTimeMillis()/1000);
-        Collections.sort(arrayToSort, new Comparator<Offers>() {
-            @Override
-            public int compare(Offers o1, Offers o2) {
-                return o1.getTimeStamp().compareTo(o2.getTimeStamp());
-            }
-        });
 
-        Collections.reverse(arrayToSort);
-
-        /*for(int i = 0;i<offerList.size();i++)
-            Log.v("Main","index: "+i+"|| offer:"+offerList.get(i).getTitle());*/
-        //Log.v("Main","Started at: "+StartTime/1000);
-        //Log.v("Main","Finished Sorting at:"+ System.currentTimeMillis()/1000);
-    }
 
     //temp code :
     static void addToFavoriteList(String offerId, String offerCity){
@@ -608,6 +599,28 @@ public class Main extends Fragment implements View.OnClickListener{
     }*/
 
 
+/*
+             List<String> keys = new ArrayList<>();
+            List<Offers> offers = new ArrayList<>();
+            DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference()
+                    .child(Util.RDB_COUNTRY +"/"+ Util.RDB_JORDAN+"/"+"Amman/"+Util.RDB_OFFERS);
+            for(int i =0;i<=10;i++)
+            {
+                Offers offer = new Offers(FirebaseAuth.getInstance().getCurrentUser().getUid()
+                        ,"Title"+i,"Desc"+i,"Car","Amman",System.currentTimeMillis());
+                String temp = DataBaseRoot.push().getKey();
+                keys.add(temp);
+                offers.add(offer);
+                DataBaseRoot.child(temp).setValue(offer);
 
+
+            }
+            DataBaseRoot = FirebaseDatabase.getInstance().getReference()
+                    .child(Util.RDB_OFFERS +"/"+ FirebaseAuth.getInstance().getCurrentUser().getUid());
+            for(int i =0;i<=10;i++)
+            {
+                DataBaseRoot.child(keys.get(i)).setValue(offers.get(i));
+            }
+            */
 
 }

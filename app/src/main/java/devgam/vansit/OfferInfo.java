@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -103,18 +102,11 @@ public class OfferInfo extends Fragment {
 
         Commit = (Button) getActivity().findViewById(R.id.offerInfo_commitRating);
 
-        setUpInfo();
+        SetUpInfo();
     }
-    void setUpInfo()
+    void SetUpInfo()
     {
-
-        switch(userOffer.getType())
-        {
-            case "Car":typeIcon.setImageDrawable(getDrawableResource(R.drawable.car));break;
-            case "Bus":typeIcon.setImageDrawable(getDrawableResource(R.drawable.bus));break;
-            case "Taxi":typeIcon.setImageDrawable(getDrawableResource(R.drawable.taxi));break;
-            case "Truck":typeIcon.setImageDrawable(getDrawableResource(R.drawable.truck));break;
-        }
+        typeIcon.setImageDrawable(Util.getDrawableResource(getActivity(), Util.changeIcon(userOffer.getType())));
 
         Title.setText(userOffer.getTitle());
         Description.setText(userOffer.getDescription());
@@ -216,7 +208,7 @@ public class OfferInfo extends Fragment {
                                     return ;
 
                                 final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-                                if(userDriver.getUserKey().equals(firebaseAuth.getCurrentUser().getUid()))// user cant vote for self.
+                                if(userDriver.getUserID().equals(firebaseAuth.getCurrentUser().getUid()))// user cant vote for self.
                                     return ;
 
 
@@ -236,13 +228,13 @@ public class OfferInfo extends Fragment {
                                             boolean canRate=true;
                                             for(String value : ratedForList)
                                             {
-                                                if(value.equals(userDriver.getUserKey()))//user already voted for this driver
+                                                if(value.equals(userDriver.getUserID()))//user already voted for this driver
                                                     canRate = false;
                                             }
 
                                             if(canRate)
                                             {
-                                                ratedForList.add(userDriver.getUserKey());
+                                                ratedForList.add(userDriver.getUserID());
 
                                                 commitRating(ratedForList,firebaseAuth.getCurrentUser().getUid() );//apply rate and add this driver to user
 
@@ -272,11 +264,6 @@ public class OfferInfo extends Fragment {
             }
         });
     }
-    private Drawable getDrawableResource(int resID)//used in list view to set icons to rows
-    {
-        return ContextCompat.getDrawable(getActivity().getApplicationContext(), resID);//context.compat checks the version implicitly
-    }
-
     void commitRating(ArrayList<String> updatedRatedForList , String userKey)
     {
         //current userKey so we can search and add the updatedRatedForList for user.
@@ -287,7 +274,7 @@ public class OfferInfo extends Fragment {
             totalRating += ratingPrice.getRating();
 
             DataBaseRoot.child(Util.RDB_USERS)
-                    .child(userDriver.getUserKey())
+                    .child(userDriver.getUserID())
                     .child(Util.RATE_PRICE_COUNT)
                     .setValue(userDriver.getRatePriceCount()+1);
 
@@ -295,7 +282,7 @@ public class OfferInfo extends Fragment {
             df.setRoundingMode(RoundingMode.DOWN);
 
             DataBaseRoot.child(Util.RDB_USERS)
-                    .child(userDriver.getUserKey())
+                    .child(userDriver.getUserID())
                     .child(Util.RATE_PRICE)
                     .setValue(Float.parseFloat(df.format(totalRating/ (userDriver.getRatePriceCount()+1))));
         }
@@ -307,14 +294,14 @@ public class OfferInfo extends Fragment {
             totalRating += ratingService.getRating();
 
             DataBaseRoot.child(Util.RDB_USERS)
-                    .child(userDriver.getUserKey())
+                    .child(userDriver.getUserID())
                     .child(Util.RATE_SERVICE_COUNT)
                     .setValue(userDriver.getRateServiceCount()+1);
 
             DecimalFormat df = new DecimalFormat("#.####");
             df.setRoundingMode(RoundingMode.DOWN);
             DataBaseRoot.child(Util.RDB_USERS)
-                    .child(userDriver.getUserKey())
+                    .child(userDriver.getUserID())
                     .child(Util.RATE_SERVICE)
                     .setValue(Float.parseFloat(df.format(totalRating/ (userDriver.getRateServiceCount()+1))));
 

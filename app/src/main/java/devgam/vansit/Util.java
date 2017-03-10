@@ -29,9 +29,13 @@ import com.google.firebase.auth.FirebaseAuth;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
+import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Users;
 
 /**
@@ -284,4 +288,15 @@ class Util
         //editText.setError(null,errorIcon);
     }
 
+    static ArrayList<Offers>  SortByTimeStampDesc(ArrayList<Offers> arrayToSort)// sort offers by date
+    {
+        Collections.sort(arrayToSort, new Comparator<Offers>() {
+            @Override
+            public int compare(Offers o1, Offers o2) {
+                return o1.getTimeStamp().compareTo(o2.getTimeStamp());
+            }
+        });
+        Collections.reverse(arrayToSort);
+        return arrayToSort;
+    }
 }
