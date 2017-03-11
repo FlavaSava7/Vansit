@@ -30,7 +30,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import devgam.vansit.JSON_Classes.Users;
+
+import static devgam.vansit.Util.dayNow;
 import static devgam.vansit.Util.makeToast;
+import static devgam.vansit.Util.monthNow;
+import static devgam.vansit.Util.yearNow;
 
 public class myAccount extends Fragment implements View.OnClickListener{
 
@@ -81,6 +85,12 @@ public class myAccount extends Fragment implements View.OnClickListener{
         //FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         //if(fab!=null)
             //fab.setVisibility(View.GONE);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        tempUID = firebaseAuth.getCurrentUser().getUid();
+        mRef = FirebaseDatabase.getInstance().
+                getReference(Util.RDB_USERS +"/"+
+                        tempUID);
 
         //Views initialize
         firstNameEdit = (EditText) getActivity().findViewById(R.id.my_account_firstName_edit);
@@ -251,27 +261,33 @@ public class myAccount extends Fragment implements View.OnClickListener{
         mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                final Users tempUser = dataSnapshot.getValue(Users.class);
+                try {
+                    final Users tempUser = dataSnapshot.getValue(Users.class);
 
-                if(! tempUser.getFirstName().isEmpty()) {
-                    //For Check method
-                    tempYearOfBirth = Integer.parseInt(tempUser.getDateYear());
-                    tempMonthOfBirth = Integer.parseInt(tempUser.getDateMonth());
-                    tempDayOfBirth = Integer.parseInt(tempUser.getDateDay());
+                    if (!tempUser.getFirstName().isEmpty()) {
+                        //For Check method
+                        tempYearOfBirth = Integer.parseInt(tempUser.getDateYear());
+                        tempMonthOfBirth = Integer.parseInt(tempUser.getDateMonth());
+                        tempDayOfBirth = Integer.parseInt(tempUser.getDateDay());
 
-                    firstNameEdit.setText(tempUser.getFirstName());
-                    lastNameEdit.setText(tempUser.getLastName());
-                    phoneEdit.setText(tempUser.getPhone());
-                    birthEdit.setText(tempDayOfBirth + " / " +
-                            (tempMonthOfBirth + 1) + "/ " +
-                            tempYearOfBirth);
+                        firstNameEdit.setText(tempUser.getFirstName());
+                        lastNameEdit.setText(tempUser.getLastName());
+                        phoneEdit.setText(tempUser.getPhone());
+                        birthEdit.setText(tempDayOfBirth + " / " +
+                                (tempMonthOfBirth + 1) + "/ " +
+                                tempYearOfBirth);
 
-                    if (tempUser.getGender().equals("male")) {
-                        maleRadio.setChecked(true);
-                    } else {
-                        femaleRadio.setChecked(true);
+                        if (tempUser.getGender().equals("male")) {
+                            maleRadio.setChecked(true);
+                        } else {
+                            femaleRadio.setChecked(true);
+                        }
+
                     }
-
+                } catch (Exception e){
+                    birthEdit.setText(dayNow + " / " +
+                            (monthNow + 1) + "/ " +
+                            yearNow);
                 }
 
 

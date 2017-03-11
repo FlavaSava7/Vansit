@@ -1,6 +1,7 @@
 package devgam.vansit;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -17,11 +18,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.util.concurrent.Executor;
 
 public class Login extends Fragment implements View.OnClickListener{
 
@@ -29,11 +43,15 @@ public class Login extends Fragment implements View.OnClickListener{
     private EditText emailEdit, passEdit ;
     private TextView signUpText, errorText, forgetPassText;
     private TextInputLayout emailInput, passInput;
+    LinearLayout googleSignIn;
 
     private ProgressDialog progressDialog ;
 
     FirebaseAuth firebaseAuth;
+    FirebaseAuth.AuthStateListener firebaseListener;
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
+    GoogleApiClient mGoogleApiClient;
+    private static final int RC_SIGN_IN = 1;
 
     private Drawable errorIcon;
 
@@ -42,9 +60,34 @@ public class Login extends Fragment implements View.OnClickListener{
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //to sign in process :
+        firebaseAuth = FirebaseAuth.getInstance();
+        fragmentManager = getActivity().getSupportFragmentManager();
+
+        firebaseListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+
+            }
+        };
+
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                .enableAutoManage(getActivity(), new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+                    }
+                }).addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
 
     }
 
@@ -71,6 +114,7 @@ public class Login extends Fragment implements View.OnClickListener{
         forgetPassText = (TextView) getActivity().findViewById(R.id.login_forget_pass_text);
         emailInput = (TextInputLayout) getActivity().findViewById(R.id.login_email_input);
         passInput = (TextInputLayout) getActivity().findViewById(R.id.login_password_input);
+        googleSignIn = (LinearLayout) getActivity().findViewById(R.id.login_google_layout);
 
         //to set error text not visible if user out from app and come again :
         errorText.setVisibility(View.INVISIBLE);
@@ -79,36 +123,16 @@ public class Login extends Fragment implements View.OnClickListener{
         signInButton.setOnClickListener(this);
         signUpText.setOnClickListener(this);
         forgetPassText.setOnClickListener(this);
+        googleSignIn.setOnClickListener(this);
+    }
 
-        //to sign in process :
-        firebaseAuth = FirebaseAuth.getInstance();
-        fragmentManager = getActivity().getSupportFragmentManager();
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        firebaseAuth.addAuthStateListener(firebaseListener);
     }
 
     private void userSignIn(){
-        /*final String Email = emailEdit.getText().toString().trim();
-        final String password = passEdit.getText().toString().trim();
-
-        //To check email is not empty :
-        if(TextUtils.isEmpty(Email) ){
-            //Email is empty
-            //Temp code
-            Util.makeToast(getContext(), "Email required");
-            //to stop Function :
-            return;
-        } else if(Util.isValidEmail(emailEdit.getText().toString())) {
-
-        }
-
-        //To check password is not empty :
-        if(TextUtils.isEmpty(password)){
-            //password is empty
-            //Temp code
-            Util.makeToast(getContext(), "password required");
-            //to stop Function :
-            return;
-        }*/
         if( ! checkEditText())
             return;
 
@@ -188,7 +212,7 @@ public class Login extends Fragment implements View.OnClickListener{
             if(Util.IS_USER_CONNECTED)
                 userSignIn();
             else
-                Util.makeToast(getContext(), "No Internet");
+                Util.makeToast(getContext(), String.valueOf(R.string.noInternetMsg));
 
         } else if(v == signUpText) {
             // To go to sign up fragment if he hasn't account
@@ -199,8 +223,54 @@ public class Login extends Fragment implements View.OnClickListener{
             //Go to forget password page ..
             resetPassword reset = new resetPassword();
             Util.ChangeFrag(reset,fragmentManager);
+        } else if(v == googleSignIn){
+            signIn();
         }
     }
+
+    private void signIn() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            if (result.isSuccess()) {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = result.getSignInAccount();
+                try {
+                    firebaseAuthWithGoogle(account);
+                } catch (Exception e){
+
+                }
+            } else {
+                // Google Sign In failed, update UI appropriately
+                // ...
+            }
+        }
+    }
+
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+        //Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        firebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        myAccount ma = new myAccount();
+                        Util.ChangeFrag(ma, fragmentManager);
+                    }
+
+                });
+    }
+
 
 
 }

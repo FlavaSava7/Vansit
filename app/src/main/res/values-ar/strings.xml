@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Vansit</string>
+    <string name="city">المدينة</string>
+    <string name="hint_text_email">البريد الالكتروني</string>
+    <string name="hint_text_password">الرقم السري</string>
+    <string name="layout_button_save">حفظ</string>
+    <string name="list_item_call_text">اتصال</string>
+    <string name="list_item_city_text">المدينة :</string>
+    <string name="list_item_delete_text">حذف</string>
+    <string name="list_item_edit_text">تعديل</string>
+    <string name="list_item_love_text"></string>
+    <string name="list_item_price_rating_text">تقييم السعر :</string>
+    <string name="list_item_profile_text">الحساب</string>
+    <string name="list_item_user_rating_text">تقييم المستخدم :</string>
+    <string name="main_fab_text_add_offer">اضف خدمة</string>
+    <string name="main_fab_text_add_request">اطلب خدمة</string>
+    <string name="main_order_city">حسب المدينة</string>
+    <string name="main_order_type">حسب النوع</string>
+    <string name="menu_account_text">الحساب</string>
+    <string name="menu_home_text">الرئيسية</string>
+    <string name="menu_login_text">تسجيل دخول</string>
+    <string name="menu_logout_text">تسجيل خروج</string>
+    <string name="menu_my_account_text">حسابي</string>
+    <string name="menu_my_offers_text">خدماتي</string>
+    <string name="my_account_birthday_text">تاريخ الميلاد :</string>
+    <string name="my_account_firstName_text">الاسم الأول</string>
+    <string name="my_account_gender_female_text">أنثى</string>
+    <string name="my_account_gender_male_text">ذكر</string>
+    <string name="my_account_gender_text">الجنس :</string>
+    <string name="my_account_homeCity_text">مدينة السكن :</string>
+    <string name="my_account_lastName_text">الاسم الأخير</string>
+    <string name="my_account_phone_text">رقم الهاتف</string>
+    <string name="my_account_title_text">المعلومات الشخصية</string>
+    <string name="no">لا</string>
+    <string name="noInternetMsg">لا يوجد اتصال بالانترت</string>
+    <string name="prompt_email"></string>
+    <string name="type">النوع</string>
+    <string name="user_information_title">الحساب</string>
+    <string name="yes">نعم</string>
+    <string name="prompt_password"></string>
+    <string name="add_offer_desc_text">الوصف</string>
+    <string name="add_offer_info_offer_text">الموقع ونوع المركبة</string>
+    <string name="add_offer_info_user_text">المستخدم</string>
+    <string name="add_offer_title_hint">مثال : نقل طلاب المدارس</string>
+    <string name="add_offer_title_text">العنوان</string>
+    <string name="add_offer_user_name_text">الاسم :</string>
+    <string name="add_offer_user_phone_text">الهاتف :</string>
+    <string name="add_offer_about_offer_text">"حول الخدمة "</string>
+    <string name="add_offer_desc_hint">"هنا أضف ملاحظاتك حول الخدمة "</string>
+    <string name="hello_blank_fragment">قريبا ستكون متاحة</string>
+
+</resources>

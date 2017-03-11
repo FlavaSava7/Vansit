@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fb="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="devgam.vansit.Registration"
@@ -19,7 +20,7 @@
             android:text="Register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="29dp"
+            android:layout_marginTop="@dimen/views_margin_xl"
             android:id="@+id/nav_header_main_email_text"
             android:textAppearance="@style/TextAppearance.AppCompat"
             android:textSize="24sp"
@@ -48,9 +49,7 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/nav_header_main_email_text"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
+            android:layout_below="@+id/nav_header_main_email_text">
 
             <EditText
                 android:layout_width="match_parent"
@@ -59,8 +58,6 @@
                 android:ems="10"
                 android:id="@+id/register_pass_edit"
                 android:hint="@string/hint_text_password"
-                android:lines="6"
-                android:windowSoftInputMode="stateHidden"
                 android:layout_below="@+id/textInputLayout2"
                 android:layout_toRightOf="@+id/register_error_msg_text"
                 android:layout_toEndOf="@+id/register_error_msg_text" />
@@ -82,6 +79,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/register_signup_button"
+            android:background="@drawable/googe_button"
+            android:layout_margin="@dimen/views_button_margin"
+            android:textColor="@color/cardview_light_background"
+            android:backgroundTint="@color/fab_add_offer"
             android:layout_above="@+id/register_signin_text"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
@@ -95,9 +96,68 @@
             android:id="@+id/register_signin_text"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="159dp"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:layout_marginTop="@dimen/views_margin" />
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/googe_button"
+            android:layout_marginTop="@dimen/views_button_margin"
+            android:layout_marginRight="@dimen/login_button_margin"
+            android:layout_marginLeft="@dimen/login_button_margin"
+            android:id="@+id/login_google_layout">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fb:srcCompat="@mipmap/ic_google_icon"
+                android:id="@+id/imageView5"
+                android:layout_weight="0.5"
+                android:layout_marginLeft="@dimen/views_button_margin"
+                android:layout_marginRight="@dimen/views_button_margin" />
+
+            <TextView
+                android:text="@string/signup_with_google"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/textView"
+                android:layout_weight="1"
+                android:gravity="center_vertical|center_horizontal" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/googe_button"
+            android:layout_marginTop="@dimen/views_button_margin"
+            android:layout_marginRight="@dimen/login_button_margin"
+            android:layout_marginLeft="@dimen/login_button_margin"
+            android:id="@+id/login_google_layout"
+            android:backgroundTint="@color/com_facebook_blue">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fb:srcCompat="@mipmap/ic_facebook_icon"
+                android:id="@+id/imageView6"
+                android:layout_weight="0.5"
+                android:layout_marginLeft="@dimen/views_button_margin"
+                android:layout_marginRight="@dimen/views_button_margin" />
+
+            <TextView
+                android:text="@string/signup_with_facebook"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/textView"
+                android:layout_weight="1"
+                android:gravity="center_vertical|center_horizontal"
+                android:textColor="@color/cardview_light_background" />
+
+        </LinearLayout>
 
 
     </LinearLayout>

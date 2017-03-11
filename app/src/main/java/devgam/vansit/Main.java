@@ -53,7 +53,7 @@ public class Main extends Fragment implements View.OnClickListener{
 
     FloatingActionButton addFab, addOffer, addRequest;
     Animation fabOpen, fabClose, fabClockWise, fabAntiClockWise;
-    TextView addOfferText, addRequestText;
+    TextView addOfferText, addRequestText, noResultText;
     boolean isFloatingActionOpen = false;
 
     private ListView listView;
@@ -101,6 +101,7 @@ public class Main extends Fragment implements View.OnClickListener{
 
         addOfferText = (TextView) getActivity().findViewById(R.id.fab_add_offer_text);
         addRequestText = (TextView) getActivity().findViewById(R.id.fab_add_request_text);
+        noResultText = (TextView) getActivity().findViewById(R.id.main_no_result_text);
 
         fabOpen = AnimationUtils.loadAnimation(getContext(), R.anim.fab_open);
         fabClose = AnimationUtils.loadAnimation(getContext(), R.anim.fab_close);
@@ -231,12 +232,12 @@ public class Main extends Fragment implements View.OnClickListener{
     private void FillSpinnersAndListView()
     {
 
-        // must check for internet
+        /*// must check for internet
         if(!Util.IS_USER_CONNECTED)
         {
             // show msg
             return;
-        }
+        }*/
 
         //City
         ArrayList<String> tempCityList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.city_list)));
@@ -302,7 +303,7 @@ public class Main extends Fragment implements View.OnClickListener{
                     Log.v("Main","offerList:"+offer.getTitle());*/
 
                 listView.setAdapter(offerAdapter);
-                Util.ProgDialogDelay(progressDialog,1000L);
+                Util.ProgDialogDelay(progressDialog,100L);
             }
             @Override
             public void onCancelled(DatabaseError databaseError)
@@ -321,8 +322,6 @@ public class Main extends Fragment implements View.OnClickListener{
                 whichType.isEmpty()|| whichType.equals("") ) {
             return;
         }
-
-        ShowMoreBtn(listView);
 
         listCounter = listCounterOriginal;//reset
         offerList.clear();
@@ -350,12 +349,16 @@ public class Main extends Fragment implements View.OnClickListener{
                 listView.setAdapter(offerAdapter);
             }
 
+
+
+
             @Override
             public void onCancelled(DatabaseError databaseError)
             {
             }
         };
         query.addListenerForSingleValueEvent(QVEL);
+
     }
 
     @Override
@@ -564,63 +567,7 @@ public class Main extends Fragment implements View.OnClickListener{
 
         listView.addFooterView(showMore);
 
-
-
     }
 
-
-
-    //temp code :
-    static void addToFavoriteList(String offerId, String offerCity){
-        //TODO : add offer to favorite list
-    }
-
-    /*//temp code :
-    int getNumberOfOffer(String key){
-        if(userFavoriteCount == 0)
-            return 0;
-
-        for(int i=1; i<= userFavoriteCount; i++)
-            if(userFavoriteOffers.getString("id" + i, "") == key)
-                return i;
-
-        return 0;
-    }
-
-    //temp code :
-    static void deleteFromFavoriteList(int count){
-        if(userFavoriteCount == 0)
-            return ;
-        for(int i= count; i< userFavoriteCount; i++) {
-            userFavoriteEditor.putString("city" + i, userFavoriteOffers.getString("city" + (i+1), "") );
-            userFavoriteEditor.putString("id" + i, userFavoriteOffers.getString("id" + (i+1), "") );
-            userFavoriteEditor.commit();
-        }
-    }*/
-
-
-/*
-             List<String> keys = new ArrayList<>();
-            List<Offers> offers = new ArrayList<>();
-            DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference()
-                    .child(Util.RDB_COUNTRY +"/"+ Util.RDB_JORDAN+"/"+"Amman/"+Util.RDB_OFFERS);
-            for(int i =0;i<=10;i++)
-            {
-                Offers offer = new Offers(FirebaseAuth.getInstance().getCurrentUser().getUid()
-                        ,"Title"+i,"Desc"+i,"Car","Amman",System.currentTimeMillis());
-                String temp = DataBaseRoot.push().getKey();
-                keys.add(temp);
-                offers.add(offer);
-                DataBaseRoot.child(temp).setValue(offer);
-
-
-            }
-            DataBaseRoot = FirebaseDatabase.getInstance().getReference()
-                    .child(Util.RDB_OFFERS +"/"+ FirebaseAuth.getInstance().getCurrentUser().getUid());
-            for(int i =0;i<=10;i++)
-            {
-                DataBaseRoot.child(keys.get(i)).setValue(offers.get(i));
-            }
-            */
 
 }

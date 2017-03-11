@@ -143,6 +143,7 @@ public class myOffers extends Fragment {
             //declare & initialize list item contents
             holder.titleText = (TextView) listRow.findViewById(R.id.my_offers_list_items_title);
             holder.cityText = (TextView) listRow.findViewById(R.id.my_offers_list_items_city);
+            holder.descText = (TextView) listRow.findViewById(R.id.my_offers_list_items_desc);
             holder.itemIcon = (ImageView) listRow.findViewById(R.id.main_items_typeIcon);
             holder.editText = (TextView) listRow.findViewById(R.id.my_offers_list_items_edit);
             holder.deleteText = (TextView) listRow.findViewById(R.id.my_offers_list_items_delete);
@@ -151,6 +152,7 @@ public class myOffers extends Fragment {
 
             holder.titleText.setText(tempOffer.getTitle());
             holder.cityText.setText(tempOffer.getCity());
+            holder.descText.setText(tempOffer.getDescription());
 
             holder.itemIcon.setImageDrawable(Util.getDrawableResource(getActivity(), Util.changeIcon(tempOffer.getType())));
 
@@ -184,8 +186,9 @@ public class myOffers extends Fragment {
     static class ViewHolder
     {
         // this class is called in getView and assigned it all "items" layouts Views,for smooth scrolling
-        TextView titleText, cityText, editText, deleteText;
+        TextView titleText, cityText, descText, editText, deleteText;
         ImageView itemIcon;
+
     }
 
     private void deleteOffer(final Offers offerToDelete)

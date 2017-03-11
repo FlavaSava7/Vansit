@@ -43,7 +43,7 @@ public class AddOffer extends Fragment {
     TextView nameText, phoneText, cityText;
     Spinner spinnerCity,spinnerType;
     EditText editTitle,editDesc;
-    Button btnSave,btnCancel;
+    Button btnSave;
     FragmentManager fragmentManager;
 
     public Offers editOffer = null; // this will be set of we came from myOffers pages to edit an offer
@@ -107,13 +107,6 @@ public class AddOffer extends Fragment {
                 else
                     EditOffer();
 
-            }
-        });
-        btnCancel = (Button) getActivity().findViewById(R.id.addOffer_cancel);
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CancelOffer();
             }
         });
 

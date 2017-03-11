@@ -15,27 +15,18 @@
         android:layout_alignParentStart="true">
 
         <Button
-            android:text="@string/layout_button_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/my_account_cancel_button"
-            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_weight="1"
-            android:allowUndo="false" />
-
-        <Button
             android:text="@string/layout_button_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/my_account_save_button"
-            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/googe_button"
+            android:layout_margin="@dimen/views_margin"
+            android:textColor="@color/cardview_light_background"
+            android:backgroundTint="@color/fab_add_offer" />
     </LinearLayout>
 
     <LinearLayout
@@ -79,6 +70,7 @@
                     android:layout_marginRight="@dimen/views_margin"
                     android:layout_marginLeft="@dimen/views_margin"
                     android:layout_marginTop="@dimen/views_margin" />
+                style="@style/Widget.AppCompat.EditText"
             </android.support.design.widget.TextInputLayout>
 
         </LinearLayout>
@@ -151,7 +143,8 @@
                 android:textSize="18sp"
                 android:textAlignment="center"
                 android:layout_marginRight="@dimen/views_top_margin"
-                android:layout_marginLeft="@dimen/views_top_margin" />
+                android:layout_marginLeft="@dimen/views_top_margin"
+                android:textStyle="normal|bold" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -192,7 +185,8 @@
                 android:textAlignment="center"
                 android:layout_marginRight="@dimen/views_top_margin"
                 android:layout_marginLeft="@dimen/views_top_margin"
-                android:gravity="center_vertical" />
+                android:gravity="center_vertical"
+                android:textStyle="normal|bold" />
 
             <RadioGroup
                 android:layout_width="match_parent"
@@ -251,7 +245,8 @@
                 android:textSize="18sp"
                 android:textAlignment="center"
                 android:layout_marginRight="@dimen/views_top_margin"
-                android:layout_marginLeft="@dimen/views_top_margin" />
+                android:layout_marginLeft="@dimen/views_top_margin"
+                android:textStyle="normal|bold" />
 
             <Spinner
                 android:layout_width="match_parent"
