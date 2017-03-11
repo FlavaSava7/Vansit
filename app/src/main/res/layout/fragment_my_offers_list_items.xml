@@ -31,8 +31,8 @@
                 android:layout_toRightOf="@+id/main_items_typeIcon"
                 android:layout_toEndOf="@+id/main_items_typeIcon"
                 android:layout_weight="1"
-                android:layout_marginRight="@dimen/views_button_margin"
-                android:layout_marginLeft="@dimen/views_button_margin"
+                android:layout_marginRight="@dimen/views_margin"
+                android:layout_marginLeft="@dimen/views_margin"
                 android:layout_marginTop="@dimen/views_top_margin"
                 android:textColor="@color/gray"
                 android:singleLine="true"
@@ -42,7 +42,10 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:layout_marginBottom="@dimen/views_top_margin"
+                android:layout_marginLeft="@dimen/views_button_margin"
+                android:layout_marginRight="@dimen/views_button_margin">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -51,7 +54,7 @@
                     android:id="@+id/main_items_typeIcon"
                     android:layout_marginTop="@dimen/views_top_margin"
                     android:layout_marginLeft="@dimen/views_button_margin"
-                    android:layout_marginRight="@dimen/views_top_margin" />
+                    android:layout_marginRight="@dimen/views_button_margin" />
 
                 <LinearLayout
                     android:orientation="vertical"
@@ -71,7 +74,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView3"
-                            android:layout_marginLeft="@dimen/views_top_margin"
                             android:textStyle="normal|bold"
                             android:textSize="12sp" />
 
@@ -80,8 +82,9 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/my_offers_list_items_city"
                             android:layout_weight="1"
-                            android:layout_marginRight="@dimen/views_margin_xl"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            android:layout_marginLeft="@dimen/views_top_margin"
+                            android:layout_marginRight="@dimen/views_top_margin" />
                     </LinearLayout>
 
                     <View
@@ -89,30 +92,27 @@
                         android:layout_height="1dp"
                         android:background="@color/fragment_background"
                         android:layout_marginLeft="@dimen/views_top_margin"
-                        android:layout_marginRight="@dimen/views_margin_xl"
+                        android:layout_marginRight="@dimen/views_top_margin"
 
                          />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_marginTop="@dimen/views_margin_s">
 
                         <TextView
                             android:text="@string/add_offer_desc_text"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView3"
-                            android:layout_marginLeft="@dimen/views_top_margin"
-                            android:layout_marginRight="@dimen/views_margin_xl"
                             android:textStyle="normal|bold"
                             android:textSize="12sp" />
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/my_offers_list_items_desc"
-                            android:layout_marginLeft="@dimen/views_top_margin"
-                            android:layout_marginRight="@dimen/views_margin_xl"
                             android:layout_weight="1"
                             android:textSize="12sp"
                             android:maxLines="1"
@@ -138,7 +138,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7"
-                    android:id="@+id/main_items_call_layout">
+                    android:id="@+id/main_items_call_layout"
+                    android:layout_marginLeft="@dimen/views_margin"
+                    android:layout_marginRight="@dimen/views_margin">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -147,7 +149,6 @@
                         android:drawableTint="@color/gray"
                         android:drawableTintMode="src_atop"
                         android:id="@+id/main_items_call_img"
-                        android:layout_marginLeft="@dimen/views_margin"
                         android:tint="@color/gray"/>
 
                     <TextView
@@ -173,7 +174,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/main_items_profile_layout"
-                    android:layout_marginLeft="@dimen/views_margin_xl">
+                    android:layout_marginLeft="@dimen/views_margin"
+                    android:layout_marginRight="@dimen/views_margin">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -181,7 +183,6 @@
                         app:srcCompat="@drawable/ic_delete"
                         android:drawableTint="@color/deleteButtonColor"
                         android:id="@+id/imageView2"
-                        android:layout_marginLeft="@dimen/views_margin"
                         android:adjustViewBounds="false"
                         android:tint="@color/deleteButtonColor" />
 

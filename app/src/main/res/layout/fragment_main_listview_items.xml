@@ -30,8 +30,8 @@
                 android:layout_toRightOf="@+id/main_items_typeIcon"
                 android:layout_toEndOf="@+id/main_items_typeIcon"
                 android:layout_weight="1"
-                android:layout_marginRight="@dimen/views_button_margin"
-                android:layout_marginLeft="@dimen/views_button_margin"
+                android:layout_marginRight="@dimen/views_margin"
+                android:layout_marginLeft="@dimen/views_margin"
                 android:layout_marginTop="@dimen/views_top_margin"
                 android:textColor="@color/gray"
                 android:singleLine="true"
@@ -42,7 +42,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:layout_marginBottom="@dimen/views_top_margin">
+                android:layout_marginBottom="@dimen/views_top_margin"
+                android:layout_marginLeft="@dimen/views_button_margin"
+                android:layout_marginRight="@dimen/views_button_margin">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -51,7 +53,7 @@
                     android:id="@+id/main_items_typeIcon"
                     android:layout_marginTop="@dimen/views_top_margin"
                     android:layout_marginLeft="@dimen/views_button_margin"
-                    android:layout_marginRight="@dimen/views_top_margin" />
+                    android:layout_marginRight="@dimen/views_button_margin" />
 
                 <LinearLayout
                     android:orientation="vertical"
@@ -71,7 +73,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView3"
-                            android:layout_marginLeft="@dimen/views_top_margin"
                             android:textSize="12sp"
                             android:textStyle="normal|bold" />
 
@@ -80,8 +81,9 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/main_items_cityData"
                             android:layout_weight="1"
-                            android:layout_marginRight="@dimen/views_margin_xl"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            android:layout_marginLeft="@dimen/views_top_margin"
+                            android:layout_marginRight="@dimen/views_top_margin" />
                     </LinearLayout>
 
                     <View
@@ -89,7 +91,7 @@
                         android:layout_height="1dp"
                         android:background="@color/fragment_background"
                         android:layout_marginLeft="@dimen/views_top_margin"
-                        android:layout_marginRight="@dimen/views_margin_xl" />
+                        android:layout_marginRight="@dimen/views_top_margin" />
 
                     <LinearLayout
                         android:orientation="horizontal"
@@ -103,7 +105,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView3"
-                            android:layout_marginLeft="@dimen/views_top_margin"
                             android:textSize="12sp"
                             android:textStyle="normal|bold" />
 
@@ -112,8 +113,9 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/main_items_serviceRatingData"
                             android:layout_weight="1"
-                            android:layout_marginRight="@dimen/views_margin_xl"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            android:layout_marginLeft="@dimen/views_top_margin"
+                            android:layout_marginRight="@dimen/views_top_margin" />
                     </LinearLayout>
 
                     <View
@@ -121,7 +123,7 @@
                         android:layout_height="1dp"
                         android:background="@color/fragment_background"
                         android:layout_marginLeft="@dimen/views_top_margin"
-                        android:layout_marginRight="@dimen/views_margin_xl" />
+                        android:layout_marginRight="@dimen/views_top_margin" />
 
                     <LinearLayout
                         android:orientation="horizontal"
@@ -135,7 +137,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView3"
-                            android:layout_marginLeft="@dimen/views_top_margin"
                             android:textSize="12sp"
                             android:textStyle="normal|bold"
                             />
@@ -144,9 +145,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/main_items_priceRatingData"
-                            android:layout_marginRight="@dimen/views_margin_xl"
                             android:layout_weight="1"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            android:layout_marginLeft="@dimen/views_top_margin"
+                            android:layout_marginRight="@dimen/views_top_margin" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -167,7 +169,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.9"
-                    android:id="@+id/main_items_call_layout">
+                    android:id="@+id/main_items_call_layout"
+                    android:layout_marginLeft="@dimen/views_margin"
+                    android:layout_marginRight="@dimen/views_margin">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -176,7 +180,6 @@
                         android:drawableTint="@color/gray"
                         android:drawableTintMode="src_atop"
                         android:id="@+id/main_items_call_img"
-                        android:layout_marginLeft="@dimen/views_margin"
                         android:tint="@color/gray" />
 
                     <TextView
@@ -202,7 +205,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/main_items_profile_layout"
-                    android:layout_marginLeft="@dimen/views_margin_xl">
+                    android:layout_marginLeft="@dimen/views_margin"
+                    android:layout_marginRight="@dimen/views_margin">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -211,7 +215,6 @@
                         android:drawableTint="@color/gray"
                         android:drawableTintMode="src_atop"
                         android:id="@+id/imageView2"
-                        android:layout_marginLeft="@dimen/views_margin"
                         android:tint="@color/gray" />
 
                     <TextView
