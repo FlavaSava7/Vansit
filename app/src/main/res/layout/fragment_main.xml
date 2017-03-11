@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="devgam.vansit.Main"
+    android:orientation="vertical"
     android:background="@color/fragment_background">
 
     <LinearLayout
@@ -83,6 +84,19 @@
 
     </LinearLayout>
 
+
+    <TextView
+        android:text="@string/main_no_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/main_no_result_text"
+        android:layout_marginLeft="110dp"
+        android:drawableLeft="@drawable/ic_search"
+        android:gravity="center_vertical"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:visibility="invisible" />
 
     <ListView
 

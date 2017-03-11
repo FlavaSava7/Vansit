@@ -44,19 +44,4 @@
         </menu>
     </item>
 
-    <item android:title="just for test">
-        <menu>
-            <item
-                android:id="@+id/nav_user"
-                android:icon="@drawable/ic_menu_manage"
-                android:title="user info" />
-
-
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>
-
 </menu>

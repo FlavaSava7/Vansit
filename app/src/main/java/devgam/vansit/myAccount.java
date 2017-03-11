@@ -82,6 +82,12 @@ public class myAccount extends Fragment implements View.OnClickListener{
         //if(fab!=null)
             //fab.setVisibility(View.GONE);
 
+        firebaseAuth = FirebaseAuth.getInstance();
+        tempUID = firebaseAuth.getCurrentUser().getUid();
+        mRef = FirebaseDatabase.getInstance().
+                getReference(Util.RDB_USERS +"/"+
+                        tempUID);
+
         //Views initialize
         firstNameEdit = (EditText) getActivity().findViewById(R.id.my_account_firstName_edit);
         lastNameEdit = (EditText) getActivity().findViewById(R.id.my_account_lastName_edit);

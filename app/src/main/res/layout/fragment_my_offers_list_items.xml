@@ -34,7 +34,7 @@
                 android:layout_marginRight="@dimen/views_button_margin"
                 android:layout_marginLeft="@dimen/views_button_margin"
                 android:layout_marginTop="@dimen/views_top_margin"
-                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textColor="@color/gray"
                 android:singleLine="true"
                 android:textSize="18sp" />
 
@@ -80,6 +80,7 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/my_offers_list_items_city"
                             android:layout_weight="1"
+                            android:layout_marginRight="@dimen/views_margin_xl"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -92,6 +93,33 @@
 
                          />
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:text="@string/add_offer_desc_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView3"
+                            android:layout_marginLeft="@dimen/views_top_margin"
+                            android:layout_marginRight="@dimen/views_margin_xl"
+                            android:textStyle="normal|bold"
+                            android:textSize="12sp" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/my_offers_list_items_desc"
+                            android:layout_marginLeft="@dimen/views_top_margin"
+                            android:layout_marginRight="@dimen/views_margin_xl"
+                            android:layout_weight="1"
+                            android:textSize="12sp"
+                            android:maxLines="1"
+                            android:singleLine="true" />
+
+                    </LinearLayout>
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -101,61 +129,81 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:weightSum="1"
-                android:layout_marginLeft="@dimen/views_button_margin"
-                android:layout_marginRight="@dimen/views_button_margin">
+                android:layout_weight="0.5"
+                android:layout_marginLeft="@dimen/views_margin_xl"
+                android:layout_marginRight="@dimen/views_margin_xl">
 
-
-                <Button
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/list_item_edit_text"
-                    android:id="@+id/my_offers_list_items_edit"
-                    android:drawableLeft="@drawable/ic_mode_edit"
-                    android:gravity="center_vertical"
-                    android:textAllCaps="true"
-                    android:textStyle="normal|bold"
-                    android:layout_weight="0.45"
-                    android:textAppearance="@style/TextAppearance.AppCompat"
-                    android:textSize="12sp"
-                    android:textColor="@color/editButtonColor"
-                    android:drawableTint="@color/editButtonColor"
-                    android:drawableTintMode="src_atop"
-                    android:duplicateParentState="false"
-                    style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"/>
+                    android:layout_weight="0.7"
+                    android:id="@+id/main_items_call_layout">
 
-                <!--<Button
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@drawable/ic_mode_edit"
+                        android:drawableTint="@color/gray"
+                        android:drawableTintMode="src_atop"
+                        android:id="@+id/main_items_call_img"
+                        android:layout_marginLeft="@dimen/views_margin"
+                        android:tint="@color/gray"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/list_item_edit_text"
+                        android:id="@+id/my_offers_list_items_edit"
+                        android:textAllCaps="true"
+                        android:textStyle="normal|bold"
+                        android:textAppearance="@style/TextAppearance.AppCompat"
+                        android:textSize="12sp"
+                        android:textColor="@color/gray"
+                        style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                        android:layout_weight="0.45"
+                        android:gravity="center_vertical"
+                        android:clickable="false"
+                        android:longClickable="false" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/list_item_share_text"
-                    android:id="@+id/my_offers_list_items_share"
-                    android:drawableLeft="@drawable/ic_repeat"
-                    android:gravity="center_vertical"
-                    android:textAllCaps="true"
-                    android:textStyle="normal|bold"
-                    android:layout_weight="0.45"
-                    android:textAppearance="@style/TextAppearance.AppCompat"
-                    android:textSize="12sp"
-                    android:textColor="@color/shareButtonColor"
-                    android:drawableTint="@color/shareButtonColor"
-                    android:drawableTintMode="src_atop"
-                    style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"/>-->
+                    android:id="@+id/main_items_profile_layout"
+                    android:layout_marginLeft="@dimen/views_margin_xl">
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/list_item_delete_text"
-                    android:id="@+id/my_offers_list_items_delete"
-                    android:drawableLeft="@drawable/ic_delete"
-                    android:gravity="center_vertical"
-                    android:textAllCaps="true"
-                    android:textStyle="normal|bold"
-                    android:layout_weight="1"
-                    android:textAppearance="@style/TextAppearance.AppCompat"
-                    android:textSize="12sp"
-                    android:textColor="@color/deleteButtonColor"
-                    android:drawableTint="@color/deleteButtonColor"
-                    android:drawableTintMode="src_atop"
-                    style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@drawable/ic_delete"
+                        android:drawableTint="@color/deleteButtonColor"
+                        android:id="@+id/imageView2"
+                        android:layout_marginLeft="@dimen/views_margin"
+                        android:adjustViewBounds="false"
+                        android:tint="@color/deleteButtonColor" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="false"
+                        android:text="@string/list_item_delete_text"
+                        android:id="@+id/my_offers_list_items_delete"
+                        android:textAllCaps="true"
+                        android:textStyle="normal|bold"
+                        android:layout_weight="0.45"
+                        android:textAppearance="@style/TextAppearance.AppCompat"
+                        android:textSize="12sp"
+                        android:textColor="@color/deleteButtonColor"
+                        android:drawableTint="@color/gray"
+                        android:drawableTintMode="src_atop"
+                        style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                        android:textAlignment="gravity"
+                        android:gravity="center_vertical" />
+
+                </LinearLayout>
 
             </LinearLayout>
 

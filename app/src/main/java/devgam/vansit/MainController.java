@@ -1,6 +1,4 @@
 package devgam.vansit;
-
-import android.app.FragmentTransaction;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,8 +14,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import devgam.vansit.JSON_Classes.Users;
 
@@ -29,6 +31,11 @@ public class MainController extends AppCompatActivity
 
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
     DrawerLayout drawer;
+    FirebaseAuth firebaseAuth;
+    DatabaseReference mRef;
+    String tempUID;
+    TextView name;
+    ImageView img;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -49,14 +56,27 @@ public class MainController extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //Header text must be changed
-        View header=navigationView.getHeaderView(0);
-        TextView name = (TextView)header.findViewById(R.id.nav_header_main_name_text);
+        View header = navigationView.getHeaderView(0);
+        name = (TextView)header.findViewById(R.id.nav_header_main_name_text);
         TextView email = (TextView)header.findViewById(R.id.nav_header_main_email_text);
-        ImageView img = (ImageView)header.findViewById(R.id.nav_header_main_img);
-        name.setText("nimer esam");
-        email.setText("nimeresam95@gmail.com");
-        img.setImageResource(R.mipmap.ic_action_male);
+        img = (ImageView)header.findViewById(R.id.nav_header_main_img);
+
+        if(Util.isLogged()) {
+            firebaseAuth = FirebaseAuth.getInstance();
+            tempUID = firebaseAuth.getCurrentUser().getUid();
+            mRef = FirebaseDatabase.getInstance().
+                    getReference(Util.RDB_USERS + "/" +
+                            tempUID);
+            email.setText(firebaseAuth.getCurrentUser().getEmail());
+
+            setDataToViews();
+        } else {
+            name.setVisibility(View.INVISIBLE);
+            email.setVisibility(View.INVISIBLE);
+            img.setVisibility(View.INVISIBLE);
+        }
+
+
 
         // to check for the first time if we have internet , then internet listener will keep checking
         if(Util.CheckConnection(this)) //INTERNET IS ON
@@ -93,21 +113,6 @@ public class MainController extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        //replaced code in navigation menu
-        //int id = item.getItemId();
-        /*if (id == R.id.logout_menu_item)
-        {
-            FloatingActionButton fabMain = (FloatingActionButton) findViewById(R.id.add_fab);
-            if(fabMain!=null)
-                fabMain.setVisibility(View.GONE);
-            FirebaseAuth.getInstance().signOut();
-            Main mainPage = new Main();
-            Util.ChangeFrag(mainPage,fragmentManager);
-
-
-            return true;
-        }*/
         return super.onOptionsItemSelected(item);
     }
 
@@ -131,13 +136,6 @@ public class MainController extends AppCompatActivity
         } else if(id == R.id.nav_my_account){
             myAccount myAccount = new myAccount();
             Util.ChangeFrag(myAccount, fragmentManager);
-        } else if(id == R.id.nav_user) {
-            //Temp calling to test setter valid or not !
-            Users tempUserForTest = new Users("Nimer","Esam","Amman","0796546549","male","6","6","1966");//just for testing user information
-            userInformation user = new userInformation(this,tempUserForTest,fragmentManager);
-            user.show();
-            //Util.ChangeFrag(user, fragmentManager);
-
         }  else if(id == R.id.nav_my_offers) {
             myOffers myOffers = new myOffers();
             Util.ChangeFrag(myOffers, fragmentManager);
@@ -190,6 +188,35 @@ public class MainController extends AppCompatActivity
             nav_Menu.findItem(R.id.nav_my_offers).setVisible(false);
 
         }
+    }
+
+    //to set data to views after data set it one time
+    private void setDataToViews() {
+
+        //temp code:
+        mRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final Users tempUser = dataSnapshot.getValue(Users.class);
+
+                if(! tempUser.getFirstName().isEmpty()) {
+                    //For Check method
+                    name.setText(tempUser.getFirstName() + " " + tempUser.getLastName());
+                    if(tempUser.getGender().equals("male"))
+                        img.setImageResource(R.mipmap.ic_action_male);
+                    else
+                        img.setImageResource(R.mipmap.ic_action_female);
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
 
