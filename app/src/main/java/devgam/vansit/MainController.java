@@ -1,8 +1,10 @@
 package devgam.vansit;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,6 +16,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,14 +33,14 @@ public class MainController extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
 
-
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
     DrawerLayout drawer;
     FirebaseAuth firebaseAuth;
     DatabaseReference mRef;
     String tempUID;
-    TextView name;
-    ImageView img;
+    public static TextView name;
+    public static ImageView img;
+    public static NavigationView globalNavigationView;//used to get navigation view from other fragments
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -53,22 +58,17 @@ public class MainController extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        globalNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        globalNavigationView.setNavigationItemSelectedListener(this);
 
-        View header = navigationView.getHeaderView(0);
+        View header = globalNavigationView.getHeaderView(0);
         name = (TextView)header.findViewById(R.id.nav_header_main_name_text);
         TextView email = (TextView)header.findViewById(R.id.nav_header_main_email_text);
         img = (ImageView)header.findViewById(R.id.nav_header_main_img);
 
         if(Util.isLogged()) {
             firebaseAuth = FirebaseAuth.getInstance();
-            tempUID = firebaseAuth.getCurrentUser().getUid();
-            mRef = FirebaseDatabase.getInstance().
-                    getReference(Util.RDB_USERS + "/" +
-                            tempUID);
             email.setText(firebaseAuth.getCurrentUser().getEmail());
-
             setDataToViews();
         } else {
             name.setVisibility(View.INVISIBLE);
@@ -150,7 +150,8 @@ public class MainController extends AppCompatActivity
             Util.ChangeFrag(rec, fragmentManager);
             drawer.closeDrawer(GravityCompat.START);
             return true;
-        } else  if(id == R.id.nav_logout) {
+        } else  if(id == R.id.nav_logout)
+        {
             FloatingActionButton fabMain = (FloatingActionButton) findViewById(R.id.add_fab);
             if(fabMain!=null)
                 fabMain.setVisibility(View.GONE);
@@ -158,6 +159,7 @@ public class MainController extends AppCompatActivity
             Main mainPage = new Main();
             Util.ChangeFrag(mainPage,fragmentManager);
             hideItem();
+
             return true;
         }
 
@@ -166,12 +168,10 @@ public class MainController extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
-    public void hideItem() {
+    public void hideItem()
+    {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu nav_Menu = navigationView.getMenu();
-
         if (Util.isLogged()) {//user is logged in
             nav_Menu.findItem(R.id.nav_login).setVisible(false);
             nav_Menu.findItem(R.id.nav_rec).setVisible(true);
@@ -186,29 +186,50 @@ public class MainController extends AppCompatActivity
             nav_Menu.findItem(R.id.nav_my_account).setVisible(false);
             nav_Menu.findItem(R.id.nav_logout).setVisible(false);
             nav_Menu.findItem(R.id.nav_my_offers).setVisible(false);
-
         }
     }
-
+    public static void GlobalHideItem(Menu nav_Menu)
+    {
+        if (Util.isLogged()) {//user is logged in
+            nav_Menu.findItem(R.id.nav_login).setVisible(false);
+            nav_Menu.findItem(R.id.nav_rec).setVisible(true);
+            nav_Menu.findItem(R.id.nav_fav).setVisible(true);
+            nav_Menu.findItem(R.id.nav_my_account).setVisible(true);
+            nav_Menu.findItem(R.id.nav_logout).setVisible(true);
+            nav_Menu.findItem(R.id.nav_my_offers).setVisible(true);
+        } else {
+            nav_Menu.findItem(R.id.nav_login).setVisible(true);
+            nav_Menu.findItem(R.id.nav_rec).setVisible(false);
+            nav_Menu.findItem(R.id.nav_fav).setVisible(false);
+            nav_Menu.findItem(R.id.nav_my_account).setVisible(false);
+            nav_Menu.findItem(R.id.nav_logout).setVisible(false);
+            nav_Menu.findItem(R.id.nav_my_offers).setVisible(false);
+        }
+    }
     //to set data to views after data set it one time
-    private void setDataToViews() {
-
+    private void setDataToViews()
+    {
+        DatabaseReference mRef = FirebaseDatabase.getInstance().
+                getReference(Util.RDB_USERS + "/" +
+                        FirebaseAuth.getInstance().getCurrentUser().getUid());
         //temp code:
         mRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                final Users tempUser = dataSnapshot.getValue(Users.class);
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                if(dataSnapshot!=null)
+                {
+                    final Users tempUser = dataSnapshot.getValue(Users.class);
 
-                if(! tempUser.getFirstName().isEmpty()) {
-                    //For Check method
-                    name.setText(tempUser.getFirstName() + " " + tempUser.getLastName());
-                    if(tempUser.getGender().equals("male"))
-                        img.setImageResource(R.mipmap.ic_action_male);
-                    else
-                        img.setImageResource(R.mipmap.ic_action_female);
+                    if(! tempUser.getFirstName().isEmpty()) {
+                        //For Check method
+                        name.setText(tempUser.getFirstName() + " " + tempUser.getLastName());
+                        if(tempUser.getGender().equals("male"))
+                            img.setImageResource(R.mipmap.ic_action_male);
+                        else
+                            img.setImageResource(R.mipmap.ic_action_female);
+                    }
                 }
-
-
             }
 
             @Override
@@ -218,7 +239,4 @@ public class MainController extends AppCompatActivity
         });
 
     }
-
-
-
 }

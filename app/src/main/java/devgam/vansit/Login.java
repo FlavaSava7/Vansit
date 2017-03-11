@@ -2,11 +2,9 @@ package devgam.vansit;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,7 +18,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -34,8 +31,12 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
-
-import java.util.concurrent.Executor;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class Login extends Fragment implements View.OnClickListener{
 
@@ -94,7 +95,6 @@ public class Login extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         return inflater.inflate(R.layout.fragment_login, container, false);
     }
 
@@ -256,21 +256,45 @@ public class Login extends Fragment implements View.OnClickListener{
         }
     }
 
+
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         //Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        myAccount ma = new myAccount();
-                        Util.ChangeFrag(ma, fragmentManager);
+                    public void onComplete(@NonNull Task<AuthResult> task)
+                    {
+                        // we need Progress Dialog here , because it take some time to process. But it get stuck for a weird reason.
+
+                        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().
+                                child(Util.RDB_USERS+"/"+firebaseAuth.getCurrentUser().getUid());
+                        Query query = mRef;
+                        query.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot)
+                            {
+                                if(dataSnapshot.exists())//user exists
+                                {
+                                    MainController.GlobalHideItem(MainController.globalNavigationView.getMenu());//update menu
+
+                                    Main mainPage = new Main();
+                                    Util.ChangeFrag(mainPage, fragmentManager);
+                                }
+                                else
+                                {
+                                    myAccount ma = new myAccount();
+                                    Util.ChangeFrag(ma, fragmentManager);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {}
+                        });
                     }
-
                 });
+
+
     }
-
-
 
 }
