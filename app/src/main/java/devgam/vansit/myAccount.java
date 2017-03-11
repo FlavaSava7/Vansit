@@ -191,6 +191,7 @@ public class myAccount extends Fragment implements View.OnClickListener{
 
                 if(Util.IS_USER_CONNECTED) {
                     saveDataToDatabase();
+                    MainController.GlobalHideItem(MainController.globalNavigationView.getMenu());//update menu
                     Main mainPage = new Main();
                     Util.ChangeFrag(mainPage, fragmentManager);
                 } else {
