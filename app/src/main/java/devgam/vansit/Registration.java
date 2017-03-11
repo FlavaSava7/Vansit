@@ -127,7 +127,7 @@ public class Registration extends Fragment implements View.OnClickListener{
             if(Util.IS_USER_CONNECTED)
                 userRegistration();
             else
-                Util.makeToast(getContext(), "No Internet");
+                Util.makeToast(getContext(), String.valueOf(R.string.noInternetMsg));
                     /*Toast.makeText(getContext(), "No Internet",
                             Toast.LENGTH_SHORT).show();*/
         } else if(v == signInText) {
