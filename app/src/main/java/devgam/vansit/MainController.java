@@ -38,8 +38,8 @@ public class MainController extends AppCompatActivity
     FirebaseAuth firebaseAuth;
     DatabaseReference mRef;
     String tempUID;
-    public static TextView name;
-    public static ImageView img;
+    TextView name, email;
+    ImageView img;
     public static NavigationView globalNavigationView;//used to get navigation view from other fragments
 
     @Override
@@ -63,7 +63,7 @@ public class MainController extends AppCompatActivity
 
         View header = globalNavigationView.getHeaderView(0);
         name = (TextView)header.findViewById(R.id.nav_header_main_name_text);
-        TextView email = (TextView)header.findViewById(R.id.nav_header_main_email_text);
+        email = (TextView)header.findViewById(R.id.nav_header_main_email_text);
         img = (ImageView)header.findViewById(R.id.nav_header_main_img);
 
         if(Util.isLogged()) {
@@ -159,7 +159,9 @@ public class MainController extends AppCompatActivity
             Main mainPage = new Main();
             Util.ChangeFrag(mainPage,fragmentManager);
             hideItem();
-
+            name.setVisibility(View.INVISIBLE);
+            email.setVisibility(View.INVISIBLE);
+            img.setVisibility(View.INVISIBLE);
             return true;
         }
 
@@ -238,5 +240,51 @@ public class MainController extends AppCompatActivity
             }
         });
 
+    }
+    public static void GlobalSetDataToViews(NavigationView navigationView)
+    {
+        View header = navigationView.getHeaderView(0);
+
+        final TextView name = (TextView)header.findViewById(R.id.nav_header_main_name_text);
+        TextView email = (TextView)header.findViewById(R.id.nav_header_main_email_text);
+        final ImageView img = (ImageView)header.findViewById(R.id.nav_header_main_img);
+
+        email.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+
+        DatabaseReference mRef = FirebaseDatabase.getInstance().
+                getReference(Util.RDB_USERS + "/" +
+                        FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        mRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+
+                if(dataSnapshot!=null)
+                {
+
+                    final Users tempUser = dataSnapshot.getValue(Users.class);
+
+                    if(! tempUser.getFirstName().isEmpty()) {
+                        //For Check method
+                        name.setText(tempUser.getFirstName() + " " + tempUser.getLastName());
+                        if(tempUser.getGender().equals("male"))
+                            img.setImageResource(R.mipmap.ic_action_male);
+                        else
+                            img.setImageResource(R.mipmap.ic_action_female);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        name.setVisibility(View.VISIBLE);
+        email.setVisibility(View.VISIBLE);
+        img.setVisibility(View.VISIBLE);
     }
 }

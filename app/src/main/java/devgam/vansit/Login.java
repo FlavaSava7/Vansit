@@ -91,7 +91,13 @@ public class Login extends Fragment implements View.OnClickListener{
                 .build();
 
     }
-
+    @Override
+    public void onPause() {
+        super.onPause();
+        // fix mGoogleApiClient crash bug
+        mGoogleApiClient.stopAutoManage(getActivity());
+        mGoogleApiClient.disconnect();
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -277,7 +283,7 @@ public class Login extends Fragment implements View.OnClickListener{
                                 if(dataSnapshot.exists())//user exists
                                 {
                                     MainController.GlobalHideItem(MainController.globalNavigationView.getMenu());//update menu
-
+                                    MainController.GlobalSetDataToViews(MainController.globalNavigationView);
                                     Main mainPage = new Main();
                                     Util.ChangeFrag(mainPage, fragmentManager);
                                 }
