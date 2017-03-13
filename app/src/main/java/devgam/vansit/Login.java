@@ -2,6 +2,7 @@ package devgam.vansit;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -36,7 +37,7 @@ public class Login extends Fragment implements View.OnClickListener{
     private EditText emailEdit, passEdit ;
     private TextView signUpText, errorText, forgetPassText;
     private TextInputLayout emailInput, passInput;
-    LinearLayout googleSignIn, facebookSignIn;
+    LinearLayout googleSignIn;
 
     private ProgressDialog progressDialog ;
 
@@ -75,14 +76,18 @@ public class Login extends Fragment implements View.OnClickListener{
                 .requestEmail()
                 .build();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-                .enableAutoManage(getActivity(), new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        try {
+            mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                    .enableAutoManage(getActivity(), new GoogleApiClient.OnConnectionFailedListener() {
+                        @Override
+                        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-                    }
-                }).addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
+                        }
+                    }).addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                    .build();
+        } catch (Exception e){
+
+        }
 
         // Configure Google Sign In
 

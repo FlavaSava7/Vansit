@@ -29,6 +29,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 import devgam.vansit.JSON_Classes.Users;
 
 import static devgam.vansit.Util.dayNow;
@@ -276,6 +279,8 @@ public class myAccount extends Fragment implements View.OnClickListener{
                         birthEdit.setText(tempDayOfBirth + " / " +
                                 (tempMonthOfBirth + 1) + "/ " +
                                 tempYearOfBirth);
+
+                        citySpinner.setSelection(cityAdapter.getPosition(tempUser.getCity()));
 
                         if (tempUser.getGender().equals("male")) {
                             maleRadio.setChecked(true);

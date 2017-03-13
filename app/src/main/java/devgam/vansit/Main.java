@@ -138,7 +138,7 @@ public class Main extends Fragment implements View.OnClickListener{
             });
         }else {
             //Log.v("Main","User is not logged in ");
-            addFab.setVisibility(View.GONE);
+           addFab.setVisibility(View.GONE);
         }
 
         //FAB On Click Listener from overriden method :
@@ -241,8 +241,8 @@ public class Main extends Fragment implements View.OnClickListener{
 
         //City
         ArrayList<String> tempCityList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.city_list)));
-        tempCityList.add(0,"");
-        ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(),
+        //tempCityList.add(0,"");
+        ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item,tempCityList);
         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -250,7 +250,7 @@ public class Main extends Fragment implements View.OnClickListener{
 
         //Type
         ArrayList<String> tempTypeList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.type_list)));
-        tempTypeList.add(0,"");
+        //tempTypeList.add(0,"");
         ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item,
                 tempTypeList);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

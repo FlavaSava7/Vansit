@@ -62,6 +62,7 @@
     <string name="menu_rec_text">Recommended</string>
     <string name="menu_account_text">Account</string>
     <string name="menu_my_offers_text">My Offers</string>
+    <string name="menu_settings_text">Settings</string>
     
     <string name="main_order_city">Order by city</string>
     <string name="main_order_type">Order by type</string>
@@ -86,6 +87,12 @@
     <string name="sign_in_forget_password">Forget your password?</string>
     <string name="sign_in_register_link">Dont have account? Sign up now</string>
 
+    <string name="sign_up_title">Sign up</string>
+    <string name="sign_up_login_link">Already have account? Sign in now</string>
+
+    <string name="reset_title">Reset Password</string>
+    <string name="reset_desc">To reset your password, enter the email address you use to sign in to this application</string>
+
 
     <!-- shared by layouts -->
     <string name="layout_button_save">save</string>
@@ -98,6 +105,7 @@
 
     <!-- TODO: String Array for spinners -->
     <string-array name="city_list">
+        <item>Select City</item>
         <item>Amman</item>
         <item>Zarqa</item>
         <item>Irbid</item>
@@ -113,6 +121,7 @@
     </string-array>
 
     <string-array name="type_list">
+        <item>Select Type</item>
         <item>Car</item>
         <item>Bus</item>
         <item>Truck</item>
