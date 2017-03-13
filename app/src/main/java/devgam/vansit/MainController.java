@@ -122,11 +122,11 @@ public class MainController extends AppCompatActivity
 
         int id = item.getItemId();
         /**
-        *
-        * Check what ID user clicked (change IDs in activity_main_drawer.xml)
-        * Then navigate to the selected Page
-        * each time u need to create new instance and call ChangeFrag method
-        */
+         *
+         * Check what ID user clicked (change IDs in activity_main_drawer.xml)
+         * Then navigate to the selected Page
+         * each time u need to create new instance and call ChangeFrag method
+         */
         if (id == R.id.nav_login) {
             Login loginPage = new Login();
             Util.ChangeFrag(loginPage,fragmentManager);

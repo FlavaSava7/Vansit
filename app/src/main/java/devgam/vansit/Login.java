@@ -11,14 +11,12 @@ import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -31,12 +29,6 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 public class Login extends Fragment implements View.OnClickListener{
 
@@ -44,7 +36,7 @@ public class Login extends Fragment implements View.OnClickListener{
     private EditText emailEdit, passEdit ;
     private TextView signUpText, errorText, forgetPassText;
     private TextInputLayout emailInput, passInput;
-    LinearLayout googleSignIn;
+    LinearLayout googleSignIn, facebookSignIn;
 
     private ProgressDialog progressDialog ;
 
@@ -53,6 +45,7 @@ public class Login extends Fragment implements View.OnClickListener{
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
     GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 1;
+
 
     private Drawable errorIcon;
 
@@ -63,6 +56,7 @@ public class Login extends Fragment implements View.OnClickListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         //to sign in process :
         firebaseAuth = FirebaseAuth.getInstance();
@@ -90,17 +84,16 @@ public class Login extends Fragment implements View.OnClickListener{
                 }).addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
+        // Configure Google Sign In
+
+
+
     }
-    @Override
-    public void onPause() {
-        super.onPause();
-        // fix mGoogleApiClient crash bug
-        mGoogleApiClient.stopAutoManage(getActivity());
-        mGoogleApiClient.disconnect();
-    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_login, container, false);
     }
 
@@ -262,45 +255,43 @@ public class Login extends Fragment implements View.OnClickListener{
         }
     }
 
-
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         //Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task)
-                    {
-                        // we need Progress Dialog here , because it take some time to process. But it get stuck for a weird reason.
-
-                        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().
-                                child(Util.RDB_USERS+"/"+firebaseAuth.getCurrentUser().getUid());
-                        Query query = mRef;
-                        query.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot)
-                            {
-                                if(dataSnapshot.exists())//user exists
-                                {
-                                    MainController.GlobalHideItem(MainController.globalNavigationView.getMenu());//update menu
-                                    MainController.GlobalSetDataToViews(MainController.globalNavigationView);
-                                    Main mainPage = new Main();
-                                    Util.ChangeFrag(mainPage, fragmentManager);
-                                }
-                                else
-                                {
-                                    myAccount ma = new myAccount();
-                                    Util.ChangeFrag(ma, fragmentManager);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {}
-                        });
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        myAccount ma = new myAccount();
+                        Util.ChangeFrag(ma, fragmentManager);
                     }
+
                 });
+        try{
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }catch(Exception e){
+
+        }
 
 
     }
+
+
+
+
+
 
 }

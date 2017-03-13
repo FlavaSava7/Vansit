@@ -62,6 +62,7 @@
     <string name="menu_rec_text">Recommended</string>
     <string name="menu_account_text">Account</string>
     <string name="menu_my_offers_text">My Offers</string>
+    <string name="menu_settings_text">Settings</string>
     
     <string name="main_order_city">Order by city</string>
     <string name="main_order_type">Order by type</string>
@@ -80,10 +81,17 @@
     <string name="add_offer_user_name_text">Name : </string>
     <string name="add_offer_user_phone_text">Phone : </string>
 
-    <string name="login_with_google">SIGN IN WITH GOOGLE</string>
-    <string name="login_with_facebook">SIGN IN WITH FACEBOOK</string>
-    <string name="signup_with_google">SIGN UP WITH GOOGLE</string>
-    <string name="signup_with_facebook">SIGN UP WITH FACEBOOK</string>
+    <string name="sign_in_with_google">SIGN IN WITH GOOGLE</string>
+    <string name="sign_in_title">Sign in</string>
+    <string name="sign_in_desc">using your account</string>
+    <string name="sign_in_forget_password">Forget your password?</string>
+    <string name="sign_in_register_link">Dont have account? Sign up now</string>
+
+    <string name="sign_up_title">Sign up</string>
+    <string name="sign_up_login_link">Already have account? Sign in now</string>
+
+    <string name="reset_title">Reset Password</string>
+    <string name="reset_desc">To reset your password, enter the email address you use to sign in to this application</string>
 
 
     <!-- shared by layouts -->

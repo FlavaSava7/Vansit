@@ -243,7 +243,7 @@ public class Main extends Fragment implements View.OnClickListener{
         ArrayList<String> tempCityList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.city_list)));
         tempCityList.add(0,"");
         ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.city_list));
+                android.R.layout.simple_spinner_item,tempCityList);
         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerCity.setAdapter(cityAdapter);
@@ -252,12 +252,12 @@ public class Main extends Fragment implements View.OnClickListener{
         ArrayList<String> tempTypeList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.type_list)));
         tempTypeList.add(0,"");
         ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item,
-                getResources().getStringArray(R.array.type_list));
+                tempTypeList);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerType.setAdapter(typeAdapter);
 
-        final ProgressDialog progressDialog = new ProgressDialog(getContext(),ProgressDialog.STYLE_SPINNER);
-        Util.ProgDialogStarter(progressDialog,"Loading...");
+        //final ProgressDialog progressDialog = new ProgressDialog(getContext(),ProgressDialog.STYLE_SPINNER);
+        //Util.ProgDialogStarter(progressDialog,"Loading...");
 
         //Initial Filling of ListView, default
 
@@ -303,11 +303,17 @@ public class Main extends Fragment implements View.OnClickListener{
                     Log.v("Main","offerList:"+offer.getTitle());*/
 
                 listView.setAdapter(offerAdapter);
-                Util.ProgDialogDelay(progressDialog,100L);
+                try {
+                    getActivity().findViewById(R.id.loadingPanel_main).setVisibility(View.GONE);
+                } catch (Exception e){
+
+                }
+                //Util.ProgDialogDelay(progressDialog,100L);
             }
             @Override
             public void onCancelled(DatabaseError databaseError)
             {
+                getActivity().findViewById(R.id.loadingPanel_main).setVisibility(View.GONE);
             }
         };
         query.addListenerForSingleValueEvent(QVEL);
@@ -318,8 +324,8 @@ public class Main extends Fragment implements View.OnClickListener{
         //must AUTO input the city of the User
         //must check for internet
 
-        if(whichCity.isEmpty()|| whichCity.equals("Select City") ||
-                whichType.isEmpty()|| whichType.equals("Select Type") ) {
+        if(whichCity.isEmpty()|| whichCity.equals("") ||
+                whichType.isEmpty()|| whichType.equals("") ) {
             return;
         }
 

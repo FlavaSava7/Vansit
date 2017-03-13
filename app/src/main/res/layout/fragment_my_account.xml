@@ -26,7 +26,8 @@
             android:background="@drawable/googe_button"
             android:layout_margin="@dimen/views_margin"
             android:textColor="@color/cardview_light_background"
-            android:backgroundTint="@color/fab_add_offer" />
+            android:backgroundTint="@color/fab_add_offer"
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
