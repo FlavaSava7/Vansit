@@ -49,5 +49,9 @@
     <string name="add_offer_about_offer_text">"حول الخدمة "</string>
     <string name="add_offer_desc_hint">"هنا أضف ملاحظاتك حول الخدمة "</string>
     <string name="hello_blank_fragment">قريبا ستكون متاحة</string>
+    <string name="sign_in_title">تسجيل الدخول</string>
+    <string name="sign_in_register_link">لا تملك حساب ؟ سجل الآن</string>
+    <string name="sign_in_forget_password">نسيت الحساب ؟</string>
+    <string name="sign_in_desc">باستخدام حسابك</string>
 
 </resources>

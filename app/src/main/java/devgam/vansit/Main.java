@@ -256,8 +256,8 @@ public class Main extends Fragment implements View.OnClickListener{
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerType.setAdapter(typeAdapter);
 
-        final ProgressDialog progressDialog = new ProgressDialog(getContext(),ProgressDialog.STYLE_SPINNER);
-        Util.ProgDialogStarter(progressDialog,"Loading...");
+        //final ProgressDialog progressDialog = new ProgressDialog(getContext(),ProgressDialog.STYLE_SPINNER);
+        //Util.ProgDialogStarter(progressDialog,"Loading...");
 
         //Initial Filling of ListView, default
 
@@ -303,11 +303,17 @@ public class Main extends Fragment implements View.OnClickListener{
                     Log.v("Main","offerList:"+offer.getTitle());*/
 
                 listView.setAdapter(offerAdapter);
-                Util.ProgDialogDelay(progressDialog,100L);
+                try {
+                    getActivity().findViewById(R.id.loadingPanel_main).setVisibility(View.GONE);
+                } catch (Exception e){
+
+                }
+                //Util.ProgDialogDelay(progressDialog,100L);
             }
             @Override
             public void onCancelled(DatabaseError databaseError)
             {
+                getActivity().findViewById(R.id.loadingPanel_main).setVisibility(View.GONE);
             }
         };
         query.addListenerForSingleValueEvent(QVEL);

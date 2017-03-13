@@ -8,7 +8,7 @@
                     <corners android:radius="@dimen/views_top_margin"/>
                 </shape>
             </item>
-            <item android:bottom="2dp" >
+            <item android:bottom="2dp"  >
                 <shape android:shape="rectangle">
                     <solid android:color="#FFFFFF"/>
                     <corners android:radius="@dimen/views_top_margin"/>

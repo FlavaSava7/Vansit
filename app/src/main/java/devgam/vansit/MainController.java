@@ -3,6 +3,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,14 +37,15 @@ public class MainController extends AppCompatActivity
     FirebaseAuth firebaseAuth;
     DatabaseReference mRef;
     String tempUID;
-    TextView name;
-    ImageView img;
+    TextView nameText, emailText;
+    ImageView genderImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -57,9 +61,9 @@ public class MainController extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         View header = navigationView.getHeaderView(0);
-        name = (TextView)header.findViewById(R.id.nav_header_main_name_text);
-        TextView email = (TextView)header.findViewById(R.id.nav_header_main_email_text);
-        img = (ImageView)header.findViewById(R.id.nav_header_main_img);
+        nameText = (TextView)header.findViewById(R.id.nav_header_main_name_text);
+        emailText = (TextView)header.findViewById(R.id.nav_header_main_email_text);
+        genderImg = (ImageView)header.findViewById(R.id.nav_header_main_img);
 
         if(Util.isLogged()) {
             firebaseAuth = FirebaseAuth.getInstance();
@@ -67,13 +71,13 @@ public class MainController extends AppCompatActivity
             mRef = FirebaseDatabase.getInstance().
                     getReference(Util.RDB_USERS + "/" +
                             tempUID);
-            email.setText(firebaseAuth.getCurrentUser().getEmail());
+            emailText.setText(firebaseAuth.getCurrentUser().getEmail());
 
             setDataToViews();
         } else {
-            name.setVisibility(View.INVISIBLE);
-            email.setVisibility(View.INVISIBLE);
-            img.setVisibility(View.INVISIBLE);
+            nameText.setVisibility(View.INVISIBLE);
+            emailText.setVisibility(View.INVISIBLE);
+            genderImg.setVisibility(View.INVISIBLE);
         }
 
 
@@ -104,6 +108,7 @@ public class MainController extends AppCompatActivity
             super.onBackPressed();
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -179,6 +184,9 @@ public class MainController extends AppCompatActivity
             nav_Menu.findItem(R.id.nav_my_account).setVisible(true);
             nav_Menu.findItem(R.id.nav_logout).setVisible(true);
             nav_Menu.findItem(R.id.nav_my_offers).setVisible(true);
+            nameText.setVisibility(View.VISIBLE);
+            emailText.setVisibility(View.VISIBLE);
+            genderImg.setVisibility(View.VISIBLE);
         } else {
             nav_Menu.findItem(R.id.nav_login).setVisible(true);
             nav_Menu.findItem(R.id.nav_rec).setVisible(false);
@@ -186,7 +194,9 @@ public class MainController extends AppCompatActivity
             nav_Menu.findItem(R.id.nav_my_account).setVisible(false);
             nav_Menu.findItem(R.id.nav_logout).setVisible(false);
             nav_Menu.findItem(R.id.nav_my_offers).setVisible(false);
-
+            nameText.setVisibility(View.INVISIBLE);
+            emailText.setVisibility(View.INVISIBLE);
+            genderImg.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -201,11 +211,11 @@ public class MainController extends AppCompatActivity
 
                 if(! tempUser.getFirstName().isEmpty()) {
                     //For Check method
-                    name.setText(tempUser.getFirstName() + " " + tempUser.getLastName());
+                    nameText.setText(tempUser.getFirstName() + " " + tempUser.getLastName());
                     if(tempUser.getGender().equals("male"))
-                        img.setImageResource(R.mipmap.ic_action_male);
+                        genderImg.setImageResource(R.mipmap.ic_action_male);
                     else
-                        img.setImageResource(R.mipmap.ic_action_female);
+                        genderImg.setImageResource(R.mipmap.ic_action_female);
                 }
 
 
