@@ -2,21 +2,26 @@ package devgam.vansit;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -30,13 +35,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.util.concurrent.Executor;
+
 public class Login extends Fragment implements View.OnClickListener{
 
     private Button signInButton;
     private EditText emailEdit, passEdit ;
     private TextView signUpText, errorText, forgetPassText;
     private TextInputLayout emailInput, passInput;
-    LinearLayout googleSignIn, facebookSignIn;
+    LinearLayout googleSignIn;
 
     private ProgressDialog progressDialog ;
 
@@ -45,7 +52,6 @@ public class Login extends Fragment implements View.OnClickListener{
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
     GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 1;
-
 
     private Drawable errorIcon;
 
@@ -56,7 +62,6 @@ public class Login extends Fragment implements View.OnClickListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         //to sign in process :
         firebaseAuth = FirebaseAuth.getInstance();
@@ -83,10 +88,6 @@ public class Login extends Fragment implements View.OnClickListener{
                     }
                 }).addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-
-        // Configure Google Sign In
-
-
 
     }
 
@@ -268,29 +269,7 @@ public class Login extends Fragment implements View.OnClickListener{
                     }
 
                 });
-        try{
-
-
-
-
-
-
-
-
-
-
-
-
-
-        }catch(Exception e){
-
-        }
-
-
     }
-
-
-
 
 
 

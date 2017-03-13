@@ -98,6 +98,7 @@
 
     <!-- TODO: String Array for spinners -->
     <string-array name="city_list">
+        <item>Select City</item>
         <item>Amman</item>
         <item>Zarqa</item>
         <item>Irbid</item>
@@ -113,6 +114,7 @@
     </string-array>
 
     <string-array name="type_list">
+        <item>Select Type</item>
         <item>Car</item>
         <item>Bus</item>
         <item>Truck</item>
