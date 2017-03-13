@@ -243,7 +243,7 @@ public class Main extends Fragment implements View.OnClickListener{
         ArrayList<String> tempCityList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.city_list)));
         tempCityList.add(0,"");
         ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.city_list));
+                android.R.layout.simple_spinner_item,tempCityList);
         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerCity.setAdapter(cityAdapter);
@@ -252,7 +252,7 @@ public class Main extends Fragment implements View.OnClickListener{
         ArrayList<String> tempTypeList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.type_list)));
         tempTypeList.add(0,"");
         ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item,
-                getResources().getStringArray(R.array.type_list));
+                tempTypeList);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerType.setAdapter(typeAdapter);
 
@@ -324,8 +324,8 @@ public class Main extends Fragment implements View.OnClickListener{
         //must AUTO input the city of the User
         //must check for internet
 
-        if(whichCity.isEmpty()|| whichCity.equals("Select City") ||
-                whichType.isEmpty()|| whichType.equals("Select Type") ) {
+        if(whichCity.isEmpty()|| whichCity.equals("") ||
+                whichType.isEmpty()|| whichType.equals("") ) {
             return;
         }
 

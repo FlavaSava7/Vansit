@@ -13,18 +13,18 @@
     android:background="@drawable/login_back">
 
     <TextView
-        android:text="@string/sign_in_title"
+        android:text="Sign in"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/views_margin_xl"
+        android:layout_marginTop="@dimen/views_margin"
         android:id="@+id/nav_header_main_email_text"
         android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textSize="36sp"
+        android:textSize="54sp"
         android:textAlignment="center"
         android:textColor="@color/fragment_background"
-        android:textStyle="normal|bold" />
+        android:fontFamily="cursive" />
 
     <TextView
         android:layout_width="match_parent"
@@ -38,7 +38,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fff0f0f0">
+        android:background="#BBf0f0f0">
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -64,8 +64,7 @@
                 android:background="@drawable/login_edit_boarder"
                 android:singleLine="true"
                 android:paddingBottom="@dimen/views_top_margin"
-                android:paddingTop="@dimen/views_top_margin"
-                android:layout_marginBottom="@dimen/views_top_margin" />
+                android:paddingTop="@dimen/views_top_margin" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -144,13 +143,12 @@
         android:layout_below="@+id/login_signup_text"
         android:layout_centerHorizontal="true"
         android:textAlignment="center"
-        android:textStyle="normal|bold"
         android:textColor="@color/fragment_background"
         android:textSize="16sp"
         android:layout_marginTop="@dimen/views_margin"
         android:fontFamily="sans-serif"
-        android:typeface="monospace"
-        android:textAppearance="@style/TextAppearance.AppCompat" />
+        android:textAppearance="@android:style/TextAppearance.Material"
+        android:typeface="monospace" />
 
     <TextView
         android:text="@string/sign_in_register_link"
@@ -160,10 +158,12 @@
         android:layout_below="@+id/login_signin_button"
         android:layout_centerHorizontal="true"
         android:textAlignment="center"
-        android:textStyle="normal|bold"
         android:textColor="@color/fragment_background"
         android:layout_marginBottom="@dimen/views_top_margin"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textAppearance="@android:style/TextAppearance.Material"
+        android:fontFamily="sans-serif"
+        android:typeface="monospace" />
 
     <LinearLayout
         android:orientation="horizontal"

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#009688</color>
-    <color name="colorPrimaryDark">#00796B</color>
-    <color name="colorAccent">#009688</color>
+    <color name="colorPrimary">#347d8a</color>
+    <color name="colorPrimaryDark">#28616b</color>
+    <color name="colorAccent">#16a086</color>
+    <color name="textColor">#94acb6</color>
     <color name="buttonTextColor">#ff4081</color>
     <color name="gray">#505050</color>
     <color name="gray_lite">#898989</color>
     <color name="fab_add_offer">#f39c12</color>
+
     <color name="fab_add_request">#8e44ad</color>
     <color name="fragment_background">#e0e0e0</color>
     <color name="editText_background">#f2f2f2</color>

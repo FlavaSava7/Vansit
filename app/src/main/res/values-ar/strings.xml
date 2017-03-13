@@ -53,5 +53,12 @@
     <string name="sign_in_register_link">لا تملك حساب ؟ سجل الآن</string>
     <string name="sign_in_forget_password">نسيت الحساب ؟</string>
     <string name="sign_in_desc">باستخدام حسابك</string>
+    <string name="main_no_result">لا يوجد خدمات مطابقة</string>
+    <string name="menu_fav_text">المفضلة</string>
+    <string name="reset_desc">لاعادة تعيين كلمة السر, أدخل البريد الالكتروني المستخدم للدخول للتطبيق</string>
+    <string name="reset_title">إعادة تعيين كلمة السر</string>
+    <string name="sign_up_login_link">تمتلك حساب بالفعل؟ ادخل الآن</string>
+    <string name="sign_up_title">سجل</string>
+    <string name="title_activity_login"></string>
 
 </resources>
