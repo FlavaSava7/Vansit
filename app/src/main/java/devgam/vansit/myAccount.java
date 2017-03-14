@@ -84,10 +84,8 @@ public class myAccount extends Fragment implements View.OnClickListener{
     @Override
     public void onResume() {
         super.onResume();
-        // A.J.I. : Hide Fab
-        //FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        //if(fab!=null)
-            //fab.setVisibility(View.GONE);
+
+        Util.ChangePageTitle(getActivity(),R.string.menu_my_account_text);
 
         firebaseAuth = FirebaseAuth.getInstance();
         tempUID = firebaseAuth.getCurrentUser().getUid();
@@ -195,6 +193,7 @@ public class myAccount extends Fragment implements View.OnClickListener{
                 if(Util.IS_USER_CONNECTED) {
                     saveDataToDatabase();
                     MainController.GlobalHideItem(MainController.globalNavigationView.getMenu());//update menu
+                    MainController.GlobalSetDataToViews(MainController.globalNavigationView);
                     Main mainPage = new Main();
                     Util.ChangeFrag(mainPage, fragmentManager);
                 } else {
@@ -235,13 +234,17 @@ public class myAccount extends Fragment implements View.OnClickListener{
             Util.makeToast(getActivity(), "Invalid Birth day");
             return false;
         }
-
+        if(tempUserCity.isEmpty() || tempUserCity.equals("Select City"))
+        {
+            return false;
+        }
         return true;
     }
 
-    private void saveDataToDatabase(){
+    private void saveDataToDatabase()
+    {
+
         //user object to push data on DB
-        //TODO: UPDATE THE VALUE HERE TO PUT FIRST NAME , LAST NAME ( constructer take one more parameter for last name now )
         Users userData = new Users(tempUserFirstName, tempUserLastName,tempUserCity,tempPhoneNumber,tempUserGander,
                 tempDayOfBirth + "", tempMonthOfBirth + "", tempYearOfBirth + "");
 

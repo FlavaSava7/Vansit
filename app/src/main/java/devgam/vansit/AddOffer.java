@@ -177,7 +177,10 @@ public class AddOffer extends Fragment {
             makeToast(getContext(), String.valueOf(R.string.noInternetMsg));
             return;
         }
-
+        if(spinnerCity.getSelectedItem().toString().isEmpty()|| spinnerCity.getSelectedItem().toString().equals("Select City") ||
+                spinnerType.getSelectedItem().toString().isEmpty()|| spinnerType.getSelectedItem().toString().equals("Select Type") ) {
+            return;
+        }
         Offers myOffer = new Offers(FirebaseAuth.getInstance().getCurrentUser().getUid(),
                 editTitle.getText().toString(),
                 editDesc.getText().toString(),

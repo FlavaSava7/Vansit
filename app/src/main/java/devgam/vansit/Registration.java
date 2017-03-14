@@ -52,6 +52,8 @@ public class Registration extends Fragment implements View.OnClickListener{
     public void onResume()
     {
         super.onResume();
+        Util.ChangePageTitle(getActivity(),R.string.sign_up_title);
+
         //Initialize signing in progress Dialog :
         progressDialog = new ProgressDialog(getContext());
 
