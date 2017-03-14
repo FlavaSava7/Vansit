@@ -18,12 +18,12 @@ import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.R;
 
 
-public class favorite extends Fragment {
+public class favourite extends Fragment {
 
     private ListView myFavoriteList;
     private ArrayList<Offers> myFavoriteArray ;
 
-    public favorite() {
+    public favourite() {
         // Required empty public constructor
     }
 
@@ -38,7 +38,7 @@ public class favorite extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
+        Util.ChangePageTitle(getActivity(),R.string.menu_fav_text);
         myFavoriteList = (ListView) getActivity().findViewById(R.id.favorite_listview);
 
         myFavoriteArray = new ArrayList<>();

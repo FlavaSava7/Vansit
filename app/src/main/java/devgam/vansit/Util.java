@@ -59,7 +59,7 @@ class Util
     // TODO: Real Time Database Variable Names
     static final String RDB_USERS = "Users";
     static final String RDB_OFFERS = "Offers";
-    static final String RDB_FAVORITE = "favorite";
+    static final String RDB_FAVORITE = "favourite";
     static final String RDB_COUNTRY = "Country";
     static final String RDB_JORDAN = "Jordan";
     static final String RDB_TYPE = "type";
@@ -91,11 +91,17 @@ class Util
     static int monthNow = CALENDAR.get(Calendar.MONTH);
     static int yearNow = CALENDAR.get(Calendar.YEAR);
 
+    // TODO: METHODS
 
-
-
-    // TODO: Methods
-    static boolean CheckConnection(Context context)//this will use isOnline or isOnlineApi18 to check for internet
+    /**
+     * Initial filling of the IS_USER_CONNECTED boolean
+     * Check Connection is used to check if the user is connected to the internet, it uses isOnline() method
+     * And You should use isOnline18 , if the API target is 18
+     * However The InternetListener broadcast receiver is used to change IS_USER_CONNECTED to true or false.
+     * @param context
+     * @return
+     */
+    static boolean CheckConnection(Context context)
     {
         ConnectivityManager cm =
                 (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -138,13 +144,21 @@ class Util
         return false;
     }
 
+    /**
+     * Is the User Logged?
+     * @return True if user is Logged
+     */
     static boolean isLogged()// to check if user is already logged
     {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         return ( firebaseAuth.getCurrentUser() != null);
     }
 
-
+    /**
+     * Change the Current Fragment to Other One
+     * @param fragment : fragment to go to
+     * @param fragmentManager
+     */
     static void ChangeFrag(Fragment fragment, FragmentManager fragmentManager)//change fragments
     {
         String backStateName = fragment.getClass().getName();
@@ -159,11 +173,14 @@ class Util
         }
     }
 
-
+    /**
+     * Starts a Progress Dialog OR Stop Progress Dialog if it got called from ProgDialogDelay
+     * @param progressDialog
+     * @param message : Message to show, Can be null because we call this method from ProgDialogDelay to stop the progress after X time
+     */
     static void ProgDialogStarter(ProgressDialog progressDialog , @Nullable String message )
     {
-        // to show progress bar ,then u need to call ProgDialogDelay method with time parameter to stop ProgressDialog after time Ends.
-        // @Nullable String message so we can call this method from  ProgDialogDelay without passing msg , because JAVA does not have default values ex. (String msg="")
+
         if(progressDialog.isShowing())
         {
             progressDialog.dismiss();
@@ -181,6 +198,12 @@ class Util
 
         }
     }
+
+    /**
+     * This Is used to Delay the Progress Dialog that was started by ProgDialogStarter
+     * @param progressDialog
+     * @param timer
+     */
     static void ProgDialogDelay(final ProgressDialog progressDialog, long timer) // to stop progress bar after timer seconds
     {
         if(progressDialog==null)
@@ -193,11 +216,22 @@ class Util
         }, timer);
     }
 
+    /**
+     * Create A Toast
+     * @param context
+     * @param msg : Message to Show
+     */
     static void makeToast(Context context, String msg)
     {
         Toast.makeText(context ,msg, Toast.LENGTH_SHORT ).show();
     }
-    static void OutsideTouchKeyBoardHider(View view, final FragmentActivity fragmentActivity)// use this so u can click outside an Editbox to hide he keyboard
+
+    /**
+     * Use This So Yopu Can Click Outside an EditText to Hide The Keyboard Using HideKeyboard Method
+     * @param view : the layout that contains the edit texts
+     * @param fragmentActivity : getActivity()
+     */
+    static void OutsideTouchKeyBoardHider(View view, final FragmentActivity fragmentActivity)
     {
 
         //Set up touch listener for non-text box views to hide keyboard.
@@ -225,6 +259,10 @@ class Util
         }
     }
 
+    /**
+     * Hide The KeyBoard, used in OutsideTouchKeyBoardHider Method
+     * @param fragmentActivity : getActivity()
+     */
     static void HideKeyboard(FragmentActivity fragmentActivity)
     {
 
@@ -233,11 +271,21 @@ class Util
         imm.hideSoftInputFromWindow(frameLayout.getWindowToken(), 0);
     }
 
-    //used in list view to set icons to rows
+    /**
+     * Used in List View to Set Icons to Rows
+     * @param activity : getActivity()
+     * @param resID : ID of the Image
+     * @return Vaild Image To Use
+     */
     static Drawable getDrawableResource(Activity activity, int resID) {
         return ContextCompat.getDrawable(activity.getApplicationContext(), resID);//context.compat checks the version implicitly
     }
 
+    /**
+     *
+     * @param type : name of the Type
+     * @return : ID of the icon
+     */
     static int changeIcon(String type){
         int typeIcon = R.drawable.common_google_signin_btn_icon_dark;
         switch(type) {
@@ -258,6 +306,11 @@ class Util
         return typeIcon;
     }
 
+    /**
+     *
+     * @param target : the character to check if email is valid
+     * @return false of target parameter is null, otherwise check if Email is vaild
+     */
     public final static boolean isValidEmail(CharSequence target) {
         if (target == null) {
             return false;
@@ -266,10 +319,17 @@ class Util
         }
     }
 
-    //To check first, last name & phone edit text is empty or not !
+    /**
+     * To Check First, Last Name & Phone Edit Text Is Empty or Not !
+     * @param activity : getActivity()
+     * @param errorIcon : Icon of the Error
+     * @param editText : The Edit Text to check on
+     * @param errorMsg : Message of The Error
+     * @return True if EditText.getText is Valid, otherwise false
+     */
     static boolean checkEdit(Activity activity,  Drawable errorIcon, EditText editText, String errorMsg){
         Util.setErrorMsg(activity, errorIcon);
-        if(! editText.getText().toString().isEmpty() && !(editText.getText().toString() == "")) {
+        if(! editText.getText().toString().isEmpty() && !(editText.getText().toString().equals(""))) {
             //Util.makeToast(getContext(), "name done");
             return true;
         } else {
@@ -281,13 +341,22 @@ class Util
         }
     }
 
-    //to set an error icon on edit text if it was empty
+    /**
+     * To Set an Error Icon on Edit Text If It Was Empty
+     * @param activity : getActivity()
+     * @param errorIcon : Icon of the Error
+     */
     private static void setErrorMsg(Activity activity, Drawable errorIcon){
         errorIcon = activity.getResources().getDrawable(R.drawable.ic_error);
         errorIcon.setBounds(new Rect(0, 0, errorIcon.getIntrinsicWidth(), errorIcon.getIntrinsicHeight()));
         //editText.setError(null,errorIcon);
     }
 
+    /**
+     * Sort ArrayList by Date that is in Offer Class
+     * @param arrayToSort
+     * @return Sorted ArrayList
+     */
     static ArrayList<Offers>  SortByTimeStampDesc(ArrayList<Offers> arrayToSort)// sort offers by date
     {
         Collections.sort(arrayToSort, new Comparator<Offers>() {
@@ -298,5 +367,20 @@ class Util
         });
         Collections.reverse(arrayToSort);
         return arrayToSort;
+    }
+
+    /**
+     * Change the Title of the page.
+     * @param fragmentActivity : use getActivity()
+     * @param titleID : R.string.ID_OF_THE_STRING
+     */
+    static void ChangePageTitle(FragmentActivity fragmentActivity, int titleID)
+    {
+        try {
+            if(!fragmentActivity.getTitle().equals(fragmentActivity.getResources().getString(titleID)))
+                fragmentActivity.setTitle(fragmentActivity.getResources().getString(titleID));
+        }
+        catch (NullPointerException e ) {
+        }
     }
 }

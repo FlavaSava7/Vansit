@@ -1,11 +1,15 @@
 <resources>
+
     <string name="app_name">Vansit</string>
 
+    <!-- TODO: Global Strings-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+
+
 
     <!-- TODO: MainController Strings-->
     <string name="city">City</string>
@@ -58,7 +62,7 @@
     <string name="menu_logout_text">Sign Out</string>
     <string name="menu_my_account_text">My Account</string>
     <string name="menu_home_text">Home</string>
-    <string name="menu_fav_text">Favorite</string>
+    <string name="menu_fav_text">Favourite</string>
     <string name="menu_rec_text">Recommended</string>
     <string name="menu_account_text">Account</string>
     <string name="menu_my_offers_text">My Offers</string>

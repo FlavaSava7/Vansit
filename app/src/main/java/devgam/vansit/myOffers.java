@@ -63,6 +63,7 @@ public class myOffers extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        Util.ChangePageTitle(getActivity(),R.string.menu_my_offers_text);
         myOffersList = (ListView) getActivity().findViewById(R.id.my_offers_listView);
         myOffersAdapter = new itemsAdapter(getContext());
         progressDialog = new ProgressDialog(getContext(),ProgressDialog.STYLE_SPINNER);

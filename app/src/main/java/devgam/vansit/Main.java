@@ -91,6 +91,7 @@ public class Main extends Fragment implements View.OnClickListener{
     public void onResume()
     {
         super.onResume();
+        Util.ChangePageTitle(getActivity(),R.string.menu_home_text);
         //StartTime= System.currentTimeMillis();
         allCities = getResources().getStringArray(R.array.city_list);
         allTypes = getResources().getStringArray(R.array.type_list);
@@ -231,28 +232,15 @@ public class Main extends Fragment implements View.OnClickListener{
 
     private void FillSpinnersAndListView()
     {
-
-        /*// must check for internet
-        if(!Util.IS_USER_CONNECTED)
-        {
-            // show msg
-            return;
-        }*/
-
-        //City
-        ArrayList<String> tempCityList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.city_list)));
-        tempCityList.add(0,"");
         ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_item,tempCityList);
+                android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.city_list));
         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerCity.setAdapter(cityAdapter);
 
         //Type
-        ArrayList<String> tempTypeList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.type_list)));
-        tempTypeList.add(0,"");
         ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item,
-                tempTypeList);
+                getResources().getStringArray(R.array.type_list));
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerType.setAdapter(typeAdapter);
 
@@ -324,11 +312,12 @@ public class Main extends Fragment implements View.OnClickListener{
         //must AUTO input the city of the User
         //must check for internet
 
-        if(whichCity.isEmpty()|| whichCity.equals("") ||
-                whichType.isEmpty()|| whichType.equals("") ) {
+        if(whichCity.isEmpty()|| whichCity.equals("Select City") ||
+                whichType.isEmpty()|| whichType.equals("Select Type") ) {
             return;
         }
 
+        ShowMoreBtn(listView);
         listCounter = listCounterOriginal;//reset
         offerList.clear();
 
@@ -512,11 +501,6 @@ public class Main extends Fragment implements View.OnClickListener{
         if(listView.getFooterViewsCount()>=1)// prevent duplications for show more button
             return;
 
-
-        //listCounter += 1;
-        //Log.v("MainController","listCounter: "+listCounter);
-
-
         Button showMore = new Button(getContext());
         showMore.setText("Show More");
         showMore.setOnClickListener(new View.OnClickListener() {
@@ -536,7 +520,7 @@ public class Main extends Fragment implements View.OnClickListener{
                     {
                         for (DataSnapshot areaSnapshot: dataSnapshot.getChildren())
                         {
-                            Log.v("MainController",""+areaSnapshot.getValue(Offers.class).getTitle());
+                            //Log.v("MainController",""+areaSnapshot.getValue(Offers.class).getTitle());
                             Offers tempOffer = areaSnapshot.getValue(Offers.class);
                             tempOffer.setOfferKey(areaSnapshot.getKey());
 

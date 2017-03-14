@@ -1,10 +1,8 @@
 package devgam.vansit;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,8 +15,6 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -141,8 +137,8 @@ public class MainController extends AppCompatActivity
             Util.ChangeFrag(myOffers, fragmentManager);
             drawer.closeDrawer(GravityCompat.START);
         } else  if(id == R.id.nav_fav) {
-            favorite favorite = new favorite();
-            Util.ChangeFrag(favorite, fragmentManager);
+            favourite favourite = new favourite();
+            Util.ChangeFrag(favourite, fragmentManager);
             drawer.closeDrawer(GravityCompat.START);
             return true;
         } else  if(id == R.id.nav_rec) {

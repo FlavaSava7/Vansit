@@ -48,7 +48,7 @@ public class resetPassword extends Fragment implements View.OnClickListener{
     @Override
     public void onResume() {
         super.onResume();
-
+        Util.ChangePageTitle(getActivity(),R.string.sign_in_forget_password);
         //Initialize signing in progress Dialog :
         progressDialog = new ProgressDialog(getContext());
 
