@@ -38,6 +38,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Users;
@@ -232,10 +233,10 @@ public class Main extends Fragment implements View.OnClickListener{
 
     private void FillSpinnersAndListView()
     {
+        //City
         ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.city_list));
         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         spinnerCity.setAdapter(cityAdapter);
 
         //Type
@@ -244,59 +245,27 @@ public class Main extends Fragment implements View.OnClickListener{
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerType.setAdapter(typeAdapter);
 
-        //final ProgressDialog progressDialog = new ProgressDialog(getContext(),ProgressDialog.STYLE_SPINNER);
-        //Util.ProgDialogStarter(progressDialog,"Loading...");
-
-        //Initial Filling of ListView, default
-
         DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference()
-                .child(Util.RDB_COUNTRY +"/"+ Util.RDB_JORDAN);
-        Query query = DataBaseRoot;
+                .child(Util.RDB_OFFERS);
+        Query query = DataBaseRoot.orderByChild("timeStamp").limitToLast(recentOfferCounter);
         ValueEventListener QVEL= new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
-
-                for(DataSnapshot cityRoot : dataSnapshot.getChildren())
+                for(DataSnapshot everyOffer : dataSnapshot.getChildren())
                 {
-                    for (DataSnapshot offerRoot : cityRoot.getChildren())
-                    {
-                        for (DataSnapshot everyOffer : offerRoot.getChildren())
-                        {
-
-                            Offers tempOffer = everyOffer.getValue(Offers.class);
-                            tempOffer.setOfferKey(everyOffer.getKey());
-                            offerList.add(tempOffer);
-                        }
-                    }
+                    Offers tempOffer = everyOffer.getValue(Offers.class);
+                    tempOffer.setOfferKey(everyOffer.getKey());
+                    offerList.add(tempOffer);
                 }
                 // sort them by time desc
                 Util.SortByTimeStampDesc(offerList);
-
-                if(offerList.size()>=recentOfferCounter)
-                {
-                    //Log.v("Main","offerList.size:"+offerList.size());
-                    for(int index =offerList.size()-1; index>=recentOfferCounter; index--)
-                    {
-
-                        //Log.v("Main","index:"+index);
-                        //Log.v("Main","removed:"+offerList.get(index).getTitle());
-                        offerList.remove(index);
-                    }
-
-                }
-
-
-                /*for (Offers offer: offerList)
-                    Log.v("Main","offerList:"+offer.getTitle());*/
 
                 listView.setAdapter(offerAdapter);
                 try {
                     getActivity().findViewById(R.id.loadingPanel_main).setVisibility(View.GONE);
                 } catch (Exception e){
-
                 }
-                //Util.ProgDialogDelay(progressDialog,100L);
             }
             @Override
             public void onCancelled(DatabaseError databaseError)
@@ -309,8 +278,6 @@ public class Main extends Fragment implements View.OnClickListener{
 
     public void ChangeListItems() {
         // every time the spinner values change , update list
-        //must AUTO input the city of the User
-        //must check for internet
 
         if(whichCity.isEmpty()|| whichCity.equals("Select City") ||
                 whichType.isEmpty()|| whichType.equals("Select Type") ) {
@@ -322,11 +289,8 @@ public class Main extends Fragment implements View.OnClickListener{
         offerList.clear();
 
         DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference()
-                .child(Util.RDB_COUNTRY+"/"+
-                        Util.RDB_JORDAN+"/"+
-                        whichCity+"/"+
-                        Util.RDB_OFFERS);
-        Query query = DataBaseRoot.orderByChild(Util.RDB_TYPE).equalTo(whichType).limitToFirst(listCounter);
+                .child(Util.RDB_OFFERS);
+        Query query = DataBaseRoot.orderByChild(Util.RDB_TYPE).equalTo(whichType).limitToLast(listCounter);
         ValueEventListener QVEL= new ValueEventListener()
         {
             @Override
@@ -334,7 +298,10 @@ public class Main extends Fragment implements View.OnClickListener{
             {
                 for (DataSnapshot areaSnapshot: dataSnapshot.getChildren())
                 {
+
                     Offers tempOffer = areaSnapshot.getValue(Offers.class);
+                    if(!tempOffer.getCity().equals(whichCity))
+                        continue;
                     tempOffer.setOfferKey(areaSnapshot.getKey());
                     offerList.add(tempOffer);
                 }
@@ -343,9 +310,6 @@ public class Main extends Fragment implements View.OnClickListener{
                 Util.SortByTimeStampDesc(offerList);
                 listView.setAdapter(offerAdapter);
             }
-
-
-
 
             @Override
             public void onCancelled(DatabaseError databaseError)
@@ -360,9 +324,42 @@ public class Main extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         if(v == addRequest || v == addRequestText)
         {
+            /*DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
+            List<Offers> offers = new ArrayList<>();
+            Random randomGenerator = new Random();
+            for(int i = 0;i<100;i++)
+            {
+                int randomInt = randomGenerator.nextInt(4);
+
+                String type="";
+                switch(randomInt)
+                {
+                    case 0 : type="Car";break;
+                    case 1 : type="Bus";break;
+                    case 2 : type="Truck";break;
+                    case 3 : type="Taxi";break;
+                    default:type="Car";break;
+                }
+                String city="";
+                switch(randomInt)
+                {
+                    case 0 : city="Amman";break;
+                    case 1 : city="Zarqa";break;
+                    case 2 : city="Irbid";break;
+                    case 3 : city="Ajloun";break;
+                    default:city="Amman";break;
+                }
+                Offers offer = new Offers("JRtqgsjvHvMIsSLQVVs6EDNfL582",
+                        "Title"+i,"Desc"+i,type,city,Util.RDB_JORDAN,System.currentTimeMillis()+i*10);
+                offers.add(i,offer);
+
+                myRef.child("Offers").push().setValue(offer);
+            }*/
+
+            /*
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             addRequest addRequestPage = new addRequest();
-            Util.ChangeFrag(addRequestPage, fragmentManager);
+            Util.ChangeFrag(addRequestPage, fragmentManager);*/
         } if( v == addOffer || v == addOfferText)
         {
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -415,8 +412,6 @@ public class Main extends Fragment implements View.OnClickListener{
                 public void onDataChange(DataSnapshot dataSnapshot)
                 {
                     if(dataSnapshot.getValue(Users.class)!=null) {
-
-                        //Log.v("Main:","KEY "+dataSnapshot.getKey());
                         final Users tempUser = dataSnapshot.getValue(Users.class);
                         tempUser.setUserID(dataSnapshot.getKey());
 
@@ -427,9 +422,6 @@ public class Main extends Fragment implements View.OnClickListener{
 
                         if(toAdd)
                             userList.add(tempUser);
-
-
-
 
                         holder.ratingService.setText("("+tempUser.getRateService()+"/5)");
                         holder.ratingPrice.setText("("+tempUser.getRatePrice()+"/5)");
@@ -471,7 +463,6 @@ public class Main extends Fragment implements View.OnClickListener{
             };
             query.addListenerForSingleValueEvent(VEL);
 
-            // more work
             return rowItem;
         }
         @Override
@@ -502,17 +493,14 @@ public class Main extends Fragment implements View.OnClickListener{
             return;
 
         Button showMore = new Button(getContext());
-        showMore.setText("Show More");
+        showMore.setText(getResources().getString(R.string.main_show_more));
         showMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
                 listCounter +=listCounterOriginal;
-                DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference().child(Util.RDB_COUNTRY+"/"+
-                        Util.RDB_JORDAN+"/"+
-                        whichCity+"/"+
-                        Util.RDB_OFFERS);
-                Query query = DataBaseRoot.orderByChild(Util.RDB_TYPE).equalTo(whichType).limitToFirst(listCounter);
+                DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference().child(Util.RDB_OFFERS);
+                Query query = DataBaseRoot.orderByChild(Util.RDB_TYPE).equalTo(whichType).limitToLast(listCounter);
                 ValueEventListener QVEL= new ValueEventListener()
                 {
                     @Override
@@ -522,6 +510,8 @@ public class Main extends Fragment implements View.OnClickListener{
                         {
                             //Log.v("MainController",""+areaSnapshot.getValue(Offers.class).getTitle());
                             Offers tempOffer = areaSnapshot.getValue(Offers.class);
+                            if(!tempOffer.getCity().equals(whichCity))
+                                continue;
                             tempOffer.setOfferKey(areaSnapshot.getKey());
 
                             boolean toAdd=true;
@@ -543,7 +533,7 @@ public class Main extends Fragment implements View.OnClickListener{
                         // sort desc again
                         Util.SortByTimeStampDesc(offerList);
                         offerAdapter.notifyDataSetChanged();
-                        listView.smoothScrollToPosition(0);
+
                     }
 
                     @Override
