@@ -59,13 +59,10 @@ class Util
     // TODO: Real Time Database Variable Names
     static final String RDB_USERS = "Users";
     static final String RDB_OFFERS = "Offers";
-    static final String RDB_FAVORITE = "favourite";
+    static final String RDB_FAVOURITE = "Favourites";
     static final String RDB_COUNTRY = "Country";
     static final String RDB_JORDAN = "Jordan";
     static final String RDB_TYPE = "type";
-
-    static final String RDB_AMMAN = "Amman";
-    static final String RDB_ZARQA = "Zarqa";
 
     // TODO: Real Time Database Variable Names FOR USERS CLASS
 
@@ -74,16 +71,25 @@ class Util
     static final String CITY = "city";
     static final String PHONE = "phone";
     static final String GENDER = "gender";
-
     static final String DATE_DAY = "dateDay";
     static final String DATE_MONTH = "dateMonth";
     static final String DATE_YEAR = "dateYear";
+    static final String RATED_FOR = "ratedFor";
 
     static final String RATE_SERVICE = "rateService";
     static final String RATE_SERVICE_COUNT = "rateServiceCount";
     static final String RATE_PRICE = "ratePrice";
     static final String RATE_PRICE_COUNT = "ratePriceCount";
-    static final String RATED_FOR = "ratedFor";
+
+    // TODO: Real Time Database Variable Names FOR OFFERS CLASS
+    // no city var cuz we have the same on users class
+    static final String USER_ID = "userID";
+    static final String COUNTRY = "country";
+    static final String TYPE = "type";
+    static final String DESCRIPTION = "description";
+    static final String TITLE = "title";
+    static final String TIME_STAMP = "timeStamp";
+
 
     final static Calendar CALENDAR = Calendar.getInstance();
     //These values to get current date and open date picker on current date

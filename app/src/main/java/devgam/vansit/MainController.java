@@ -211,7 +211,7 @@ public class MainController extends AppCompatActivity
                 getReference(Util.RDB_USERS + "/" +
                         FirebaseAuth.getInstance().getCurrentUser().getUid());
         //temp code:
-        mRef.addValueEventListener(new ValueEventListener() {
+        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
@@ -251,7 +251,7 @@ public class MainController extends AppCompatActivity
                 getReference(Util.RDB_USERS + "/" +
                         FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        mRef.addValueEventListener(new ValueEventListener() {
+        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
