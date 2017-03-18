@@ -99,7 +99,7 @@ public class resetPassword extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         if (v == resetButton) {
-            //Check if user has internet connection or not !
+            //Check if User has internet connection or not !
             if(Util.IS_USER_CONNECTED)
                 //reset process
                 resetPass();

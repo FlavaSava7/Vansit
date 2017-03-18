@@ -40,6 +40,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
+import devgam.vansit.JSON_Classes.Favourite;
 import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Users;
 
@@ -58,8 +59,8 @@ public class Main extends Fragment implements View.OnClickListener{
     boolean isFloatingActionOpen = false;
 
     private ListView listView;
-    private ArrayList<Offers> offerList;// this will be refilled with Offers each time a user change City Filter
-    private ArrayList<Users> userList;// to match offer with the user it has, we are filling in inside the getView
+    private ArrayList<Offers> offerList;// this will be refilled with Offers each time a User change City Filter
+    private ArrayList<Users> userList;// to match offer with the User it has, we are filling in inside the getView
     private ArrayAdapter offerAdapter;
     private static int listCounter = 5;
     private static final int listCounterOriginal = listCounter;
@@ -324,42 +325,9 @@ public class Main extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         if(v == addRequest || v == addRequestText)
         {
-            /*DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
-            List<Offers> offers = new ArrayList<>();
-            Random randomGenerator = new Random();
-            for(int i = 0;i<100;i++)
-            {
-                int randomInt = randomGenerator.nextInt(4);
-
-                String type="";
-                switch(randomInt)
-                {
-                    case 0 : type="Car";break;
-                    case 1 : type="Bus";break;
-                    case 2 : type="Truck";break;
-                    case 3 : type="Taxi";break;
-                    default:type="Car";break;
-                }
-                String city="";
-                switch(randomInt)
-                {
-                    case 0 : city="Amman";break;
-                    case 1 : city="Zarqa";break;
-                    case 2 : city="Irbid";break;
-                    case 3 : city="Ajloun";break;
-                    default:city="Amman";break;
-                }
-                Offers offer = new Offers("JRtqgsjvHvMIsSLQVVs6EDNfL582",
-                        "Title"+i,"Desc"+i,type,city,Util.RDB_JORDAN,System.currentTimeMillis()+i*10);
-                offers.add(i,offer);
-
-                myRef.child("Offers").push().setValue(offer);
-            }*/
-
-            /*
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             addRequest addRequestPage = new addRequest();
-            Util.ChangeFrag(addRequestPage, fragmentManager);*/
+            Util.ChangeFrag(addRequestPage, fragmentManager);
         } if( v == addOffer || v == addOfferText)
         {
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -427,7 +395,7 @@ public class Main extends Fragment implements View.OnClickListener{
                         holder.ratingPrice.setText("("+tempUser.getRatePrice()+"/5)");
 
                         //add by nimer esam :
-                        //To make call when user click on call text :
+                        //To make call when User click on call text :
                         final String phoneNumber = tempUser.getPhone();
 
                         holder.callText.setOnClickListener(new View.OnClickListener() {
@@ -549,5 +517,39 @@ public class Main extends Fragment implements View.OnClickListener{
 
     }
 
+
+
+    // auto insert data to database for testing
+    /*DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
+    List<Offers> offers = new ArrayList<>();
+    Random randomGenerator = new Random();
+    for(int i = 0;i<100;i++)
+    {
+        int randomInt = randomGenerator.nextInt(4);
+
+        String type="";
+        switch(randomInt)
+        {
+            case 0 : type="Car";break;
+            case 1 : type="Bus";break;
+            case 2 : type="Truck";break;
+            case 3 : type="Taxi";break;
+            default:type="Car";break;
+        }
+        String city="";
+        switch(randomInt)
+        {
+            case 0 : city="Amman";break;
+            case 1 : city="Zarqa";break;
+            case 2 : city="Irbid";break;
+            case 3 : city="Ajloun";break;
+            default:city="Amman";break;
+        }
+        Offers offer = new Offers("JRtqgsjvHvMIsSLQVVs6EDNfL582",
+                "Title"+i,"Desc"+i,type,city,Util.RDB_JORDAN,System.currentTimeMillis()+i*10);
+        offers.add(i,offer);
+
+        myRef.child("Offers").push().setValue(offer);
+    }*/
 
 }

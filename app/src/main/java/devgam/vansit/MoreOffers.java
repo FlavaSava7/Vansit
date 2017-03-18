@@ -40,7 +40,7 @@ public class MoreOffers extends Fragment {
     private TextView userName,userAge,userCity,userPhone;
 
     private ListView listView;
-    private ArrayList<Offers> offerList;// this will be refilled with Offers each time a user change City Filter
+    private ArrayList<Offers> offerList;// this will be refilled with Offers each time a User change City Filter
     private ArrayAdapter offerAdapter;
 
     Users userDriver = null;
@@ -147,7 +147,7 @@ public class MoreOffers extends Fragment {
                         }
 
                         for (Offers offer : offerList) {
-                            //Log.v("Main", "offerList for this user: " + offer.getOfferKey());
+                            //Log.v("Main", "offerList for this User: " + offer.getOfferKey());
                         }
                         Util.SortByTimeStampDesc(offerList);
                         listView.setAdapter(offerAdapter);

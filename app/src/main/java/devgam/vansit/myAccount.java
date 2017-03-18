@@ -57,7 +57,7 @@ public class myAccount extends Fragment implements View.OnClickListener{
 
 
     //temp day, month, year to save data from picker until data click save
-    //because may be user cancel change
+    //because may be User cancel change
     //that's will product real data on fireBase
     private int tempDayOfBirth, tempMonthOfBirth, tempYearOfBirth ;
     private static String tempUserFirstName, tempUserLastName , tempPhoneNumber, tempUserCity, tempUserGander ;
@@ -143,7 +143,7 @@ public class myAccount extends Fragment implements View.OnClickListener{
         maleRadio.setOnClickListener(this);
         femaleRadio.setOnClickListener(this);
 
-        //may be user don't click because it's already clicked
+        //may be User don't click because it's already clicked
         if(maleRadio.isChecked())
             tempUserGander = "male";
         else
@@ -228,7 +228,7 @@ public class myAccount extends Fragment implements View.OnClickListener{
             tempUserFirstName = firstNameEdit.getText().toString();
 
         if(tempYearOfBirth == 0 || Util.yearNow < tempYearOfBirth + 16) {
-            //Check if user add real birthDate not current date !
+            //Check if User add real birthDate not current date !
             //Just year because no body born in this year can make account
             //No one less than 16 can drive or make deal with other people
             Util.makeToast(getActivity(), "Invalid Birth day");
@@ -244,7 +244,7 @@ public class myAccount extends Fragment implements View.OnClickListener{
     private void saveDataToDatabase()
     {
 
-        //user object to push data on DB
+        //User object to push data on DB
         Users userData = new Users(tempUserFirstName, tempUserLastName,tempUserCity,tempPhoneNumber,tempUserGander,
                 tempDayOfBirth + "", tempMonthOfBirth + "", tempYearOfBirth + "");
 

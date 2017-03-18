@@ -11,6 +11,7 @@ public class Profile extends Fragment {
 
     public Profile() {
         // Required empty public constructor
+
     }
 
 

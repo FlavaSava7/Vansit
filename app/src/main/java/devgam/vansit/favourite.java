@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -14,8 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -34,7 +35,6 @@ import devgam.vansit.JSON_Classes.Favourite;
 import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Users;
 
-import static devgam.vansit.Util.ProgDialogDelay;
 import static devgam.vansit.Util.makeToast;
 
 
@@ -88,6 +88,10 @@ public class favourite extends Fragment {
         }
 
     }
+
+    /**
+     * Set Up User Favourites and call setAdapterAndUpdateUserFavourites
+     */
     private void SetUpMyFavourites()
     {
         if(!Util.IS_USER_CONNECTED)
@@ -95,9 +99,10 @@ public class favourite extends Fragment {
             makeToast(getContext(), String.valueOf(R.string.noInternetMsg));
             return;
         }
-        // used later to delete any offers if we didnt find them
-        // we add on this list inside QVEL
-        final List<String> offerKeysToDelete = new ArrayList<>();
+
+        // used later to update User fav
+        final List<Favourite> favsToKeep = new ArrayList<>();
+
         final DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child(Util.RDB_FAVOURITE
                                 +"/"+ FirebaseAuth.getInstance().getCurrentUser().getUid());
         ValueEventListener QVEL= new ValueEventListener()
@@ -105,18 +110,18 @@ public class favourite extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
-                if(!dataSnapshot.exists())//user does not have any favourites
+                if(!dataSnapshot.exists())//User does not have any favourites
                 {
                     noFav.setVisibility(View.VISIBLE);
+                    Util.ProgDialogDelay(progressDialog,100L);
                 }else
                 {
                     for(DataSnapshot favObj : dataSnapshot.getChildren())
                     {
                         Favourite fav = favObj.getValue(Favourite.class);
                         myFavourits.add(fav);
+                        favsToKeep.add(fav);
                     }
-                    for(Favourite fav : myFavourits)
-                        Log.v("Main","fav: "+fav.getOfferKey());
 
                     DatabaseReference mRef2;//just an inner reference
 
@@ -131,16 +136,38 @@ public class favourite extends Fragment {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot)
                             {
-                                //this offer is deleted by the Driver, So delete it from this user Fav.
-                                // But first store it in another variable then later delete it,
-                                // so the myFavouritsOffers does not fail
-                                if(dataSnapshot==null)
+                                //this offer is deleted by the Driver,
+                                // So store it inside favsToKeep to update User's fav list.
+                                if(!dataSnapshot.exists())// offer does not exist
                                 {
-                                    offerKeysToDelete.add(myFavouritsOffers.get(finalI).getOfferKey());
+                                    int indexToDelete=0;// to store the index which we will delete from favsToKeep
+                                    for(int innerIndex =0 ;innerIndex<favsToKeep.size();innerIndex++)
+                                    {
+                                        if(myFavourits.get(finalI).getOfferKey().equals(favsToKeep.get(innerIndex).getOfferKey()))
+                                        {
+                                            indexToDelete = innerIndex;
+                                            break;
+                                        }
+                                    }
+                                    favsToKeep.remove(indexToDelete);
+
                                 }else// offer exists
                                 {
                                     Offers offer = dataSnapshot.getValue(Offers.class);
                                     myFavouritsOffers.add(offer);
+                                }
+
+                                if((finalI+1)==myFavourits.size())
+                                {
+                                    // last iteration: set adapter and update fav list in database
+                                    new Handler().postDelayed(new Runnable()
+                                    {
+                                        @Override
+                                        public void run()
+                                        {
+                                            setAdapterAndUpdateUserFavourites(favsToKeep);
+                                        }
+                                    },500L);
                                 }
                             }
                             @Override
@@ -149,15 +176,8 @@ public class favourite extends Fragment {
                             }
                         };
                         mRef2.addListenerForSingleValueEvent(QVEL2);
-
                     }
-
-                    myFavouriteList.setAdapter(myFavouriteAdapter);
-                    for(Offers offer : myFavouritsOffers)
-                        Log.v("Main","Offers Fav: "+offer.getTitle());
-
                 }
-                Util.ProgDialogDelay(progressDialog,100L);
             }
             @Override
             public void onCancelled(DatabaseError databaseError)
@@ -165,18 +185,31 @@ public class favourite extends Fragment {
             }
         };
         mRef.addListenerForSingleValueEvent(QVEL);
+    }
 
-        //delete any favourites from this user if we found any offer was deleted
-        if(!offerKeysToDelete.isEmpty())
+    /**
+     * Set the ListView Adapter and update the User favourites list in the database.
+     * It's called after we are done fetching all favourites and the favourites that still points to offers.
+     * @param favsToKeep : the favourites that still points on offers in the database
+     */
+    private void setAdapterAndUpdateUserFavourites(List<Favourite> favsToKeep)
+    {
+
+        if(!myFavouritsOffers.isEmpty())
+            myFavouriteList.setAdapter(myFavouriteAdapter);
+        else // all of this User favs were deleted, delete his list
         {
-            DatabaseReference mRef2;
-            for(String offerKey : offerKeysToDelete)
-            {
-                mRef2 = FirebaseDatabase.getInstance().getReference().child(Util.RDB_FAVOURITE
-                        +"/"+ FirebaseAuth.getInstance().getCurrentUser().getUid()+"/"+offerKey);
-                mRef2.removeValue();
-            }
+            DatabaseReference myRef = FirebaseDatabase.getInstance().getReference().child(Util.RDB_FAVOURITE+"/"+
+                    FirebaseAuth.getInstance().getCurrentUser().getUid());
+            myRef.removeValue();
         }
+        if(!favsToKeep.isEmpty())
+        {
+            DatabaseReference myRef = FirebaseDatabase.getInstance().getReference().child(Util.RDB_FAVOURITE+"/"+
+            FirebaseAuth.getInstance().getCurrentUser().getUid());
+            myRef.setValue(favsToKeep);
+        }
+        Util.ProgDialogDelay(progressDialog,100L);
     }
     private class itemsAdapter extends ArrayAdapter<Offers>
     {
@@ -206,16 +239,16 @@ public class favourite extends Fragment {
             holder.typeIcon = (ImageView) rowItem.findViewById(R.id.favorite_items_typeIcon);
             holder.typeIcon.setImageDrawable(Util.getDrawableResource(getActivity(), Util.changeIcon(tempOffer.getType())));
 
-            holder.profileText = (LinearLayout) rowItem.findViewById(R.id.main_items_profile_layout);
-            holder.callText = (LinearLayout) rowItem.findViewById(R.id.main_items_call_layout);
+            holder.profileText = (Button) rowItem.findViewById(R.id.favorite_items_profile_text);
+            holder.callText = (Button) rowItem.findViewById(R.id.favorite_items_call_text);
 
             Query query = databaseReference.child(tempOffer.getUserID());
             ValueEventListener VEL = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot)
                 {
-                    if(dataSnapshot.getValue(Users.class)!=null) {
-
+                    if(dataSnapshot.getValue(Users.class)!=null)
+                    {
                         final Users tempUser = dataSnapshot.getValue(Users.class);
                         tempUser.setUserID(dataSnapshot.getKey());
 
@@ -272,7 +305,7 @@ public class favourite extends Fragment {
         // this class is called in getView and assigned it all "items" layouts Views,for smooth scrolling
         TextView Title, City;
         ImageView typeIcon;
-        LinearLayout profileText, callText;
+        Button profileText, callText;
     }
 
 }

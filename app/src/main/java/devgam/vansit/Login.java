@@ -121,7 +121,7 @@ public class Login extends Fragment implements View.OnClickListener{
         passInput = (TextInputLayout) getActivity().findViewById(R.id.login_password_input);
         googleSignIn = (LinearLayout) getActivity().findViewById(R.id.login_google_layout);
 
-        //to set error text not visible if user out from app and come again :
+        //to set error text not visible if User out from app and come again :
         errorText.setVisibility(View.INVISIBLE);
 
         //on click listener for buttons :
@@ -291,7 +291,7 @@ public class Login extends Fragment implements View.OnClickListener{
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot)
                             {
-                                if (dataSnapshot.exists())//user exists
+                                if (dataSnapshot.exists())//User exists
                                 {
                                     MainController.GlobalHideItem(MainController.globalNavigationView.getMenu());//update menu
                                     MainController.GlobalSetDataToViews(MainController.globalNavigationView);
