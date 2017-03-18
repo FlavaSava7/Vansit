@@ -53,14 +53,14 @@ class Util
         // Empty Constructor}
     }
     // TODO: Global Normal Variables
-    static boolean IS_USER_CONNECTED = false ; // if InternetListener detected the user lost connection to internet this will be FALSE , otherwise TRUE
+    static boolean IS_USER_CONNECTED = false ; // if InternetListener detected the User lost connection to internet this will be FALSE , otherwise TRUE
     static Users currentUser = null;
 
     // TODO: Real Time Database Variable Names
     static final String RDB_USERS = "Users";
     static final String RDB_OFFERS = "Offers";
     static final String RDB_FAVOURITE = "Favourites";
-    static final String RDB_COUNTRY = "Country";
+    static final String RDB_REQUESTS = "Requests";
     static final String RDB_JORDAN = "Jordan";
     static final String RDB_TYPE = "type";
 
@@ -101,7 +101,7 @@ class Util
 
     /**
      * Initial filling of the IS_USER_CONNECTED boolean
-     * Check Connection is used to check if the user is connected to the internet, it uses isOnline() method
+     * Check Connection is used to check if the User is connected to the internet, it uses isOnline() method
      * And You should use isOnline18 , if the API target is 18
      * However The InternetListener broadcast receiver is used to change IS_USER_CONNECTED to true or false.
      * @param context
@@ -152,9 +152,9 @@ class Util
 
     /**
      * Is the User Logged?
-     * @return True if user is Logged
+     * @return True if User is Logged
      */
-    static boolean isLogged()// to check if user is already logged
+    static boolean isLogged()// to check if User is already logged
     {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         return ( firebaseAuth.getCurrentUser() != null);

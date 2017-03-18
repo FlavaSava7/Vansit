@@ -64,7 +64,7 @@ public class Registration extends Fragment implements View.OnClickListener{
         signInText = (TextView) getActivity().findViewById(R.id.register_signin_text);
         errorText = (TextView) getActivity().findViewById(R.id.register_error_msg_text);
 
-        //to set error text not visible if user out from app and come again :
+        //to set error text not visible if User out from app and come again :
         errorText.setVisibility(View.INVISIBLE);
 
         //on click listener for buttons :
@@ -83,13 +83,13 @@ public class Registration extends Fragment implements View.OnClickListener{
 
         //To check email is not empty :
         if(TextUtils.isEmpty(email)){
-            //if user didn't enter his email
+            //if User didn't enter his email
             return;
         }
 
         //To check pass is not empty :
         if(TextUtils.isEmpty(pass)){
-            //if user didn't enter his password
+            //if User didn't enter his password
             return;
         }
 
@@ -110,7 +110,7 @@ public class Registration extends Fragment implements View.OnClickListener{
                         if(task.isSuccessful())
                         {
                             //Registration done
-                            //now user should complete entering his data
+                            //now User should complete entering his data
                             Util.ChangeFrag(myAccountPage,fragmentManager);// use like this to go from fragment to other
                         }
                         else

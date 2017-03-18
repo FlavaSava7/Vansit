@@ -1,8 +1,10 @@
 package devgam.vansit;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -119,7 +121,7 @@ public class MainController extends AppCompatActivity
         int id = item.getItemId();
         /**
          *
-         * Check what ID user clicked (change IDs in activity_main_drawer.xml)
+         * Check what ID User clicked (change IDs in activity_main_drawer.xml)
          * Then navigate to the selected Page
          * each time u need to create new instance and call ChangeFrag method
          */
@@ -170,7 +172,7 @@ public class MainController extends AppCompatActivity
     {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu nav_Menu = navigationView.getMenu();
-        if (Util.isLogged()) {//user is logged in
+        if (Util.isLogged()) {//User is logged in
             nav_Menu.findItem(R.id.nav_login).setVisible(false);
             nav_Menu.findItem(R.id.nav_rec).setVisible(true);
             nav_Menu.findItem(R.id.nav_fav).setVisible(true);
@@ -188,7 +190,7 @@ public class MainController extends AppCompatActivity
     }
     public static void GlobalHideItem(Menu nav_Menu)
     {
-        if (Util.isLogged()) {//user is logged in
+        if (Util.isLogged()) {//User is logged in
             nav_Menu.findItem(R.id.nav_login).setVisible(false);
             nav_Menu.findItem(R.id.nav_rec).setVisible(true);
             nav_Menu.findItem(R.id.nav_fav).setVisible(true);
@@ -282,5 +284,11 @@ public class MainController extends AppCompatActivity
         name.setVisibility(View.VISIBLE);
         email.setVisibility(View.VISIBLE);
         img.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
     }
 }

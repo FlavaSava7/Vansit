@@ -71,16 +71,16 @@ public class userInformation extends Dialog implements
         moreOffersText.setOnClickListener(this);
 
         try{
-            //set user name to text on dialog
+            //set User name to text on dialog
             if(tempUserName != "" || ! tempUserName.isEmpty())
                 nameText.setText(tempUserName);
 
-            //set user age to text on dialog
+            //set User age to text on dialog
             int age =  Util.yearNow - Integer.parseInt(tempUserAgeYear) ;
             age = (Util.monthNow > Integer.parseInt(tempUserAgeMonth) ? age : age -1 );
             ageText.setText("Age is " + age + " years old");
 
-            //set user name to text on dialog
+            //set User name to text on dialog
             if(tempUserCity != "" || ! tempUserCity.isEmpty())
                 cityText.setText("Lives in " + tempUserCity );
 
