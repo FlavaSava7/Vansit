@@ -42,6 +42,7 @@ import java.util.Random;
 
 import devgam.vansit.JSON_Classes.Favourite;
 import devgam.vansit.JSON_Classes.Offers;
+import devgam.vansit.JSON_Classes.Requests;
 import devgam.vansit.JSON_Classes.Users;
 
 
@@ -66,15 +67,11 @@ public class Main extends Fragment implements View.OnClickListener{
     private static final int listCounterOriginal = listCounter;
     private static final int recentOfferCounter = 20;
 
-
     private Spinner spinnerCity,spinnerType;
     private static String whichCity="";// to give it a new value in a spinner to fetch new items
     private static String whichType="";// to give it a new value in a spinner to fetch new items
     private static String allCities[];//this will contain the values that are in strings.xml
     private static String allTypes[];//this will contain the values that are in strings.xml, used inside the getView to choose icon for type
-
-    //Long StartTime;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -179,7 +176,6 @@ public class Main extends Fragment implements View.OnClickListener{
                 if(stopAutoFiringCode) {
                     whichCity = parent.getSelectedItem().toString();
                     ChangeListItems();
-                    //Log.v("Main", "spinnerCity");
                 }
                 stopAutoFiringCode = true;
             }
@@ -248,7 +244,7 @@ public class Main extends Fragment implements View.OnClickListener{
 
         DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference()
                 .child(Util.RDB_OFFERS);
-        Query query = DataBaseRoot.orderByChild("timeStamp").limitToLast(recentOfferCounter);
+        Query query = DataBaseRoot.orderByChild(Util.TIME_STAMP).limitToLast(recentOfferCounter);
         ValueEventListener QVEL= new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
@@ -325,6 +321,7 @@ public class Main extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         if(v == addRequest || v == addRequestText)
         {
+            //foo();
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             addRequest addRequestPage = new addRequest();
             Util.ChangeFrag(addRequestPage, fragmentManager);
@@ -518,38 +515,142 @@ public class Main extends Fragment implements View.OnClickListener{
     }
 
 
+    void foo()
+    {
+        ArrayList<String> s = new ArrayList<>();
+        s.add("22 Olive Rd. ");
+        s.add("Melrose, MA 02176");
+        s.add("81 Cedar Swamp Drive ");
+        s.add("East Hartford, CT 06118");
+        s.add("490 Cleveland Court ");
+        s.add("Middle Village, NY 11379");
+        s.add("13 Fairview Street ");
+        s.add("Bensalem, PA 19020");
+        s.add("866 Leatherwood Drive ");
+        s.add("Petersburg, VA 23803");
+        s.add("9542 Military Street");
+        s.add("Rockaway, NJ 07866");
+        s.add("8342 Sherman Street ");
+        s.add("Hollywood, FL 33020");
+        s.add("74 Peachtree Ave. ");
+        s.add("Southfield, MI 48076");
+        s.add("9414 Hickory St. ");
+        s.add("Garfield, NJ 07026");
+        s.add("7 N. Sugar Street ");
+        s.add("Strongsville, OH 44136");
+        s.add("8085 Birch Hill St. ");
+        s.add("Harrisonburg, VA 22801");
+        s.add("92 East Deerfield Ave. ");
+        s.add("Inman, SC 29349");
+        s.add("49 Woodsman Street ");
+        s.add("Gainesville, VA 20155");
+        s.add("306 Alton St. ");
+        s.add("Owensboro, KY 42301");
+        s.add("690 Trenton Ave.");
+        s.add("Chesterton, IN 46304");
+        s.add("Goldsboro, NC 27530");
+        s.add("Fremont, OH 43420");
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
+        Random randomGenerator = new Random();
+        for(int i =0; i<s.size();i++)
+        {
+            int randomInt = randomGenerator.nextInt(4);
+            String type = "";
+            switch (randomInt) {
+                case 0:
+                    type = "Car";
+                    break;
+                case 1:
+                    type = "Bus";
+                    break;
+                case 2:
+                    type = "Truck";
+                    break;
+                case 3:
+                    type = "Taxi";
+                    break;
+                default:
+                    type = "Car";
+                    break;
+            }
+            String city = "";
+            switch (randomInt) {
+                case 0:
+                    city = "Amman";
+                    break;
+                case 1:
+                    city = "Zarqa";
+                    break;
+                case 2:
+                    city = "Irbid";
+                    break;
+                case 3:
+                    city = "Ajloun";
+                    break;
+                default:
+                    city = "Amman";
+                    break;
+            }
 
+            Users users = new Users("FA"+i,"KE"+i,city,"079656560","MALE","5","7","1995");
+            Offers offers = new Offers("ID"+i,"T"+i,"D"+i,type,city,"Jordan",System.currentTimeMillis());
+            Requests requests1 = new Requests(users,offers,s.get(i),32.021371+((double)i/1000),35.848829+((double)i/1000),System.currentTimeMillis());
+            myRef.child(Util.RDB_REQUESTS+"/"+offers.getUserID()).setValue(requests1);
+        }
+
+    }
+}
+
+
+/*
     // auto insert data to database for testing
-    /*DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
+    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
     List<Offers> offers = new ArrayList<>();
     Random randomGenerator = new Random();
-    for(int i = 0;i<100;i++)
-    {
+for(int i = 0;i<100;i++) {
         int randomInt = randomGenerator.nextInt(4);
 
-        String type="";
-        switch(randomInt)
-        {
-            case 0 : type="Car";break;
-            case 1 : type="Bus";break;
-            case 2 : type="Truck";break;
-            case 3 : type="Taxi";break;
-            default:type="Car";break;
+        String type = "";
+        switch (randomInt) {
+        case 0:
+        type = "Car";
+        break;
+        case 1:
+        type = "Bus";
+        break;
+        case 2:
+        type = "Truck";
+        break;
+        case 3:
+        type = "Taxi";
+        break;
+default:
+        type = "Car";
+        break;
         }
-        String city="";
-        switch(randomInt)
-        {
-            case 0 : city="Amman";break;
-            case 1 : city="Zarqa";break;
-            case 2 : city="Irbid";break;
-            case 3 : city="Ajloun";break;
-            default:city="Amman";break;
+        String city = "";
+        switch (randomInt) {
+        case 0:
+        city = "Amman";
+        break;
+        case 1:
+        city = "Zarqa";
+        break;
+        case 2:
+        city = "Irbid";
+        break;
+        case 3:
+        city = "Ajloun";
+        break;
+default:
+        city = "Amman";
+        break;
         }
         Offers offer = new Offers("JRtqgsjvHvMIsSLQVVs6EDNfL582",
-                "Title"+i,"Desc"+i,type,city,Util.RDB_JORDAN,System.currentTimeMillis()+i*10);
-        offers.add(i,offer);
+        "Title" + i, "Desc" + i, type, city, Util.RDB_JORDAN, System.currentTimeMillis() + i * 10);
+        offers.add(i, offer);
 
         myRef.child("Offers").push().setValue(offer);
-    }*/
+        }*/
 
-}
+

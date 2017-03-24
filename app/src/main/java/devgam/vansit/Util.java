@@ -2,13 +2,17 @@ package devgam.vansit;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -64,7 +68,7 @@ class Util
     static final String RDB_JORDAN = "Jordan";
     static final String RDB_TYPE = "type";
 
-    // TODO: Real Time Database Variable Names FOR USERS CLASS
+    // TODO: Real Time Database Variable FOR USERS CLASS
 
     static final String FIRST_NAME = "firstName";
     static final String LAST_NAME = "lastName";
@@ -81,7 +85,7 @@ class Util
     static final String RATE_PRICE = "ratePrice";
     static final String RATE_PRICE_COUNT = "ratePriceCount";
 
-    // TODO: Real Time Database Variable Names FOR OFFERS CLASS
+    // TODO: Real Time Database Variable FOR OFFERS CLASS
     // no city var cuz we have the same on users class
     static final String USER_ID = "userID";
     static final String COUNTRY = "country";
@@ -388,5 +392,34 @@ class Util
         }
         catch (NullPointerException e ) {
         }
+    }
+
+    /**
+     * Create a Dialog with intent.
+     * @param context
+     * @param title
+     * @param message
+     * @param intentYes : what to do after user click YES
+     */
+    static void AlertDialog(final Context context, String title, String message, final Intent intentYes)
+    {
+        new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        context.startActivity(intentYes);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 }

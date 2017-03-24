@@ -63,11 +63,12 @@
     <string name="menu_home_text">Home</string>
     <string name="menu_fav_text">Favourite</string>
     <string name="menu_rec_text">Recommended</string>
+    <string name="menu_req_text">Requests</string>
     <string name="menu_account_text">Account</string>
     <string name="menu_my_offers_text">My Offers</string>
     <string name="menu_settings_text">Settings</string>
     <string name="menu_requests_text">Settings</string>
-    
+
     <string name="main_order_city">Order by city</string>
     <string name="main_order_type">Order by type</string>
     <string name="main_no_result">no matches srevices</string>
@@ -105,6 +106,14 @@
     <string name="reset_title">Reset Password</string>
     <string name="reset_desc">To reset your password, enter the email address you use to sign in to this application</string>
 
+    <string name="view_requests_address">Address:</string>
+    <string name="view_requests_distance">Distance:</string>
+    <string name="view_requests_status">Status:</string>
+    <string name="view_requests_map">Open Map</string>
+    <string name="view_requests_serve">Serve</string>
+    <string name="view_requests_map_navigation">Open Navigation</string>
+
+    <string name="my_request">My Request</string>
 
     <!-- shared by layouts -->
     <string name="layout_button_save">save</string>
@@ -112,7 +121,6 @@
     <string name="hint_text_email">Email</string>
     <string name="hint_text_password">Password</string>
     <string name="noInternetMsg">No Internet Connection</string>
-
 
 
     <!-- TODO: String Array for spinners -->

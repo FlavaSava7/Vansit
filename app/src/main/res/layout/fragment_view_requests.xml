@@ -1,0 +1,87 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="devgam.vansit.ViewRequests"
+    android:background="@color/fragment_background">
+    <RelativeLayout
+        android:id="@+id/loadingPanel_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        style="@style/GenericProgressBackground">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/viewRequests_linear_layout"
+        android:background="@drawable/shadow"
+        android:paddingBottom="@dimen/views_button_margin"
+        android:paddingTop="@dimen/views_margin_s">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:text="@string/main_order_city"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/textView4"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:textStyle="normal|bold"
+                android:textColor="#CC000000"
+                android:textSize="14sp"
+                android:layout_marginTop="@dimen/views_top_margin" />
+
+            <Spinner
+                android:id="@+id/frag_viewRequests_spinCity"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:dropDownWidth="match_parent" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <TextView
+        android:text="@string/main_no_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/viewRequests_no_result_text"
+        android:layout_marginLeft="110dp"
+        android:drawableLeft="@drawable/ic_search"
+        android:gravity="center_vertical"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:visibility="invisible" />
+
+    <ListView
+
+        android:id="@+id/frag_viewRequests_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/viewRequests_linear_layout" />
+
+
+</RelativeLayout>

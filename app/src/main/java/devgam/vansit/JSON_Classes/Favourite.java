@@ -1,10 +1,12 @@
 package devgam.vansit.JSON_Classes;
 
+import java.io.Serializable;
+
 /**
  * we will fetch EACH offer the user favoured by using Offer Key ,
  * if they Offer returned null when we queried then delete this offer favourite from the user.
  */
-public class Favourite
+public class Favourite implements Serializable
 {
 
     private String offerKey;

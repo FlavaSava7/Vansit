@@ -19,7 +19,6 @@ public class Offers implements Serializable
     // The following variables will not be shown in the DataBase Offers Object Just to get more Information
     private String offerKey;//this is used inside the list views so we can know if a certain obj already exists or not inside the list
 
-
     public Offers()
     {
         //empty cons for Firebase
