@@ -1,27 +1,34 @@
 package devgam.vansit.JSON_Classes;
 
-public class Requests
+import java.io.Serializable;
+
+public class Requests implements Serializable
 {
     private Users user;
     private Offers offer;
+
+    private String address;
     private double longitude;
     private double latitude;
 
-
     private Long timeStamp;
 
-    public Requests()
-    {
+    private boolean served;//true = served , false = not served
 
-    }
+    // this wont be shown in the database, set it during list view adapter setter, to compare from far to near distance
+    // must be string so we dont show it
+    private String distanceFromRequestToUser;
 
-    public Requests(Users user, Offers offer, double longitude, double latitude, Long timeStamp ) {
+    public Requests() {}
+
+    public Requests(Users user, Offers offer,String address, double latitude, double longitude, Long timeStamp) {
         this.user = user;
         this.offer = offer;
-        this.longitude = longitude;
+        this.address = address;
         this.latitude = latitude;
+        this.longitude = longitude;
         this.timeStamp = timeStamp;
-
+        this.served = Boolean.FALSE;// by default
     }
 
     public Users getUser() {
@@ -62,6 +69,30 @@ public class Requests
 
     public void setTimeStamp(Long timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public boolean isServed() {
+        return served;
+    }
+
+    public void setServed(boolean served) {
+        this.served = served;
+    }
+
+    public String getDistanceFromRequestToUser() {
+        return distanceFromRequestToUser;
+    }
+
+    public void setDistanceFromRequestToUser(String distanceFromRequestToUser) {
+        this.distanceFromRequestToUser = distanceFromRequestToUser;
     }
 
 }

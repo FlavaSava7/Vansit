@@ -1,4 +1,5 @@
 package devgam.vansit;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import devgam.vansit.JSON_Classes.Requests;
 import devgam.vansit.JSON_Classes.Users;
 
 
@@ -109,10 +111,7 @@ public class MainController extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -161,6 +160,11 @@ public class MainController extends AppCompatActivity
             email.setVisibility(View.INVISIBLE);
             img.setVisibility(View.INVISIBLE);
             return true;
+        }else  if(id == R.id.nav_requests) {
+            ViewRequests viewRequests = new ViewRequests();
+            Util.ChangeFrag(viewRequests, fragmentManager);
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
         }
 
 
@@ -179,6 +183,7 @@ public class MainController extends AppCompatActivity
             nav_Menu.findItem(R.id.nav_my_account).setVisible(true);
             nav_Menu.findItem(R.id.nav_logout).setVisible(true);
             nav_Menu.findItem(R.id.nav_my_offers).setVisible(true);
+            nav_Menu.findItem(R.id.nav_requests).setVisible(true);
         } else {
             nav_Menu.findItem(R.id.nav_login).setVisible(true);
             nav_Menu.findItem(R.id.nav_rec).setVisible(false);
@@ -186,6 +191,7 @@ public class MainController extends AppCompatActivity
             nav_Menu.findItem(R.id.nav_my_account).setVisible(false);
             nav_Menu.findItem(R.id.nav_logout).setVisible(false);
             nav_Menu.findItem(R.id.nav_my_offers).setVisible(false);
+            nav_Menu.findItem(R.id.nav_requests).setVisible(false);
         }
     }
     public static void GlobalHideItem(Menu nav_Menu)
@@ -197,6 +203,7 @@ public class MainController extends AppCompatActivity
             nav_Menu.findItem(R.id.nav_my_account).setVisible(true);
             nav_Menu.findItem(R.id.nav_logout).setVisible(true);
             nav_Menu.findItem(R.id.nav_my_offers).setVisible(true);
+            nav_Menu.findItem(R.id.nav_requests).setVisible(true);
         } else {
             nav_Menu.findItem(R.id.nav_login).setVisible(true);
             nav_Menu.findItem(R.id.nav_rec).setVisible(false);
@@ -204,6 +211,7 @@ public class MainController extends AppCompatActivity
             nav_Menu.findItem(R.id.nav_my_account).setVisible(false);
             nav_Menu.findItem(R.id.nav_logout).setVisible(false);
             nav_Menu.findItem(R.id.nav_my_offers).setVisible(false);
+            nav_Menu.findItem(R.id.nav_requests).setVisible(false);
         }
     }
     //to set data to views after data set it one time

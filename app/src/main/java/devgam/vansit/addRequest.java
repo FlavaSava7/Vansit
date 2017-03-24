@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -14,6 +15,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -22,6 +24,8 @@ import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -40,10 +44,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
 
 import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Requests;
@@ -60,45 +64,73 @@ public class addRequest extends Fragment implements
     }
 
     private GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
     boolean mLocationPermissionGranted;
     final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10;
     double Longitude,Latitude;
     LocationManager locationManager;
 
-    TextView nameText, phoneText, cityText, locationText;
+    TextView addressText;
     Spinner spinnerCity,spinnerType;
     EditText editTitle,editDesc;
     Button requestSendBtn,requestDeleteBtn;
 
     Users myUser;
+    Requests myRequest;
     FragmentManager fragmentManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_add_request, container, false);
     }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onPrepareOptionsMenu(Menu menu)
+    {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem item = menu.findItem(R.id.request_status);
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item)
+            {
+                if(myRequest==null)
+                {
+                    Util.makeToast(getContext(),"You Don't Have Any Requests!");
+                    return false;
+                }
+
+                MyRequest myRequestPage = new MyRequest(getActivity(),myRequest, fragmentManager);
+                myRequestPage.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                myRequestPage.show();
+                return true;
+            }
+        });
+        item.setVisible(true);
+    }
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
     }
+
     @Override
-    public void onStop() {
+    public void onStop()
+    {
         if (mGoogleApiClient != null)
         {
             mGoogleApiClient.disconnect();
-            Log.v("Main","disconnected");
+            Log.v("Main"," mGoogleApiClient disconnected");
+
+            myRequest=null;
         }
 
         super.onStop();
     }
 
     @Override
-    public void onResume() {
+    public void onResume()
+    {
         super.onResume();
 
         Util.ChangePageTitle(getActivity(), R.string.main_fab_text_add_request);
@@ -119,8 +151,9 @@ public class addRequest extends Fragment implements
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
                 !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             mLocationPermissionGranted = false;
-            // don't run anything until gps is on or network is on
-            Util.makeToast(getContext(),"Please Enable Location Services");
+
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            Util.AlertDialog(getContext(), "Warning!", "Please Enable Location Services", intent);
             Log.v("Main", "All location services are disabled");
             return;
 
@@ -158,10 +191,132 @@ public class addRequest extends Fragment implements
                 locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER,this,null);
 
 
+
+
+
+
     }
 
+
+    private void initLayoutVars()
+    {
+        fragmentManager  = getActivity().getSupportFragmentManager();
+
+        requestSendBtn = (Button) getActivity().findViewById(R.id.addRequest_Send);
+        requestDeleteBtn = (Button) getActivity().findViewById(R.id.addRequest_Delete);
+        editTitle = (EditText) getActivity().findViewById(R.id.addRequest_editTitle);
+        editDesc = (EditText) getActivity().findViewById(R.id.addRequest_editDesc);
+
+        spinnerCity = (Spinner) getActivity().findViewById(R.id.addRequest_spinCity);
+        spinnerType = (Spinner)getActivity().findViewById(R.id.addRequest_spinType);
+
+        addressText = (TextView)getActivity().findViewById(R.id.addRequest_location_text);
+
+
+        requestSendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddRequest();
+            }
+        });
+
+        requestDeleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DeleteRequest();
+            }
+        });
+
+        FillSpinners();
+
+        if(!Util.IS_USER_CONNECTED)
+        {
+            makeToast(getContext(), String.valueOf(R.string.noInternetMsg));
+            return;
+        }
+        DatabaseReference myRefUsers = FirebaseDatabase.getInstance().getReference().child(Util.RDB_USERS+"/"+
+                FirebaseAuth.getInstance().getCurrentUser().getUid());
+        myRefUsers.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                if(dataSnapshot.exists())
+                {
+                    myUser = dataSnapshot.getValue(Users.class);
+                    myUser.setUserID(dataSnapshot.getKey());
+                }
+                else
+                {
+                    myUser = null;
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+
+        checkIfRequestExists();
+
+
+
+
+    }
+
+    public void checkIfRequestExists()
+    {
+        // check if this user already has a request so he can click on View My Request menu button
+        DatabaseReference myRefUsers = FirebaseDatabase.getInstance().getReference().child(Util.RDB_REQUESTS+"/"+
+                FirebaseAuth.getInstance().getCurrentUser().getUid());
+        myRefUsers.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                if(dataSnapshot.exists())
+                {
+                    myRequest = dataSnapshot.getValue(Requests.class);
+
+                    editTitle.setText(myRequest.getOffer().getTitle());
+                    editDesc.setText(myRequest.getOffer().getDescription());
+
+                    ArrayList<String> tempCityList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.city_list)));
+                    spinnerCity.setSelection(tempCityList.indexOf(myRequest.getOffer().getCity()));
+
+                    ArrayList<String> tempTypeList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.type_list)));
+                    spinnerType.setSelection(tempTypeList.indexOf(myRequest.getOffer().getType()));
+
+                }
+                else
+                {
+                    myRequest = null;
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+    private void FillSpinners()
+    {
+        //City
+        ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_item,
+                getResources().getStringArray(R.array.city_list));
+        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCity.setAdapter(cityAdapter);
+
+        //Type
+        ArrayAdapter<String> typeAdapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_item,
+                getResources().getStringArray(R.array.type_list));
+        typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerType.setAdapter(typeAdapter);
+
+    }
     private void AddRequest()
     {
+        // add or update current
+
         if (ActivityCompat.checkSelfPermission(getContext(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getContext(),
@@ -173,6 +328,7 @@ public class addRequest extends Fragment implements
             return;
 
         }
+
         if(!Util.IS_USER_CONNECTED)
         {
             makeToast(getContext(), String.valueOf(R.string.noInternetMsg));
@@ -205,118 +361,41 @@ public class addRequest extends Fragment implements
                 Util.RDB_JORDAN,
                 System.currentTimeMillis());
 
-        DatabaseReference myRefRequests = FirebaseDatabase.getInstance().getReference().child(Util.RDB_REQUESTS +"/"+
-                myUser.getUserID());
-        Requests request = new Requests(myUser,myOffer,Longitude,Latitude, System.currentTimeMillis());
+        DatabaseReference myRefRequests = FirebaseDatabase.getInstance().getReference().child(Util.RDB_REQUESTS
+                +"/"+myUser.getUserID());
+        Requests request = new Requests(myUser,myOffer,addressText.getText().toString()
+                ,Latitude,Longitude, System.currentTimeMillis());
+
+        myRequest = request;
         myRefRequests.setValue(request);
         Util.makeToast(getContext(), "Request Sent!");
 
     }
-    private void initLayoutVars()
-    {
-        requestSendBtn = (Button) getActivity().findViewById(R.id.addRequest_Send);
-        requestDeleteBtn = (Button) getActivity().findViewById(R.id.addRequest_Delete);
-        editTitle = (EditText) getActivity().findViewById(R.id.addRequest_editTitle);
-        editDesc = (EditText) getActivity().findViewById(R.id.addRequest_editDesc);
-
-        spinnerCity = (Spinner) getActivity().findViewById(R.id.addRequest_spinCity);
-        spinnerType = (Spinner)getActivity().findViewById(R.id.addRequest_spinType);
-
-        nameText =(TextView) getActivity().findViewById(R.id.addRequest_name_text);
-        phoneText = (TextView)getActivity().findViewById(R.id.addRequest_phone_text);
-        cityText = (TextView)getActivity().findViewById(R.id.addRequest_city_text);
-        locationText = (TextView)getActivity().findViewById(R.id.addRequest_location_text);
-
-
-        requestSendBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AddRequest();
-            }
-        });
-
-        requestDeleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DeleteRequest();
-            }
-        });
-        FillSpinners();
-
-        if(!Util.IS_USER_CONNECTED)
-        {
-            makeToast(getContext(), String.valueOf(R.string.noInternetMsg));
-            return;
-        }
-        DatabaseReference myRefUsers = FirebaseDatabase.getInstance().getReference().child(Util.RDB_USERS+"/"+
-                FirebaseAuth.getInstance().getCurrentUser().getUid());
-        myRefUsers.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                if(dataSnapshot.exists())
-                {
-                    myUser = dataSnapshot.getValue(Users.class);
-                    myUser.setUserID(dataSnapshot.getKey());
-                    nameText.setText(myUser.getFirstName()+" "+myUser.getLastName());
-                    phoneText.setText(myUser.getPhone());
-                    cityText.setText(myUser.getCity());
-                }
-                else
-                {
-                    myUser = null;
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-
-
-
-
-
-    }
-
     private void DeleteRequest()
     {
+        if(myUser == null)
+            return;
+        if(myRequest==null)
+        {
+            Util.makeToast(getContext(), "You Don't Have Any Requests!");
+            return;
+        }
         DatabaseReference myRefRequests = FirebaseDatabase.getInstance().getReference().child(Util.RDB_REQUESTS +"/"+
                 myUser.getUserID());
         myRefRequests.removeValue();
-       /* myRefRequests.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists())
-                {
 
-                }
-            }
+        myRequest=null;
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+        editTitle.setText("");
+        editDesc.setText("");
+        spinnerCity.setSelection(0);
+        spinnerType.setSelection(0);
 
-            }
-        });*/
+
         Util.makeToast(getContext(), "Request Deleted!");
     }
 
-    private void FillSpinners()
-    {
-        //City
-        ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_item,
-                getResources().getStringArray(R.array.city_list));
-        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCity.setAdapter(cityAdapter);
 
-        //Type
-        ArrayAdapter<String> typeAdapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_item,
-                getResources().getStringArray(R.array.type_list));
-        typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerType.setAdapter(typeAdapter);
-
-    }
     private boolean checkEditText(String title, String desc)
     {
         // checks edit texts and spinners
@@ -347,19 +426,19 @@ public class addRequest extends Fragment implements
             mLocationPermissionGranted = true;
             Longitude = location.getLongitude();
             Latitude = location.getLatitude();
-            locationText.setText("Longitude: "+Longitude+", Latitude: "+Latitude);
+            addressText.setText("Latitude: "+Latitude+", Longitude: "+Longitude);
             //Log.v("Main","Location changed: "+location.getLatitude()+ "," + location.getLongitude());
             new android.os.Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     String myAddress = getCompleteAddressString(Latitude,Longitude);
                     if(!myAddress.equals(""))
-                        locationText.setText("Address: "+myAddress);
+                        addressText.setText("Address: "+myAddress);
                     else
-                        locationText.setText("Cannot get Address!");
+                        addressText.setText("Cannot get Address!");
 
                 }
-            }, 1000);
+            }, 500);
 
         }
         else
@@ -392,26 +471,10 @@ public class addRequest extends Fragment implements
                     }
                     else{
                         Log.v("Main","myUser denied the permission and CHECKED the 'never show again' option.");
-                        new AlertDialog.Builder(getContext())
-                                .setTitle("Warning")
-                                .setMessage("Please Manually Enable Location Services for this app inside your settings, if you wish to send a Request")
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which)
-                                    {
-                                        Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                        intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
-                                        startActivity(intent);
-
-                                        //startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS));
-                                    }
-                                })
-                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                    }
-                                })
-                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                .show();
+                        Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
+                        Util.AlertDialog(getContext(),"Warning!",
+                                "Please Manually Enable Location Services for this app inside your settings",intent);
                     }
                 }
             }
@@ -435,31 +498,13 @@ public class addRequest extends Fragment implements
             if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
             {
                 locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER,this,null);
-                Log.v("Main","onConnected  IF");
+                //Log.v("Main","onConnected  IF");
             }
             else
             {
                 locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER,this,null);
-                Log.v("Main","onConnected  ELSE");
+                //Log.v("Main","onConnected  ELSE");
             }
-
-
-           /* mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                    mGoogleApiClient);
-            if (mLastLocation != null)
-            {
-                Longitude =  mLastLocation.getLongitude();
-                Latitude =  mLastLocation.getLongitude();
-                locationText.setText("Last Location: Longitude: "+Longitude+", Latitude: "+Latitude);
-                Log.v("Main", "getLastLocation Longitude =" + mLastLocation.getLongitude());
-                Log.v("Main", "getLastLocation getLatitude =" + mLastLocation.getLatitude());
-                String myAddress = getCompleteAddressString(Latitude,Longitude);
-                if(myAddress!=null)
-                    locationText.setText("Last Location: Longitude: "+Longitude+", Latitude: "+Latitude
-                    +"\n Address: "+myAddress);
-            }
-            else
-                Log.v("Main","mLastLocation  = = null");*/
 
         } catch (SecurityException e) {
             Log.v("Main", "1 " + e.getLocalizedMessage());
@@ -480,7 +525,7 @@ public class addRequest extends Fragment implements
                 StringBuilder strReturnedAddress = new StringBuilder("");
 
                 for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
-                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append(" ");
                 }
                 strAdd = strReturnedAddress.toString();
                 //Log.w("Main", "" + strReturnedAddress.toString());
