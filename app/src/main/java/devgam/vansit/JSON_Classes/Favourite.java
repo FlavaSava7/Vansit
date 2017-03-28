@@ -2,6 +2,8 @@ package devgam.vansit.JSON_Classes;
 
 import java.io.Serializable;
 
+import devgam.vansit.Util;
+
 /**
  * we will fetch EACH offer the user favoured by using Offer Key ,
  * if they Offer returned null when we queried then delete this offer favourite from the user.
@@ -13,6 +15,7 @@ public class Favourite implements Serializable
 
     public Favourite()
     {
+
         //empty constructor for Firebase API
     }
 

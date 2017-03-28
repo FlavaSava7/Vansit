@@ -9,7 +9,9 @@
     <string name="no">No</string>
     <string name="loading">Loading&#8230;</string><!-- the &#8230; so you can represent the ... -->
     <string name="fail_input_edittext">Please Check Your Inputs</string><!-- general inputs fails in add offers page -->
-
+    <string translatable="false" name="server_key">AAAAXuVOldU:APA91bF9Kz_udNp0VmuK8dzL7bLQ2hTx6vB_xFAq_X_hHvsOkLImNFOWm0LCpzE_mspc9jrWK5UnzRwctDLy3lt_JhJXfhT2aJRmb8gqNyfn9Nj3fJtqlSFHUhPzqbNhPVGzHSO1lBjmRDzk89W0CS4msa4WoBLUPA</string>
+    <string translatable="false" name="fcm_url">https://fcm.googleapis.com/fcm/send</string>
+    <string name="vansit_shared_preferences">Vansit_SP</string>
 
     <!-- TODO: MainController Strings-->
     <string name="city">City</string>
@@ -113,7 +115,8 @@
     <string name="view_requests_serve">Serve</string>
     <string name="view_requests_map_navigation">Open Navigation</string>
 
-    <string name="my_request">My Request</string>
+    <string name="my_request_title">My Request</string>
+    <string name="my_request_refresh">Refresh Request</string>
 
     <!-- shared by layouts -->
     <string name="layout_button_save">save</string>

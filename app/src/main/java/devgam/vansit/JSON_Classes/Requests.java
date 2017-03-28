@@ -1,6 +1,7 @@
 package devgam.vansit.JSON_Classes;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Requests implements Serializable
 {
@@ -15,22 +16,36 @@ public class Requests implements Serializable
 
     private boolean served;//true = served , false = not served
 
+    private String deviceToken;
+
+    private ArrayList<Users> serveDrivers;
     // this wont be shown in the database, set it during list view adapter setter, to compare from far to near distance
     // must be string so we dont show it
     private String distanceFromRequestToUser;
 
     public Requests() {}
 
-    public Requests(Users user, Offers offer,String address, double latitude, double longitude, Long timeStamp) {
+    public Requests(Users user, Offers offer,String address, double latitude, double longitude, Long timeStamp, String token)
+    {
         this.user = user;
         this.offer = offer;
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
         this.timeStamp = timeStamp;
+        this.deviceToken = token;
         this.served = Boolean.FALSE;// by default
+        this.serveDrivers = new ArrayList<>();
+        //this.serveDrivers.add(new Users());// garbage value, just to show it in JSON
     }
 
+    public ArrayList<Users> getServeDrivers() {
+        return serveDrivers;
+    }
+
+    public void setServeDrivers(ArrayList<Users> serveDrivers) {
+        this.serveDrivers = serveDrivers;
+    }
     public Users getUser() {
         return user;
     }
@@ -93,6 +108,14 @@ public class Requests implements Serializable
 
     public void setDistanceFromRequestToUser(String distanceFromRequestToUser) {
         this.distanceFromRequestToUser = distanceFromRequestToUser;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 
 }

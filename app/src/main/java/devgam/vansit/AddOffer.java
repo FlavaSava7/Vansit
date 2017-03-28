@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -172,7 +174,7 @@ public class AddOffer extends Fragment {
         // Send the Offer to the DataBase
         if(!Util.IS_USER_CONNECTED)
         {
-            makeToast(getContext(), String.valueOf(R.string.noInternetMsg));
+            makeToast(getContext(), getString(R.string.noInternetMsg));
             return;
         }
         if(!checkEditText(editTitle.getText().toString(),editDesc.getText().toString()))

@@ -8,11 +8,5 @@
         app:showAsAction="always|withText"
         android:visible="false"
         />
-    <item
-        android:id="@+id/request_view_serving"
-        android:orderInCategory="100"
-        android:title="View Serving"
-        app:showAsAction="always|withText"
-        android:visible="false"
-        />
+
 </menu>

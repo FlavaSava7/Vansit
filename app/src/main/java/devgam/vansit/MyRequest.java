@@ -2,47 +2,59 @@ package devgam.vansit;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.ImageView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 import devgam.vansit.JSON_Classes.Requests;
+import devgam.vansit.JSON_Classes.Users;
 
 
 public class MyRequest extends Dialog implements android.view.View.OnClickListener
 {
     private Requests myRequest;
     private Activity activity;
-    private FragmentManager tempFragmentManager;
+    private Context context;
+    private FragmentManager fragmentManager;
 
-    private TextView addressText, timeText, typeText, updateText;
+    private TextView addressText, timeText, typeText, updateText, isThereDriversText;
+    private ListView listView;
+    private ArrayList<Users> driversList;
+    private ArrayAdapter driversAdapter;
+
 
     private static final long WaitTimeBeforeExit=1500;
     private Calendar requestTimeEnds,currentTime;
-    private CountDownTimer timer;
+    private CountDownTimer timer;// obj which get ticks down to zero
     private static final int requestMaxTime=30;//after 30 min delete it
 
 
-    public MyRequest(Activity ac, Requests mReq, FragmentManager fragmentManager)
+    public MyRequest(Activity ac,Context c, Requests mReq, FragmentManager fragmentManager)
     {
         super(ac);
         this.activity = ac;
+        this.context = c;
         this.myRequest = mReq;
-        this.tempFragmentManager = fragmentManager;
-
+        this.fragmentManager = fragmentManager;
     }
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -55,6 +67,7 @@ public class MyRequest extends Dialog implements android.view.View.OnClickListen
         addressText = (TextView) findViewById(R.id.my_request_address);
         typeText = (TextView) findViewById(R.id.my_request_type);
         updateText = (TextView) findViewById(R.id.my_request_update);
+        isThereDriversText = (TextView) findViewById(R.id.my_request_is_there_drivers);
 
         updateText.setOnClickListener(this);
 
@@ -69,6 +82,7 @@ public class MyRequest extends Dialog implements android.view.View.OnClickListen
 
             currentTime = Calendar.getInstance();
             currentTime.setTimeInMillis(System.currentTimeMillis());
+            timer = CountDownTimer();
 
             if(currentTime.after(requestTimeEnds))
             {
@@ -76,12 +90,41 @@ public class MyRequest extends Dialog implements android.view.View.OnClickListen
                 return;
             }
 
-            timer = CountDownTimer();
+
             timer.start();
+
+
+            driversList = myRequest.getServeDrivers();
+            if(driversList==null)// no drivers to serve you
+            {
+                isThereDriversText.setVisibility(View.VISIBLE);
+                return;
+            }
+            else
+            {
+                if(driversList.isEmpty())
+                {
+                    isThereDriversText.setVisibility(View.VISIBLE);
+                    return;
+                }
+
+                isThereDriversText.setVisibility(View.GONE);
+                listView = (ListView) findViewById(R.id.my_request_listView);
+                driversAdapter = new itemsAdapter(context);
+                listView.setAdapter(driversAdapter);
+            }
+
+
+
+
+
+
+
+
         }
         catch (Exception e)
         {
-
+            Log.v("Main","error "+e.getLocalizedMessage());
         }
 
     }
@@ -123,8 +166,8 @@ public class MyRequest extends Dialog implements android.view.View.OnClickListen
 
                         addRequest addRequestPage = new addRequest();
                         hideLayout();
-
-                        Util.ChangeFrag(addRequestPage,tempFragmentManager);
+                        fragmentManager.popBackStack();
+                        Util.ChangeFrag(addRequestPage, fragmentManager);
                     }
                 },WaitTimeBeforeExit);
 
@@ -159,6 +202,90 @@ public class MyRequest extends Dialog implements android.view.View.OnClickListen
 
         timer=CountDownTimer();
         timer.start();
+    }
+
+    private class itemsAdapter extends ArrayAdapter<Users>
+    {
+        Context context;
+        itemsAdapter(Context c) {
+            super(c, R.layout.fragment_my_request_listview_items, driversList);
+            this.context = c;
+
+        }
+
+        @Override
+        public View getView(final int position, View convertView, final ViewGroup parent)
+        {
+
+            final ViewHolder holder = new ViewHolder();
+            final Users tempDriver = driversList.get(position);
+            View rowItem;
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            rowItem = inflater.inflate(R.layout.fragment_my_request_listview_items, parent, false);
+
+            holder.Name = (TextView) rowItem.findViewById(R.id.my_request_items_nameData);
+            holder.ratingService = (TextView) rowItem.findViewById(R.id.my_request_items_serviceRatingData);
+            holder.ratingPrice = (TextView) rowItem.findViewById(R.id.my_request_items_priceRatingData);
+
+            holder.acceptText = (Button) rowItem.findViewById(R.id.my_request_items_accept_text);
+            holder.profileText = (Button) rowItem.findViewById(R.id.my_request_items_profile_text);
+            holder.declineText = (Button) rowItem.findViewById(R.id.my_request_items_decline_text);
+
+            holder.Name.setText(tempDriver.getFirstName()+" "+tempDriver.getLastName());
+            holder.ratingService.setText("("+tempDriver.getRateService()+"/5)");
+            holder.ratingPrice.setText("("+tempDriver.getRatePrice()+"/5)");
+
+
+            holder.acceptText.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    Toast.makeText(context, "accepted", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            final userInformation userIn = new userInformation(activity,tempDriver, fragmentManager);
+            holder.profileText.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    userIn.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                    userIn.show();
+                }
+            });
+
+            holder.declineText.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    Toast.makeText(context, "declineText", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+
+            return rowItem;
+
+
+        }
+        @Override
+        public int getCount() {
+            return driversList.size();
+        }
+
+        @Override
+        public Users getItem(int position) {
+            return driversList.get(position);
+        }
+
+    }
+
+
+    private static class ViewHolder {
+        TextView Name, ratingService, ratingPrice;
+        Button acceptText, profileText, declineText ;
     }
 }
 

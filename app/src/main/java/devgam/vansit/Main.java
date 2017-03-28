@@ -1,12 +1,10 @@
 package devgam.vansit;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -25,22 +23,21 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Random;
 
-import devgam.vansit.JSON_Classes.Favourite;
 import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Requests;
 import devgam.vansit.JSON_Classes.Users;
@@ -51,7 +48,7 @@ public class Main extends Fragment implements View.OnClickListener{
         // Required empty public constructor
     }
 
-
+    Button showMore;
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
 
     FloatingActionButton addFab, addOffer, addRequest;
@@ -66,12 +63,13 @@ public class Main extends Fragment implements View.OnClickListener{
     private static int listCounter = 5;
     private static final int listCounterOriginal = listCounter;
     private static final int recentOfferCounter = 20;
+    public Map<Offers, View> ViewMap=new HashMap<>();
 
     private Spinner spinnerCity,spinnerType;
     private static String whichCity="";// to give it a new value in a spinner to fetch new items
     private static String whichType="";// to give it a new value in a spinner to fetch new items
-    private static String allCities[];//this will contain the values that are in strings.xml
-    private static String allTypes[];//this will contain the values that are in strings.xml, used inside the getView to choose icon for type
+    private static ArrayList<String> allCities;//this will contain the values that are in strings.xml
+    private static ArrayList<String> allTypes;//this will contain the values that are in strings.xml, used inside the getView to choose icon for type
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,9 +89,12 @@ public class Main extends Fragment implements View.OnClickListener{
     {
         super.onResume();
         Util.ChangePageTitle(getActivity(),R.string.menu_home_text);
-        //StartTime= System.currentTimeMillis();
-        allCities = getResources().getStringArray(R.array.city_list);
-        allTypes = getResources().getStringArray(R.array.type_list);
+
+        allCities  = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.city_list)));
+        allTypes = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.type_list)));
+
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        Log.v("Main","Token "+refreshedToken);
 
         addFab = (FloatingActionButton) getActivity().findViewById(R.id.add_fab);// we should show this when he is logged
         addOffer = (FloatingActionButton) getActivity().findViewById(R.id.fab_add_offer);
@@ -155,17 +156,22 @@ public class Main extends Fragment implements View.OnClickListener{
 
         spinnerCity = (Spinner)getActivity().findViewById(R.id.frag_main_spinCity);
         spinnerType = (Spinner)getActivity().findViewById(R.id.frag_main_spinType);
+        FillSpinners();
 
-        if(offerList==null && userList==null)
+        offerList = new ArrayList<>();
+        userList = new ArrayList<>();
+        FillListView();
+
+        if(whichCity!=null && !whichCity.equals("")
+                && whichType!=null && !whichType.equals("") )
         {
-            offerList = new ArrayList<>();
-            userList = new ArrayList<>();
-            FillSpinnersAndListView();
+            whichCity = "Select City";
+            whichType = "Select Type";
+            spinnerCity.setSelection(0);
+            spinnerType.setSelection(0);
         }
-        else
-        {
-            listView.setAdapter(offerAdapter);
-        }
+
+
 
         spinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
@@ -176,6 +182,7 @@ public class Main extends Fragment implements View.OnClickListener{
                 if(stopAutoFiringCode) {
                     whichCity = parent.getSelectedItem().toString();
                     ChangeListItems();
+
                 }
                 stopAutoFiringCode = true;
             }
@@ -195,7 +202,8 @@ public class Main extends Fragment implements View.OnClickListener{
                 {
                     whichType = parent.getSelectedItem().toString();
                     ChangeListItems();
-                    //Log.v("Main", "spinnerType");
+
+
                 }
                 stopAutoFiringCode = true;
             }
@@ -228,20 +236,23 @@ public class Main extends Fragment implements View.OnClickListener{
         });
     }
 
-    private void FillSpinnersAndListView()
+    private void FillSpinners()
     {
+
         //City
         ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.city_list));
+                android.R.layout.simple_spinner_item,allCities);
         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCity.setAdapter(cityAdapter);
 
         //Type
         ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item,
-                getResources().getStringArray(R.array.type_list));
+                allTypes);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerType.setAdapter(typeAdapter);
-
+    }
+    private void FillListView()
+    {
         DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference()
                 .child(Util.RDB_OFFERS);
         Query query = DataBaseRoot.orderByChild(Util.TIME_STAMP).limitToLast(recentOfferCounter);
@@ -273,17 +284,26 @@ public class Main extends Fragment implements View.OnClickListener{
         query.addListenerForSingleValueEvent(QVEL);
     }
 
-    public void ChangeListItems() {
+    public void ChangeListItems()
+    {
         // every time the spinner values change , update list
 
         if(whichCity.isEmpty()|| whichCity.equals("Select City") ||
-                whichType.isEmpty()|| whichType.equals("Select Type") ) {
+                whichType.isEmpty()|| whichType.equals("Select Type") )
+        {
+
             return;
         }
 
+        offerList.clear();
+        userList.clear();
+        ViewMap.clear();
+        if(!offerAdapter.isEmpty())
+            offerAdapter.clear();
+
         ShowMoreBtn(listView);
         listCounter = listCounterOriginal;//reset
-        offerList.clear();
+
 
         DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference()
                 .child(Util.RDB_OFFERS);
@@ -306,6 +326,10 @@ public class Main extends Fragment implements View.OnClickListener{
                 // sort desc
                 Util.SortByTimeStampDesc(offerList);
                 listView.setAdapter(offerAdapter);
+                try {
+                    getActivity().findViewById(R.id.loadingPanel_main).setVisibility(View.GONE);
+                } catch (Exception e){
+                }
             }
 
             @Override
@@ -321,7 +345,7 @@ public class Main extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         if(v == addRequest || v == addRequestText)
         {
-            //foo();
+//            foo();
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             addRequest addRequestPage = new addRequest();
             Util.ChangeFrag(addRequestPage, fragmentManager);
@@ -345,90 +369,103 @@ public class Main extends Fragment implements View.OnClickListener{
             this.databaseReference = databaseReference;
         }
 
-
         @Override
-        public View getView(final int position, View convertView, final ViewGroup parent) {
+        public View getView(final int position, View convertView, final ViewGroup parent)
+        {
+
             final ViewHolder holder = new ViewHolder();
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowItem = inflater.inflate(R.layout.fragment_main_listview_items, parent, false);
-
             final Offers tempOffer = offerList.get(position);
+            View rowItem;
 
-            holder.Title = (TextView) rowItem.findViewById(R.id.main_items_TitleData);
-            holder.Title.setText(tempOffer.getTitle());
+            if(!ViewMap.containsKey(tempOffer))
+            {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                rowItem = inflater.inflate(R.layout.fragment_main_listview_items, parent, false);
 
-            holder.City = (TextView) rowItem.findViewById(R.id.main_items_cityData);
-            holder.City.setText(tempOffer.getCity());
+                holder.Title = (TextView) rowItem.findViewById(R.id.main_items_TitleData);
+                holder.Title.setText(tempOffer.getTitle());
 
-            holder.typeIcon = (ImageView) rowItem.findViewById(R.id.main_items_typeIcon);
-            holder.typeIcon.setImageDrawable(Util.getDrawableResource(getActivity(), Util.changeIcon(tempOffer.getType())));
+                holder.City = (TextView) rowItem.findViewById(R.id.main_items_cityData);
+                holder.City.setText(tempOffer.getCity());
 
-            holder.ratingService = (TextView) rowItem.findViewById(R.id.main_items_serviceRatingData);
-            holder.ratingPrice = (TextView) rowItem.findViewById(R.id.main_items_priceRatingData);
+                holder.typeIcon = (ImageView) rowItem.findViewById(R.id.main_items_typeIcon);
+                holder.typeIcon.setImageDrawable(Util.getDrawableResource(getActivity(), Util.changeIcon(tempOffer.getType())));
 
-            //initialized by nimer esam for text buttons on list item :
-            //holder.loveText = (Button) rowItem.findViewById(R.id.main_items_love_text);
-            holder.profileText = (LinearLayout) rowItem.findViewById(R.id.main_items_profile_layout);
-            holder.callText = (LinearLayout) rowItem.findViewById(R.id.main_items_call_layout);
-            Query query = databaseReference.child(tempOffer.getUserID());
+                holder.ratingService = (TextView) rowItem.findViewById(R.id.main_items_serviceRatingData);
+                holder.ratingPrice = (TextView) rowItem.findViewById(R.id.main_items_priceRatingData);
 
-            ValueEventListener VEL = new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot)
-                {
-                    if(dataSnapshot.getValue(Users.class)!=null) {
-                        final Users tempUser = dataSnapshot.getValue(Users.class);
-                        tempUser.setUserID(dataSnapshot.getKey());
+                //initialized by nimer esam for text buttons on list item :
+                //holder.loveText = (Button) rowItem.findViewById(R.id.main_items_love_text);
+                holder.profileText = (LinearLayout) rowItem.findViewById(R.id.main_items_profile_layout);
+                holder.callText = (LinearLayout) rowItem.findViewById(R.id.main_items_call_layout);
+                Query query = databaseReference.child(tempOffer.getUserID());
 
-                        boolean toAdd = true;
-                        for(Users addedUser:userList)
-                            if(tempUser.getUserID().equals(addedUser.getUserID()))
-                                toAdd=false;
+                ValueEventListener VEL = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot)
+                    {
+                        if(dataSnapshot.getValue(Users.class)!=null) {
+                            final Users tempUser = dataSnapshot.getValue(Users.class);
+                            tempUser.setUserID(dataSnapshot.getKey());
 
-                        if(toAdd)
-                            userList.add(tempUser);
+                            boolean toAdd = true;
+                            for(Users addedUser:userList)
+                                if(tempUser.getUserID().equals(addedUser.getUserID()))
+                                    toAdd=false;
 
-                        holder.ratingService.setText("("+tempUser.getRateService()+"/5)");
-                        holder.ratingPrice.setText("("+tempUser.getRatePrice()+"/5)");
+                            if(toAdd)
+                                userList.add(tempUser);
 
-                        //add by nimer esam :
-                        //To make call when User click on call text :
-                        final String phoneNumber = tempUser.getPhone();
+                            holder.ratingService.setText("("+tempUser.getRateService()+"/5)");
+                            holder.ratingPrice.setText("("+tempUser.getRatePrice()+"/5)");
 
-                        holder.callText.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(Intent.ACTION_DIAL);
-                                intent.setData(Uri.parse("tel:" +phoneNumber));
-                                startActivity(intent);
-                            }
-                        });
+                            //add by nimer esam :
+                            //To make call when User click on call text :
+                            final String phoneNumber = tempUser.getPhone();
 
-                        final userInformation userIn = new userInformation(getActivity(),tempUser, fragmentManager);
-                        holder.profileText.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                userIn.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                                userIn.show();
-                            }
-                        });
+                            holder.callText.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                                    intent.setData(Uri.parse("tel:" +phoneNumber));
+                                    startActivity(intent);
+                                }
+                            });
 
+                            final userInformation userIn = new userInformation(getActivity(),tempUser, fragmentManager);
+                            holder.profileText.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    userIn.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                    userIn.show();
+                                }
+                            });
+
+
+                        }
+                        else {
+                            //Log.v("Main:","==null");
+                        }
 
                     }
-                    else {
-                        //Log.v("Main:","==null");
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
                     }
+                };
+                query.addListenerForSingleValueEvent(VEL);
+                ViewMap.put(tempOffer, rowItem);
+            }
+            else
+            {
+                rowItem = ViewMap.get(tempOffer);
+            }
 
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            };
-            query.addListenerForSingleValueEvent(VEL);
 
             return rowItem;
+
+
         }
         @Override
         public int getCount() {
@@ -439,7 +476,9 @@ public class Main extends Fragment implements View.OnClickListener{
         public Offers getItem(int position) {
             return offerList.get(position);
         }
+
     }
+
 
     static class ViewHolder {
         // this class is called in getView and assigned it all "items" layouts Views,for smooth scrolling
@@ -457,12 +496,15 @@ public class Main extends Fragment implements View.OnClickListener{
         if(listView.getFooterViewsCount()>=1)// prevent duplications for show more button
             return;
 
-        Button showMore = new Button(getContext());
+        showMore = new Button(getContext());
         showMore.setText(getResources().getString(R.string.main_show_more));
         showMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
+                //whichType = spinnerType.getSelectedItem().toString();
+                //whichCity = spinnerCity.getSelectedItem().toString();
+
                 listCounter +=listCounterOriginal;
                 DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference().child(Util.RDB_OFFERS);
                 Query query = DataBaseRoot.orderByChild(Util.RDB_TYPE).equalTo(whichType).limitToLast(listCounter);
@@ -594,7 +636,9 @@ public class Main extends Fragment implements View.OnClickListener{
 
             Users users = new Users("FA"+i,"KE"+i,city,"079656560","MALE","5","7","1995");
             Offers offers = new Offers("ID"+i,"T"+i,"D"+i,type,city,"Jordan",System.currentTimeMillis());
-            Requests requests1 = new Requests(users,offers,s.get(i),32.021371+((double)i/1000),35.848829+((double)i/1000),System.currentTimeMillis());
+
+            Requests requests1 = new Requests(users,offers,s.get(i),32.021371+((double)i/1000),35.848829+((double)i/1000),
+                    System.currentTimeMillis(), FirebaseInstanceId.getInstance().getToken());
             myRef.child(Util.RDB_REQUESTS+"/"+offers.getUserID()).setValue(requests1);
         }
 
