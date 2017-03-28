@@ -95,6 +95,11 @@ public class myOffers extends Fragment {
 
     private void SetUpMyOffers()
     {
+        if(!Util.IS_USER_CONNECTED)
+        {
+            Util.ProgDialogDelay(progressDialog,100L);
+            return;
+        }
         DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference()
                 .child(Util.RDB_OFFERS);
 

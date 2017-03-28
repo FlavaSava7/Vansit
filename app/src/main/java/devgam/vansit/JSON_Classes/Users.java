@@ -1,5 +1,7 @@
 package devgam.vansit.JSON_Classes;
 
+import org.json.JSONObject;
+
 import java.lang.*;
 import java.util.*;
 import java.io.Serializable;

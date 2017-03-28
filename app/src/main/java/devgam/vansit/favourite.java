@@ -101,7 +101,7 @@ public class favourite extends Fragment {
         }
 
         // used later to update User fav
-        final List<Favourite> favsToKeep = new ArrayList<>();
+        final ArrayList<Favourite> favsToKeep = new ArrayList<>();
 
         final DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child(Util.RDB_FAVOURITE
                                 +"/"+ FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -154,6 +154,7 @@ public class favourite extends Fragment {
                                 }else// offer exists
                                 {
                                     Offers offer = dataSnapshot.getValue(Offers.class);
+                                    offer.setOfferKey(dataSnapshot.getKey());
                                     myFavouritsOffers.add(offer);
                                 }
 
@@ -192,7 +193,7 @@ public class favourite extends Fragment {
      * It's called after we are done fetching all favourites and the favourites that still points to offers.
      * @param favsToKeep : the favourites that still points on offers in the database
      */
-    private void setAdapterAndUpdateUserFavourites(List<Favourite> favsToKeep)
+    private void setAdapterAndUpdateUserFavourites(ArrayList<Favourite> favsToKeep)
     {
 
         if(!myFavouritsOffers.isEmpty())
@@ -208,6 +209,9 @@ public class favourite extends Fragment {
             DatabaseReference myRef = FirebaseDatabase.getInstance().getReference().child(Util.RDB_FAVOURITE+"/"+
             FirebaseAuth.getInstance().getCurrentUser().getUid());
             myRef.setValue(favsToKeep);
+            // so if user want to delete a favourite we can use myFavourites to set the new values in the database
+            // cuz favsToKeep is local value
+            myFavourits = favsToKeep;
         }
         Util.ProgDialogDelay(progressDialog,100L);
     }
@@ -241,6 +245,7 @@ public class favourite extends Fragment {
 
             holder.profileText = (Button) rowItem.findViewById(R.id.favorite_items_profile_text);
             holder.callText = (Button) rowItem.findViewById(R.id.favorite_items_call_text);
+            holder.deleteText = (Button) rowItem.findViewById(R.id.favorite_items_delete_text);
 
             Query query = databaseReference.child(tempOffer.getUserID());
             ValueEventListener VEL = new ValueEventListener() {
@@ -286,8 +291,31 @@ public class favourite extends Fragment {
                 }
             };
             query.addListenerForSingleValueEvent(VEL);
+            holder.deleteText.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    int indexToDelete =0;
+                    for(int i = 0;i<myFavourits.size();i++)
+                    {
+                        if (myFavourits.get(i).getOfferKey().equals(tempOffer.getOfferKey()))
+                        {
+                            indexToDelete = i;
+                            break;
+                        }
+                    }
+                    myFavourits.remove(indexToDelete);
 
-            // more work
+                    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference().child(Util.RDB_FAVOURITE+"/"+
+                            FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    myRef.setValue(myFavourits);
+
+                    myFavouritsOffers.remove(tempOffer);
+                    myFavouriteAdapter.notifyDataSetChanged();
+                }
+            });
+
             return rowItem;
         }
 
@@ -301,11 +329,11 @@ public class favourite extends Fragment {
             return myFavouritsOffers.get(position);
         }
     }
-    static class ViewHolder {
+    private static class ViewHolder {
         // this class is called in getView and assigned it all "items" layouts Views,for smooth scrolling
         TextView Title, City;
         ImageView typeIcon;
-        Button profileText, callText;
+        Button profileText, callText, deleteText;
     }
 
 }

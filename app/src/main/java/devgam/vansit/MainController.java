@@ -1,4 +1,5 @@
 package devgam.vansit;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,23 +37,31 @@ public class MainController extends AppCompatActivity
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
     DrawerLayout drawer;
     FirebaseAuth firebaseAuth;
-    DatabaseReference mRef;
-    String tempUID;
     TextView name, email;
     ImageView img;
     public static NavigationView globalNavigationView;//used to get navigation view from other fragments
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if(intent.hasExtra("serve"))// did we receive a notification
+        {
+            Util.ChangeFrag(new addRequest(),fragmentManager);
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         fragmentManager  = getSupportFragmentManager();
 
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -80,15 +89,27 @@ public class MainController extends AppCompatActivity
 
         // to check for the first time if we have internet , then internet listener will keep checking
         if(Util.CheckConnection(this)) //INTERNET IS ON
+        {
             Util.IS_USER_CONNECTED =true;
+            //Log.v("Fragment:", "MainActivity : NETWORK(18 Api) IS ");
+        }
         else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN_MR2)
         {
             Util.IS_USER_CONNECTED =Util.isOnlineApi18(this);
-            //Log.v("Fragment:", "MainActivity : NETWORK(18 Api) IS " + ApplicationLinking.JuBooks_isUserConnected);
+            //Log.v("Fragment:", "MainActivity : NETWORK(18 Api) IS ");
         }
 
-        Main mainPage = new Main();
-        Util.ChangeFrag(mainPage,fragmentManager);
+        Bundle bundle = getIntent().getExtras();
+        if(bundle!=null)// did we receive a notification
+        {
+            Util.ChangeFrag(new addRequest(),fragmentManager);
+        }
+        else
+        {
+            Main mainPage = new Main();
+            Util.ChangeFrag(mainPage,fragmentManager);
+        }
+
         //Log.v("Main:","Util.IS_USER_CONNECTED: "+Util.IS_USER_CONNECTED);
 
         hideItem();
@@ -96,22 +117,23 @@ public class MainController extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        if (drawer.isDrawerOpen(GravityCompat.START))
+        {
             drawer.closeDrawer(GravityCompat.START);
         }if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             finish();
+
         } else {
             super.onBackPressed();
         }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
-
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override

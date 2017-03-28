@@ -5,12 +5,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
+import com.google.android.gms.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
@@ -36,6 +37,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -68,6 +70,17 @@ public class addRequest extends Fragment implements
     final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10;
     double Longitude,Latitude;
     LocationManager locationManager;
+    LocationListener mLocationListener;
+    LocationRequest mLocationRequest;
+    private static final int MILLISECONDS_PER_SECOND = 1000;
+
+    public static final int UPDATE_INTERVAL_IN_SECONDS = 5;
+    private static final long UPDATE_INTERVAL =
+            MILLISECONDS_PER_SECOND * UPDATE_INTERVAL_IN_SECONDS;
+
+    private static final int FASTEST_INTERVAL_IN_SECONDS = 1;
+    private static final long FASTEST_INTERVAL =
+            MILLISECONDS_PER_SECOND * FASTEST_INTERVAL_IN_SECONDS;
 
     TextView addressText;
     Spinner spinnerCity,spinnerType;
@@ -77,6 +90,7 @@ public class addRequest extends Fragment implements
     Users myUser;
     Requests myRequest;
     FragmentManager fragmentManager;
+    String myAddress;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,7 +113,7 @@ public class addRequest extends Fragment implements
                     return false;
                 }
 
-                MyRequest myRequestPage = new MyRequest(getActivity(),myRequest, fragmentManager);
+                MyRequest myRequestPage = new MyRequest(getActivity(),getContext(),myRequest, fragmentManager);
                 myRequestPage.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 myRequestPage.show();
                 return true;
@@ -120,7 +134,7 @@ public class addRequest extends Fragment implements
         if (mGoogleApiClient != null)
         {
             mGoogleApiClient.disconnect();
-            Log.v("Main"," mGoogleApiClient disconnected");
+            //Log.v("Main"," mGoogleApiClient disconnected");
 
             myRequest=null;
         }
@@ -154,28 +168,26 @@ public class addRequest extends Fragment implements
 
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             Util.AlertDialog(getContext(), "Warning!", "Please Enable Location Services", intent);
-            Log.v("Main", "All location services are disabled");
+            //Log.v("Main", "All location services are disabled");
             return;
 
         } else {
             mLocationPermissionGranted = true;
-            Log.v("Main", "GPS_PROVIDER " + locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER));
-            Log.v("Main", "NETWORK_PROVIDER " + locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER));
+           // Log.v("Main", "GPS_PROVIDER " + locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER));
+            //Log.v("Main", "NETWORK_PROVIDER " + locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER));
         }
 
         if (Build.VERSION.SDK_INT >= 23)
             if (ActivityCompat.checkSelfPermission(getContext(),
-                    android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                    ActivityCompat.checkSelfPermission(getContext(),
-                            android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                    android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             {
                 mLocationPermissionGranted = true;
-                Log.v("Main", "We Have One of the permissions");
+                //Log.v("Main", "We Have One of the permissions");
             }
             else
             {
                 Util.makeToast(getContext(),"Please Enable Location Services for This Application");
-                Log.v("Main", "We Dont Have any of the permissions for SDK_INT >= 23");
+                //Log.v("Main", "We Dont Have any of the permissions for SDK_INT >= 23");
                 mLocationPermissionGranted = false;
                 return;
             }
@@ -183,17 +195,10 @@ public class addRequest extends Fragment implements
             if(Longitude==0||Latitude==0)
             {
                 Util.makeToast(getContext(), "Searching for Location...");
+            }else
+            {
+                addressText.setText(myAddress);
             }
-            //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0,this);
-            if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-                locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER,this,null);
-            else
-                locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER,this,null);
-
-
-
-
-
 
     }
 
@@ -318,12 +323,10 @@ public class addRequest extends Fragment implements
         // add or update current
 
         if (ActivityCompat.checkSelfPermission(getContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getContext(),
-                        android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
             this.requestPermissions(
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
             return;
 
@@ -331,7 +334,7 @@ public class addRequest extends Fragment implements
 
         if(!Util.IS_USER_CONNECTED)
         {
-            makeToast(getContext(), String.valueOf(R.string.noInternetMsg));
+            makeToast(getContext(), getString(R.string.noInternetMsg));
             return;
         }
         if(!mLocationPermissionGranted)//we don't have any of permissions
@@ -361,10 +364,20 @@ public class addRequest extends Fragment implements
                 Util.RDB_JORDAN,
                 System.currentTimeMillis());
 
+        String spKey = getContext().getResources().getString(R.string.vansit_shared_preferences);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(spKey,Context.MODE_PRIVATE);
+        String deviceToken = sharedPreferences.getString("deviceToken",null);
+        if(deviceToken==null)
+        {
+            Util.makeToast(getContext(), "Something Wrong!");
+            return;
+        }
+
+
         DatabaseReference myRefRequests = FirebaseDatabase.getInstance().getReference().child(Util.RDB_REQUESTS
                 +"/"+myUser.getUserID());
         Requests request = new Requests(myUser,myOffer,addressText.getText().toString()
-                ,Latitude,Longitude, System.currentTimeMillis());
+                ,Latitude,Longitude, System.currentTimeMillis(),deviceToken);
 
         myRequest = request;
         myRefRequests.setValue(request);
@@ -394,8 +407,6 @@ public class addRequest extends Fragment implements
 
         Util.makeToast(getContext(), "Request Deleted!");
     }
-
-
     private boolean checkEditText(String title, String desc)
     {
         // checks edit texts and spinners
@@ -418,35 +429,7 @@ public class addRequest extends Fragment implements
 
         return isValid;
     }
-    @Override
-    public void onLocationChanged(Location location)
-    {
-        if(location!=null)
-        {
-            mLocationPermissionGranted = true;
-            Longitude = location.getLongitude();
-            Latitude = location.getLatitude();
-            addressText.setText("Latitude: "+Latitude+", Longitude: "+Longitude);
-            //Log.v("Main","Location changed: "+location.getLatitude()+ "," + location.getLongitude());
-            new android.os.Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    String myAddress = getCompleteAddressString(Latitude,Longitude);
-                    if(!myAddress.equals(""))
-                        addressText.setText("Address: "+myAddress);
-                    else
-                        addressText.setText("Cannot get Address!");
 
-                }
-            }, 500);
-
-        }
-        else
-        {
-
-        }
-
-    }
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
@@ -481,6 +464,38 @@ public class addRequest extends Fragment implements
         }
 
     }
+
+    private void UpdateLocation(Location location)
+    {
+        mLocationPermissionGranted = true;
+        Longitude = location.getLongitude();
+        Latitude = location.getLatitude();
+        addressText.setText("Longitude: "+Longitude+" Latitude: "+Latitude);
+        Log.v("Main","UpdateLocation: "+location.getLatitude()+ "," + location.getLongitude());
+        new android.os.Handler().postDelayed(new Runnable() {
+            @Override
+            public void run()
+            {
+                myAddress = getCompleteAddressString(Latitude,Longitude);
+                if(!myAddress.equals(""))
+                {
+                    Log.v("Main","This User Address Is "+myAddress);
+                    addressText.setText(myAddress);
+                }
+
+                else
+                    Log.v("Main","Cannot get Address!");
+
+            }
+        }, 500);
+
+
+
+
+        LocationServices.FusedLocationApi.
+                removeLocationUpdates(mGoogleApiClient,mLocationListener);
+
+    }
     @Override
     public void onConnected(@Nullable Bundle bundle)
     {
@@ -488,23 +503,28 @@ public class addRequest extends Fragment implements
         {
             if (Build.VERSION.SDK_INT >=23)
             {
-                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                        && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
             }
             if(Longitude!=0 && Latitude !=0)
                 return;
-            if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+
+            mLocationRequest = LocationRequest.create();
+            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            mLocationRequest.setInterval(UPDATE_INTERVAL);
+            mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+            mLocationListener = new LocationListener()
             {
-                locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER,this,null);
-                //Log.v("Main","onConnected  IF");
-            }
-            else
-            {
-                locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER,this,null);
-                //Log.v("Main","onConnected  ELSE");
-            }
+                @Override
+                public void onLocationChanged(Location location)
+                {
+                    if(location!=null)
+                        UpdateLocation(location);
+                }
+            };
+            LocationServices.FusedLocationApi.
+                    requestLocationUpdates(mGoogleApiClient,mLocationRequest, mLocationListener);
 
         } catch (SecurityException e) {
             Log.v("Main", "1 " + e.getLocalizedMessage());
@@ -552,21 +572,10 @@ public class addRequest extends Fragment implements
     {
         //Log.v("Main","onConnectionFailed");
     }
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        //Log.v("Main","onStatusChanged ");
 
-    }
 
     @Override
-    public void onProviderEnabled(String provider) {
-        //Log.v("Main","onProviderEnabled");
+    public void onLocationChanged(Location location) {
+        //Log.v("Main","Location changed");
     }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        //Log.v("Main","onProviderDisabled");
-
-    }
-
 }

@@ -10,13 +10,16 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
+import com.google.android.gms.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -40,7 +43,9 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -59,6 +64,7 @@ import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Requests;
 import devgam.vansit.JSON_Classes.Users;
 
+import static devgam.vansit.Util.USER_ID;
 import static devgam.vansit.Util.makeToast;
 
 public class ViewRequests extends Fragment  implements
@@ -85,6 +91,18 @@ public class ViewRequests extends Fragment  implements
     double Longitude,Latitude;
     LocationManager locationManager;
 
+    LocationListener mLocationListener;
+    LocationRequest mLocationRequest;
+    private static final int MILLISECONDS_PER_SECOND = 1000;
+
+    public static final int UPDATE_INTERVAL_IN_SECONDS = 5;
+    private static final long UPDATE_INTERVAL =
+            MILLISECONDS_PER_SECOND * UPDATE_INTERVAL_IN_SECONDS;
+
+    private static final int FASTEST_INTERVAL_IN_SECONDS = 1;
+    private static final long FASTEST_INTERVAL =
+            MILLISECONDS_PER_SECOND * FASTEST_INTERVAL_IN_SECONDS;
+
 
     public ViewRequests()
     {
@@ -96,30 +114,15 @@ public class ViewRequests extends Fragment  implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_view_requests, container, false);
-    }
-    @Override
-    public void onPrepareOptionsMenu(Menu menu)
-    {
-        super.onPrepareOptionsMenu(menu);
-        MenuItem item = menu.findItem(R.id.request_view_serving);
-        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item)
-            {
-                return true;
-            }
-        });
-        item.setVisible(true);
     }
     @Override
     public void onStop()
     {
-        if (mGoogleApiClient != null)
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected())
         {
             mGoogleApiClient.disconnect();
-            Log.v("Main"," mGoogleApiClient disconnected");
+            //Log.v("Main"," mGoogleApiClient disconnected");
         }
         StopRequestUpdates();
         whichCity="";//reset
@@ -162,12 +165,10 @@ public class ViewRequests extends Fragment  implements
 
         if (Build.VERSION.SDK_INT >= 23)
             if (ActivityCompat.checkSelfPermission(getContext(),
-                    android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                    ActivityCompat.checkSelfPermission(getContext(),
-                            android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                    android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             {
                 mLocationPermissionGranted = true;
-                //Log.v("Main", "We Have One of the permissions");
+                //Log.v("Main", "We Have the permission");
             }
             else
             {
@@ -179,14 +180,9 @@ public class ViewRequests extends Fragment  implements
 
         if(Longitude==0||Latitude==0)
         {
+            //this.onConnected(new Bundle());
             Util.makeToast(getContext(), "Searching for Location...");
         }
-
-        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-            locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER,this,null);
-        else
-            locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER,this,null);
-
 
         if(requestsList==null)
         {
@@ -194,7 +190,9 @@ public class ViewRequests extends Fragment  implements
         }
         else
         {
+            ShowMoreBtn(listView);
             listView.setAdapter(requestAdapter);
+
         }
 
 
@@ -235,7 +233,6 @@ public class ViewRequests extends Fragment  implements
             }
         });
 
-
         try {
             getActivity().findViewById(R.id.loadingPanel_main).setVisibility(View.GONE);
         } catch (Exception e){
@@ -244,8 +241,8 @@ public class ViewRequests extends Fragment  implements
 
     }
 
-
-    private class itemsAdapter extends ArrayAdapter<Requests> {
+    private class itemsAdapter extends ArrayAdapter<Requests>
+    {
 
         Context context;
 
@@ -263,6 +260,7 @@ public class ViewRequests extends Fragment  implements
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowItem = inflater.inflate(R.layout.fragment_view_requests_listview_items, parent, false);
 
+
             final Requests tempRequest = requestsList.get(position);
             final Offers requestOffer = tempRequest.getOffer();
             final Users requestUser = tempRequest.getUser();
@@ -275,11 +273,18 @@ public class ViewRequests extends Fragment  implements
             holder.Status = (TextView) rowItem.findViewById(R.id.viewRequests_items_statusData);
 
             holder.Address.setText(tempRequest.getAddress());
-
+            holder.Address.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v)
+                {
+                    if(tempRequest.isServed())
+                        return;
+                    OpenMapUserLocation(tempRequest.getLatitude(), tempRequest.getLongitude());
+                }
+            });
             if(tempRequest.isServed())
             {
                 holder.Status.setText("User Is Being Served!");
-
                 holder.Status.setTextColor(getResources().getColor(R.color.deleteButtonColor));
             }
             else
@@ -294,13 +299,21 @@ public class ViewRequests extends Fragment  implements
             if(distanceValue<1f)// don't divide on 1000, it's already in meters
             {
                 disString = String.valueOf(distanceValue);
-                disString = disString.substring(0,disString.indexOf(".")+3) + " M";
+                if(distanceValue==0)// this request is mine , yeilds 0.0
+                {
+                    disString = "0.0 M";
+                }
+                else
+                {
+                    disString = disString.substring(0,disString.indexOf(".")+3) + " M";
+                }
+
             }else
             {
                 disString = String.valueOf(distanceValue/1000);
                 disString = disString.substring(0,disString.indexOf(".")+3) + " KM";
             }
-            //Log.v("Main","diString " +disString);
+
             holder.Distance.setText(disString);
 
             holder.typeIcon = (ImageView) rowItem.findViewById(R.id.viewRequests_items_typeIcon);
@@ -313,7 +326,11 @@ public class ViewRequests extends Fragment  implements
             final String phoneNumber = requestUser.getPhone();
             holder.callText.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View v)
+                {
+                    if(tempRequest.isServed())
+                        return;
+
                     Intent intent = new Intent(Intent.ACTION_DIAL);
                     intent.setData(Uri.parse("tel:" +phoneNumber));
                     startActivity(intent);
@@ -323,7 +340,10 @@ public class ViewRequests extends Fragment  implements
             final userInformation userIn = new userInformation(getActivity(),requestUser, fragmentManager);
             holder.profileText.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View v)
+                {
+                    if(tempRequest.isServed())
+                        return;
                     userIn.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                     userIn.show();
                 }
@@ -333,20 +353,41 @@ public class ViewRequests extends Fragment  implements
                 @Override
                 public void onClick(View v)
                 {
-                    Uri gmmIntentUri = Uri.parse("google.navigation:q="+
-                            tempRequest.getLatitude()+","+tempRequest.getLongitude()+
-                            "&mode=d");
-                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                    mapIntent.setPackage("com.google.android.apps.maps");
-                    if (mapIntent.resolveActivity(context.getPackageManager()) != null)
-                    {
-                        startActivity(mapIntent);
-                    }
-                    else
-                    {
-                        Util.makeToast(context,"Cannot find Google Maps!");
-                    }
+                    if(tempRequest.isServed())
+                        return;
 
+                    new AlertDialog.Builder(context)
+                            .setTitle("Serving")
+                            .setMessage("Do You Want To Serve "+requestUser.getFirstName()+" ?")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
+                            {
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+
+                                    new RequestNotifications(getContext(),
+                                            "dJCH4IFM184:APA91bHmQEWF7FOdYvjSTnUS_t1yZ7atCP3wPUnLgzKE22D_jNC255D7Qh4MIP2TYALQov2KRXnm9C-KUTkkubZ3p9Q0d9W1W_J5-fWOUGCV9ygXc6FMFPGgaGOdv9tSmcku9h8fLQxL"
+                                    ,tempRequest);
+                                    Util.makeToast(getContext(),getString(R.string.loading));
+                                    //new RequestNotifications(getContext(),tempRequest.getDeviceToken());
+
+                                }
+                            })
+                            .setNeutralButton(getString(R.string.view_requests_map_navigation),
+                                    new DialogInterface.OnClickListener()
+                                    {
+                                        public void onClick(DialogInterface dialog, int id)
+                                        {
+                                            OpenNavigationUserLocation(tempRequest.getLatitude(),tempRequest.getLongitude());
+                                        }
+                                    })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener()
+                            {
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
                 }
             });
 
@@ -354,6 +395,7 @@ public class ViewRequests extends Fragment  implements
 
             return rowItem;
         }
+
         @Override
         public int getCount() {
             return requestsList.size();
@@ -365,23 +407,75 @@ public class ViewRequests extends Fragment  implements
         }
     }
 
-    static class ViewHolder {
+    private static class ViewHolder {
         TextView Title,Address, Distance, Status;
         ImageView typeIcon;
 
         LinearLayout profileText, callText, serveText;
     }
 
+    public static void SuccessSendingNotifications(boolean didSuccess, final Requests request)
+    {
+        // to know if notification was successful so we can update the Requests.serveDrivers list
+        if(didSuccess)
+        {
+            final ArrayList<Users> tempUsersList;
+            if(request.getServeDrivers()==null)
+            {
+                tempUsersList = new ArrayList<>();
+            }
+            else
+            {
+                tempUsersList = request.getServeDrivers();
+            }
+
+
+            DatabaseReference myRef = FirebaseDatabase.getInstance().getReference()
+                    .child(Util.RDB_USERS+"/"+FirebaseAuth.getInstance().getCurrentUser().getUid());
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot)
+                {
+                    Users tempUser = dataSnapshot.getValue(Users.class);
+                    tempUser.setUserID(dataSnapshot.getKey());
+
+                    boolean toAdd = true;
+                    for (Users users : tempUsersList)
+                    {
+                        if(users.getUserID().equals(tempUser.getUserID()))
+                            toAdd=false;
+                    }
+                    if(toAdd)
+                    {
+                        tempUsersList.add(tempUser);
+                    }
+
+                    request.setServeDrivers(tempUsersList);
+                    request.setDistanceFromRequestToUser(null);
+                    DatabaseReference myRef2 = FirebaseDatabase.getInstance().getReference()
+                            .child(Util.RDB_REQUESTS+"/"+request.getOffer().getUserID());
+                    myRef2.setValue(request);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
+
+
+        }
+    }
     public void ChangeListItems()
     {
 
         if (ActivityCompat.checkSelfPermission(getContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getContext(),
-                        android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
             this.requestPermissions(
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
             return;
 
@@ -397,7 +491,6 @@ public class ViewRequests extends Fragment  implements
 
         if(Longitude==0 || Latitude==0)// we have permissions but user didn't enable GPS
         {
-            Util.makeToast(getContext(), "Please Enable GPS");
             return;
         }
 
@@ -410,6 +503,7 @@ public class ViewRequests extends Fragment  implements
         listCounter = listCounterOriginal;
 
         ShowMoreBtn(listView);
+
         StopRequestUpdates();
         StartRequestUpdates();
 
@@ -433,6 +527,8 @@ public class ViewRequests extends Fragment  implements
                     {
                         Requests tempRequest = ds1.getValue(Requests.class);
                         tempRequest = SetUpDistance(tempRequest);
+                        if(Float.valueOf(tempRequest.getDistanceFromRequestToUser())==0.0f)// dont add my request to the list
+                            continue;
                         requestsList.add(tempRequest);
                     }
 
@@ -457,7 +553,10 @@ public class ViewRequests extends Fragment  implements
         if(listView == null)
             return;
         if(listView.getFooterViewsCount()>=1)
+        {
             return;
+        }
+
 
         Button showMore = new Button(getContext());
         showMore.setText(getResources().getString(R.string.main_show_more));
@@ -465,6 +564,8 @@ public class ViewRequests extends Fragment  implements
             @Override
             public void onClick(View v)
             {
+                whichCity = spinnerCity.getSelectedItem().toString();
+
                 listCounter +=listCounterOriginal;
                 DatabaseReference myRef = FirebaseDatabase.getInstance().getReference().child(Util.RDB_REQUESTS);
                 Query query = myRef.orderByChild("offer/"+Util.CITY).equalTo(whichCity).limitToLast(listCounter);
@@ -488,6 +589,8 @@ public class ViewRequests extends Fragment  implements
                             if(toAdd)
                             {
                                 tempRequest = SetUpDistance(tempRequest);
+                                if(Float.valueOf(tempRequest.getDistanceFromRequestToUser())==0.0f)// dont add my request to the list
+                                    continue;
                                 requestsList.add(tempRequest);
                             }
                         }
@@ -510,7 +613,7 @@ public class ViewRequests extends Fragment  implements
     }
     public void StartRequestUpdates()
     {
-        Log.v("Main","StartRequestUpdates");
+        //Log.v("Main","StartRequestUpdates");
         RequestRefs = FirebaseDatabase.getInstance().getReference().child(Util.RDB_REQUESTS);
         Query query = RequestRefs.orderByChild("offer/"+Util.CITY).equalTo(whichCity);
         QCEL = new ChildEventListener()
@@ -540,12 +643,12 @@ public class ViewRequests extends Fragment  implements
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s)
             {
-                Log.v("Main","onChildChanged");
+                //Log.v("Main","onChildChanged");
                 Requests tempRequest = dataSnapshot.getValue(Requests.class);
                 int objIndex = RequestObjIndex(tempRequest);
                 if(objIndex != -1)// -1 means : not found or list is empty or null
                 {
-                    Log.v("Main","objIndex != -1 "+tempRequest.getAddress());
+                    //Log.v("Main","objIndex != -1 "+tempRequest.getAddress());
                     tempRequest = SetUpDistance(tempRequest);
                     requestsList.set(objIndex,tempRequest);
                     SortByDistanceDesc(requestsList);
@@ -557,12 +660,12 @@ public class ViewRequests extends Fragment  implements
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot)
             {
-                Log.v("Main","onChildRemoved");
+                //Log.v("Main","onChildRemoved");
                 Requests tempRequest = dataSnapshot.getValue(Requests.class);
                 int objIndex = RequestObjIndex(tempRequest);
                 if(objIndex != -1)// -1 means : not found or list is empty or null
                 {
-                    Log.v("Main","objIndex != -1 "+tempRequest.getAddress());
+                    //Log.v("Main","objIndex != -1 "+tempRequest.getAddress());
                     requestsList.remove(objIndex);
                     SortByDistanceDesc(requestsList);
                     requestAdapter.notifyDataSetChanged();
@@ -572,12 +675,12 @@ public class ViewRequests extends Fragment  implements
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s)
             {
-                Log.v("Main","onChildMoved");
+                //Log.v("Main","onChildMoved");
                 Requests tempRequest = dataSnapshot.getValue(Requests.class);
                 int objIndex = RequestObjIndex(tempRequest);
                 if(objIndex != -1)// -1 means : not found or list is empty or null
                 {
-                    Log.v("Main","objIndex != -1 "+tempRequest.getAddress());
+                    //Log.v("Main","objIndex != -1 "+tempRequest.getAddress());
                     requestsList.remove(objIndex);
                     SortByDistanceDesc(requestsList);
                     requestAdapter.notifyDataSetChanged();
@@ -595,10 +698,6 @@ public class ViewRequests extends Fragment  implements
     {
         if(RequestRefs!=null && QCEL!=null)
             RequestRefs.removeEventListener(QCEL);
-        else
-        {
-            Log.v("Main","(myRef!=null && QCEL!=null ELSE");
-        }
     }
     private Requests SetUpDistance(Requests tempRequest)
     {
@@ -631,35 +730,31 @@ public class ViewRequests extends Fragment  implements
         });
         return arrayToSort;
     }
-
-    @Override
-    public void onLocationChanged(Location location)
+    private void UpdateLocation(Location location)
     {
-        if(location!=null)
-        {
-            mLocationPermissionGranted = true;
-            Longitude = location.getLongitude();
-            Latitude = location.getLatitude();
+        mLocationPermissionGranted = true;
+        Longitude = location.getLongitude();
+        Latitude = location.getLatitude();
 
-            //Log.v("Main","Location changed: "+location.getLatitude()+ "," + location.getLongitude());
-            new android.os.Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    String myAddress = getCompleteAddressString(Latitude,Longitude);
-                    if(!myAddress.equals(""))
-                        Log.v("Main","This User Address Is "+myAddress);
-                    else
-                        Log.v("Main","Cannot get Address!");
+        Log.v("Main","UpdateLocation: "+location.getLatitude()+ "," + location.getLongitude());
+        new android.os.Handler().postDelayed(new Runnable() {
+            @Override
+            public void run()
+            {
+                String myAddress = getCompleteAddressString(Latitude,Longitude);
+                if(!myAddress.equals(""))
+                    Log.v("Main","This User Address Is "+myAddress);
+                else
+                    Log.v("Main","Cannot get Address!");
 
-                }
-            }, 500);
-            Util.makeToast(getContext(), "Found Your Location");
-        }
-        else
-        {
+            }
+        }, 500);
+        Util.makeToast(getContext(), "Found Your Location");
+        LocationServices.FusedLocationApi.
+                removeLocationUpdates(mGoogleApiClient,mLocationListener);
 
-        }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
@@ -699,27 +794,34 @@ public class ViewRequests extends Fragment  implements
     @Override
     public void onConnected(@Nullable Bundle bundle)
     {
+        Log.v("Main","onConnected");
         try
         {
             if (Build.VERSION.SDK_INT >=23)
             {
-                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                        && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
             }
             if(Longitude!=0 && Latitude !=0)
+            {
                 return;
-            if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-            {
-                locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER,this,null);
-                //Log.v("Main","onConnected  IF");
             }
-            else
+            mLocationRequest = LocationRequest.create();
+            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            mLocationRequest.setInterval(UPDATE_INTERVAL);
+            mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+            mLocationListener = new LocationListener()
             {
-                locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER,this,null);
-                //Log.v("Main","onConnected  ELSE");
-            }
+                @Override
+                public void onLocationChanged(Location location)
+                {
+                    if(location!=null)
+                        UpdateLocation(location);
+                }
+            };
+            LocationServices.FusedLocationApi.
+                    requestLocationUpdates(mGoogleApiClient,mLocationRequest, mLocationListener);
 
         } catch (SecurityException e) {
             Log.v("Main", "1 " + e.getLocalizedMessage());
@@ -757,41 +859,55 @@ public class ViewRequests extends Fragment  implements
         }
         return strAdd;
     }
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
 
+
+    private void OpenMapUserLocation(double latitude, double longitude)
+    {
+        Uri gmmIntentUri = Uri.parse("geo:0,0?q="+latitude+","+longitude+"&z=16");
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        if (mapIntent.resolveActivity(getContext().getPackageManager()) != null)
+        {
+            startActivity(mapIntent);
+        }
+        else
+        {
+            Util.makeToast(getContext(),"Cannot find Google Maps!");
+        }
     }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
+    private void OpenNavigationUserLocation(double latitude, double longitude)
+    {
+        Uri gmmIntentUri = Uri.parse("google.navigation:q="+
+                latitude+","+longitude+
+                "&mode=d");
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        if (mapIntent.resolveActivity(getContext().getPackageManager()) != null)
+        {
+            startActivity(mapIntent);
+        }
+        else
+        {
+            Util.makeToast(getContext(),"Cannot find Google Maps!");
+        }
     }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
-
     @Override
     public void onConnectionSuspended(int i) {
-
+       // Log.v("Main","onConnectionSuspended "+i);
     }
-
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+    public void onLocationChanged(Location location)
+    {
+       // Log.v("Main","Location changed");
     }
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
+    {
+
+        //Log.v("Main","onConnectionFailed "+connectionResult.getErrorMessage());
+    }
+
+
+
+
 }
-                    /*Uri gmmIntentUri = Uri.parse("google.navigation:q="+
-                            tempRequest.getLatitude()+","+tempRequest.getLongitude()+
-                            "&mode=d");
-                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                    mapIntent.setPackage("com.google.android.apps.maps");
-                    if (mapIntent.resolveActivity(context.getPackageManager()) != null)
-                    {
-                        startActivity(mapIntent);
-                    }
-                    else
-                    {
-                        Util.makeToast(context,"Cannot find Google Maps!");
-                    }*/

@@ -33,6 +33,7 @@
                 android:textColor="@color/gray"
                 android:singleLine="true"
                 android:textSize="18sp" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -41,6 +42,7 @@
                 android:layout_marginTop="@dimen/views_top_margin"
                 android:layout_marginLeft="@dimen/views_button_margin"
                 android:layout_marginRight="@dimen/views_button_margin" />
+
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -144,6 +146,7 @@
                             android:layout_marginLeft="@dimen/views_top_margin"
                             android:layout_marginRight="@dimen/views_top_margin" />
                     </LinearLayout>
+
                 </LinearLayout>
 
             </LinearLayout>
