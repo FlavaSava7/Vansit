@@ -262,11 +262,10 @@ public class ViewRequests extends Fragment  implements
 
 
             final Requests tempRequest = requestsList.get(position);
-            final Offers requestOffer = tempRequest.getOffer();
             final Users requestUser = tempRequest.getUser();
 
             holder.Title = (TextView) rowItem.findViewById(R.id.viewRequests_items_TitleData);
-            holder.Title.setText(requestOffer.getTitle());
+            holder.Title.setText(tempRequest.getTitle());
 
             holder.Address = (TextView) rowItem.findViewById(R.id.viewRequests_items_addressData);
             holder.Distance = (TextView) rowItem.findViewById(R.id.viewRequests_items_distanceData);
@@ -317,7 +316,7 @@ public class ViewRequests extends Fragment  implements
             holder.Distance.setText(disString);
 
             holder.typeIcon = (ImageView) rowItem.findViewById(R.id.viewRequests_items_typeIcon);
-            holder.typeIcon.setImageDrawable(Util.getDrawableResource(getActivity(), Util.changeIcon(requestOffer.getType())));
+            holder.typeIcon.setImageDrawable(Util.getDrawableResource(getActivity(), Util.changeIcon(tempRequest.getType())));
 
             holder.profileText = (LinearLayout) rowItem.findViewById(R.id.viewRequests_items_profile_layout);
             holder.callText = (LinearLayout) rowItem.findViewById(R.id.viewRequests_items_call_layout);
@@ -453,7 +452,7 @@ public class ViewRequests extends Fragment  implements
                     request.setServeDrivers(tempUsersList);
                     request.setDistanceFromRequestToUser(null);
                     DatabaseReference myRef2 = FirebaseDatabase.getInstance().getReference()
-                            .child(Util.RDB_REQUESTS+"/"+request.getOffer().getUserID());
+                            .child(Util.RDB_REQUESTS+"/"+request.getUser().getUserID());
                     myRef2.setValue(request);
                 }
 
@@ -509,7 +508,7 @@ public class ViewRequests extends Fragment  implements
 
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference().
                 child(Util.RDB_REQUESTS);
-        Query query = myRef.orderByChild("offer/"+Util.CITY).equalTo(whichCity).limitToLast(listCounter);
+        Query query = myRef.orderByChild(Util.CITY).equalTo(whichCity).limitToLast(listCounter);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
@@ -527,8 +526,8 @@ public class ViewRequests extends Fragment  implements
                     {
                         Requests tempRequest = ds1.getValue(Requests.class);
                         tempRequest = SetUpDistance(tempRequest);
-                        if(Float.valueOf(tempRequest.getDistanceFromRequestToUser())==0.0f)// dont add my request to the list
-                            continue;
+                        /*if(Float.valueOf(tempRequest.getDistanceFromRequestToUser())==0.0f)// dont add my request to the list
+                            continue;*/
                         requestsList.add(tempRequest);
                     }
 
@@ -579,7 +578,7 @@ public class ViewRequests extends Fragment  implements
 
                             boolean toAdd= true;
                             for(Requests req : requestsList)
-                                if(tempRequest.getOffer().getUserID().equals(req.getOffer().getUserID()))
+                                if(tempRequest.getUser().getUserID().equals(req.getUser().getUserID()))
                                 {
                                     toAdd=false;
                                     break;
@@ -589,8 +588,8 @@ public class ViewRequests extends Fragment  implements
                             if(toAdd)
                             {
                                 tempRequest = SetUpDistance(tempRequest);
-                                if(Float.valueOf(tempRequest.getDistanceFromRequestToUser())==0.0f)// dont add my request to the list
-                                    continue;
+                               /* if(Float.valueOf(tempRequest.getDistanceFromRequestToUser())==0.0f)// dont add my request to the list
+                                    continue;*/
                                 requestsList.add(tempRequest);
                             }
                         }
@@ -615,7 +614,7 @@ public class ViewRequests extends Fragment  implements
     {
         //Log.v("Main","StartRequestUpdates");
         RequestRefs = FirebaseDatabase.getInstance().getReference().child(Util.RDB_REQUESTS);
-        Query query = RequestRefs.orderByChild("offer/"+Util.CITY).equalTo(whichCity);
+        Query query = RequestRefs.orderByChild(Util.CITY).equalTo(whichCity);
         QCEL = new ChildEventListener()
         {
             int RequestObjIndex(Requests changedChild)
@@ -625,8 +624,8 @@ public class ViewRequests extends Fragment  implements
 
                 for(int index = 0 ; index<requestsList.size();index++)
                 {
-                    if(changedChild.getOffer().getUserID().
-                            equals(requestsList.get(index).getOffer().getUserID()))
+                    if(changedChild.getUser().getUserID().
+                            equals(requestsList.get(index).getUser().getUserID()))
                     {
                        return index;
                     }
