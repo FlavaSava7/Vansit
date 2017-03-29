@@ -345,7 +345,7 @@ public class Main extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         if(v == addRequest || v == addRequestText)
         {
-//            foo();
+            foo();
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             addRequest addRequestPage = new addRequest();
             Util.ChangeFrag(addRequestPage, fragmentManager);
@@ -635,11 +635,21 @@ public class Main extends Fragment implements View.OnClickListener{
             }
 
             Users users = new Users("FA"+i,"KE"+i,city,"079656560","MALE","5","7","1995");
-            Offers offers = new Offers("ID"+i,"T"+i,"D"+i,type,city,"Jordan",System.currentTimeMillis());
+            users.setUserID("ID"+i);
+            if(randomInt%2==0)
+            {
+                Requests requests1 = new Requests(users,"Tit"+i,"Desc"+i,type,city,s.get(i),
+                        32.021371+((double)i/1000),35.848829+((double)i/1000),
+                        System.currentTimeMillis(), FirebaseInstanceId.getInstance().getToken());
+                myRef.child(Util.RDB_REQUESTS+"/"+"ID"+i).setValue(requests1);
+            }else
+            {
+                Requests requests1 = new Requests(users,"Tit"+i,"Desc"+i,type,city,s.get(i),
+                        32.021371-((double)i/1000),35.848829-((double)i/1000),
+                        System.currentTimeMillis(), FirebaseInstanceId.getInstance().getToken());
+                myRef.child(Util.RDB_REQUESTS+"/"+users.getUserID()).setValue(requests1);
+            }
 
-            Requests requests1 = new Requests(users,offers,s.get(i),32.021371+((double)i/1000),35.848829+((double)i/1000),
-                    System.currentTimeMillis(), FirebaseInstanceId.getInstance().getToken());
-            myRef.child(Util.RDB_REQUESTS+"/"+offers.getUserID()).setValue(requests1);
         }
 
     }

@@ -74,7 +74,7 @@ public class MyRequest extends Dialog implements android.view.View.OnClickListen
         try
         {
             addressText.setText("Address: "+myRequest.getAddress());
-            typeText.setText("Type: "+myRequest.getOffer().getType());
+            typeText.setText("Type: "+myRequest.getType());
 
             requestTimeEnds = Calendar.getInstance();
             requestTimeEnds.setTimeInMillis(myRequest.getTimeStamp());
@@ -159,7 +159,7 @@ public class MyRequest extends Dialog implements android.view.View.OnClickListen
                     {
 
                         DatabaseReference myRefRequests = FirebaseDatabase.getInstance().getReference().child(Util.RDB_REQUESTS +"/"+
-                                myRequest.getOffer().getUserID());
+                                myRequest.getUser().getUserID());
                         myRefRequests.removeValue();
 
                         myRequest=null;
@@ -187,7 +187,7 @@ public class MyRequest extends Dialog implements android.view.View.OnClickListen
             return;
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child(Util.RDB_REQUESTS
-                +"/"+myRequest.getOffer().getUserID());
+                +"/"+myRequest.getUser().getUserID());
         myRequest.setTimeStamp(System.currentTimeMillis());
         databaseReference.setValue(myRequest);
 

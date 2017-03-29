@@ -281,14 +281,14 @@ public class addRequest extends Fragment implements
                 {
                     myRequest = dataSnapshot.getValue(Requests.class);
 
-                    editTitle.setText(myRequest.getOffer().getTitle());
-                    editDesc.setText(myRequest.getOffer().getDescription());
+                    editTitle.setText(myRequest.getTitle());
+                    editDesc.setText(myRequest.getDescription());
 
                     ArrayList<String> tempCityList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.city_list)));
-                    spinnerCity.setSelection(tempCityList.indexOf(myRequest.getOffer().getCity()));
+                    spinnerCity.setSelection(tempCityList.indexOf(myRequest.getCity()));
 
                     ArrayList<String> tempTypeList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.type_list)));
-                    spinnerType.setSelection(tempTypeList.indexOf(myRequest.getOffer().getType()));
+                    spinnerType.setSelection(tempTypeList.indexOf(myRequest.getType()));
 
                 }
                 else
@@ -356,14 +356,6 @@ public class addRequest extends Fragment implements
                 spinnerType.getSelectedItem().toString().equals("Select Type"))
             return;
 
-        Offers myOffer = new Offers(myUser.getUserID(),
-                editTitle.getText().toString(),
-                editDesc.getText().toString(),
-                spinnerType.getSelectedItem().toString(),
-                spinnerCity.getSelectedItem().toString(),
-                Util.RDB_JORDAN,
-                System.currentTimeMillis());
-
         String spKey = getContext().getResources().getString(R.string.vansit_shared_preferences);
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(spKey,Context.MODE_PRIVATE);
         String deviceToken = sharedPreferences.getString("deviceToken",null);
@@ -376,8 +368,14 @@ public class addRequest extends Fragment implements
 
         DatabaseReference myRefRequests = FirebaseDatabase.getInstance().getReference().child(Util.RDB_REQUESTS
                 +"/"+myUser.getUserID());
-        Requests request = new Requests(myUser,myOffer,addressText.getText().toString()
-                ,Latitude,Longitude, System.currentTimeMillis(),deviceToken);
+        Requests request = new Requests(myUser,
+                editTitle.getText().toString(),
+                editDesc.getText().toString(),
+                spinnerType.getSelectedItem().toString(),
+                spinnerCity.getSelectedItem().toString(),
+                addressText.getText().toString()
+                ,Latitude,Longitude,
+                System.currentTimeMillis(),deviceToken);
 
         myRequest = request;
         myRefRequests.setValue(request);
@@ -450,10 +448,10 @@ public class addRequest extends Fragment implements
                     mLocationPermissionGranted = false;
                     if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.ACCESS_FINE_LOCATION))
                     {
-                        Log.v("Main","myUser denied the permission but DID NOT CHECK the 'never show again' option.");
+                        Log.v("Main","user denied the permission but DID NOT CHECK the 'never show again' option.");
                     }
                     else{
-                        Log.v("Main","myUser denied the permission and CHECKED the 'never show again' option.");
+                        Log.v("Main","user denied the permission and CHECKED the 'never show again' option.");
                         Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                         intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
                         Util.AlertDialog(getContext(),"Warning!",

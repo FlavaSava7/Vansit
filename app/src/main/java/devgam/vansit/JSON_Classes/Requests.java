@@ -6,7 +6,11 @@ import java.util.ArrayList;
 public class Requests implements Serializable
 {
     private Users user;
-    private Offers offer;
+
+    private String city;
+    private String title;
+    private String description;
+    private String type;
 
     private String address;
     private double longitude;
@@ -25,10 +29,16 @@ public class Requests implements Serializable
 
     public Requests() {}
 
-    public Requests(Users user, Offers offer,String address, double latitude, double longitude, Long timeStamp, String token)
+    public Requests(Users user
+                    ,String title,String desc,String type,String city
+                    ,String address, double latitude, double longitude
+                    ,Long timeStamp, String token)
     {
         this.user = user;
-        this.offer = offer;
+        this.title = title;
+        this.description = desc;
+        this.type = type;
+        this.city = city;
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -46,20 +56,13 @@ public class Requests implements Serializable
     public void setServeDrivers(ArrayList<Users> serveDrivers) {
         this.serveDrivers = serveDrivers;
     }
+
     public Users getUser() {
         return user;
     }
 
     public void setUser(Users user) {
         this.user = user;
-    }
-
-    public Offers getOffer() {
-        return offer;
-    }
-
-    public void setOffer(Offers offer) {
-        this.offer = offer;
     }
 
     public double getLatitude() {
@@ -118,4 +121,35 @@ public class Requests implements Serializable
         this.deviceToken = deviceToken;
     }
 
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }
