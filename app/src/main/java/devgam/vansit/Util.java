@@ -435,6 +435,27 @@ public class Util
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
+
+    /**
+     * Get The Current Device Token
+     * @param context
+     * @return Token if exists otherwise null
+     */
+    public static String DeviceToken(Context context)
+    {
+        String spKey = context.getResources().getString(R.string.vansit_shared_preferences);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(spKey,Context.MODE_PRIVATE);
+        String deviceToken = sharedPreferences.getString("deviceToken",null);
+        if(deviceToken==null)
+        {
+            return null;
+        }
+        else
+        {
+            return deviceToken;
+        }
+
+    }
     // still under tests
     public static void isNetworkAvailable()
     {

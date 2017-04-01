@@ -197,8 +197,8 @@ public class OfferInfo extends Fragment {
             public void onClick(View v)
             {
                 new AlertDialog.Builder(getContext())
-                        .setTitle("want?")
-                        .setMessage("sure?")
+                        .setTitle("Are you sure ?")
+                        .setMessage("")
                         .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
                         {
                             public void onClick(DialogInterface dialog, int which)
@@ -220,7 +220,6 @@ public class OfferInfo extends Fragment {
                                     public void onDataChange(DataSnapshot dataSnapshot)
                                     {
                                         ArrayList<String> ratedForList = (ArrayList<String>) dataSnapshot.getValue();
-                                        //Log.v("Main",""+p3.toString());
                                         if( ratedForList == null )
                                             Util.makeToast(getContext(),"Something wrong happened!");
                                         else
