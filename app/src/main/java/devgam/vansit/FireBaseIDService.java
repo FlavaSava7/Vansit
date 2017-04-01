@@ -13,6 +13,7 @@ public class FireBaseIDService extends FirebaseInstanceIdService
     {
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.v("Main","refreshedToken "+refreshedToken);
+
         String spKey = getApplicationContext().getResources().getString(R.string.vansit_shared_preferences);
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(spKey,MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();

@@ -44,9 +44,26 @@ public class MainController extends AppCompatActivity
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if(intent.hasExtra("serve"))// did we receive a notification
+        if(intent.hasExtra(RequestNotifications.TYPE_OF_SERVE))// did we receive a notification
         {
-            Util.ChangeFrag(new addRequest(),fragmentManager);
+            String serveType = intent.getStringExtra(RequestNotifications.TYPE_OF_SERVE);
+            String userKey = intent.getStringExtra(RequestNotifications.USER_KEY);
+            switch (serveType)
+            {
+                case RequestNotifications.ASK_TO_SERVE : Util.ChangeFrag(new addRequest(),fragmentManager);
+                    break;
+                case RequestNotifications.ACCEPTED_SERVE :
+                    AcceptedRequest acceptedRequest = new AcceptedRequest();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(RequestNotifications.USER_KEY,userKey);
+                    acceptedRequest.setArguments(bundle);
+                    Util.ChangeFrag(acceptedRequest,fragmentManager);
+
+                    break;
+                case RequestNotifications.DECLINED_SERVE : Util.ChangeFrag(new Main(),fragmentManager);
+                    break;
+            }
+
         }
     }
 
@@ -102,7 +119,31 @@ public class MainController extends AppCompatActivity
         Bundle bundle = getIntent().getExtras();
         if(bundle!=null)// did we receive a notification
         {
-            Util.ChangeFrag(new addRequest(),fragmentManager);
+            String serveType = bundle.getString(RequestNotifications.TYPE_OF_SERVE);
+            String userKey = bundle.getString(RequestNotifications.USER_KEY);
+            if(serveType!=null)
+            {
+                switch (serveType)
+                {
+                    case RequestNotifications.ASK_TO_SERVE : Util.ChangeFrag(new addRequest(),fragmentManager);
+                        break;
+                    case RequestNotifications.ACCEPTED_SERVE :
+                        AcceptedRequest acceptedRequest = new AcceptedRequest();
+                        Bundle bundle2 = new Bundle();
+                        bundle2.putString(RequestNotifications.USER_KEY,userKey);
+                        acceptedRequest.setArguments(bundle2);
+                        Util.ChangeFrag(acceptedRequest,fragmentManager);
+                        break;
+                    case RequestNotifications.DECLINED_SERVE : Util.ChangeFrag(new Main(),fragmentManager);
+                        break;
+                }
+            }
+            else
+            {
+                Main mainPage = new Main();
+                Util.ChangeFrag(mainPage,fragmentManager);
+            }
+
         }
         else
         {

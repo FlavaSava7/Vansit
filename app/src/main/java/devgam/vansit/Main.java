@@ -345,7 +345,7 @@ public class Main extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         if(v == addRequest || v == addRequestText)
         {
-            foo();
+            //foo();
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             addRequest addRequestPage = new addRequest();
             Util.ChangeFrag(addRequestPage, fragmentManager);

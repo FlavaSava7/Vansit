@@ -107,15 +107,7 @@ public class addRequest extends Fragment implements
             @Override
             public boolean onMenuItemClick(MenuItem item)
             {
-                if(myRequest==null)
-                {
-                    Util.makeToast(getContext(),"You Don't Have Any Requests!");
-                    return false;
-                }
-
-                MyRequest myRequestPage = new MyRequest(getActivity(),getContext(),myRequest, fragmentManager);
-                myRequestPage.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                myRequestPage.show();
+                UpdateIfRequestExists();
                 return true;
             }
         });
@@ -260,14 +252,13 @@ public class addRequest extends Fragment implements
             }
         });
 
-
         checkIfRequestExists();
-
-
-
 
     }
 
+    /**
+     * initial checking if we got a request in the database
+     */
     public void checkIfRequestExists()
     {
         // check if this user already has a request so he can click on View My Request menu button
@@ -294,6 +285,36 @@ public class addRequest extends Fragment implements
                 else
                 {
                     myRequest = null;
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+    /**
+     * to keep the My Request . request variable up to date when it changes from driver or user i.e. serveDrivers
+     */
+    public void UpdateIfRequestExists()
+    {
+        // check if this user already has a request so he can click on View My Request menu button
+        DatabaseReference myRefUsers = FirebaseDatabase.getInstance().getReference().child(Util.RDB_REQUESTS+"/"+
+                FirebaseAuth.getInstance().getCurrentUser().getUid());
+        myRefUsers.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                if(dataSnapshot.exists())
+                {
+                    myRequest = dataSnapshot.getValue(Requests.class);
+                    MyRequest myRequestPage = new MyRequest(getActivity(),getContext(),myRequest, fragmentManager);
+                    myRequestPage.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                    myRequestPage.show();
+                }
+                else
+                {
+                    myRequest = null;
+                    Util.makeToast(getContext(),"You Don't Have Any Requests!");
                 }
             }
             @Override
@@ -356,9 +377,7 @@ public class addRequest extends Fragment implements
                 spinnerType.getSelectedItem().toString().equals("Select Type"))
             return;
 
-        String spKey = getContext().getResources().getString(R.string.vansit_shared_preferences);
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(spKey,Context.MODE_PRIVATE);
-        String deviceToken = sharedPreferences.getString("deviceToken",null);
+        String deviceToken = Util.DeviceToken(getContext());
         if(deviceToken==null)
         {
             Util.makeToast(getContext(), "Something Wrong!");

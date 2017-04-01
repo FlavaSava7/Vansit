@@ -1,7 +1,6 @@
 package devgam.vansit;
 
 
-import android.*;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -10,7 +9,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import com.google.android.gms.location.LocationListener;
@@ -18,8 +16,6 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,8 +24,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -60,11 +54,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Requests;
 import devgam.vansit.JSON_Classes.Users;
 
-import static devgam.vansit.Util.USER_ID;
 import static devgam.vansit.Util.makeToast;
 
 public class ViewRequests extends Fragment  implements
@@ -136,6 +128,7 @@ public class ViewRequests extends Fragment  implements
         //Util.ChangePageTitle(getActivity(), "");
 
         SetUpFragment();
+        requestsList = new ArrayList<>();
 
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(getContext())
@@ -183,19 +176,6 @@ public class ViewRequests extends Fragment  implements
             //this.onConnected(new Bundle());
             Util.makeToast(getContext(), "Searching for Location...");
         }
-
-        if(requestsList==null)
-        {
-            requestsList = new ArrayList<>();
-        }
-        else
-        {
-            ShowMoreBtn(listView);
-            listView.setAdapter(requestAdapter);
-
-        }
-
-
     }
 
     public void SetUpFragment()
@@ -291,27 +271,27 @@ public class ViewRequests extends Fragment  implements
                 holder.Status.setText("Available To Serve!");
                 holder.Status.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
             }
-
-
-            float distanceValue = Float.valueOf(tempRequest.getDistanceFromRequestToUser());
-            String disString;
-            if(distanceValue<1f)// don't divide on 1000, it's already in meters
+            float distanceValue;
+            String disString="Unknown";
+            if(tempRequest.getDistanceFromRequestToUser()!=null)
             {
-                disString = String.valueOf(distanceValue);
-                if(distanceValue==0)// this request is mine , yeilds 0.0
+                distanceValue = Float.valueOf(tempRequest.getDistanceFromRequestToUser());
+                if (distanceValue < 1f)// don't divide on 1000, it's already in meters
                 {
-                    disString = "0.0 M";
-                }
-                else
-                {
-                    disString = disString.substring(0,disString.indexOf(".")+3) + " M";
-                }
+                    disString = String.valueOf(distanceValue);
+                    if (distanceValue == 0)// this request is mine , yeilds 0.0
+                    {
+                        disString = "0.0 M";
+                    } else {
+                        disString = disString.substring(0, disString.indexOf(".") + 3) + " M";
+                    }
 
-            }else
-            {
-                disString = String.valueOf(distanceValue/1000);
-                disString = disString.substring(0,disString.indexOf(".")+3) + " KM";
+                } else {
+                    disString = String.valueOf(distanceValue / 1000);
+                    disString = disString.substring(0, disString.indexOf(".") + 3) + " KM";
+                }
             }
+
 
             holder.Distance.setText(disString);
 
@@ -362,12 +342,15 @@ public class ViewRequests extends Fragment  implements
                             {
                                 public void onClick(DialogInterface dialog, int which)
                                 {
+                                    // we call SuccessSendingNotifications inside request notifications
+                                    RequestNotifications requestNotifications =
+                                            new RequestNotifications(getContext(),
+                                                    tempRequest.getDeviceToken()
+                                            ,tempRequest);
+                                    requestNotifications.SendNotificationToUser();
 
-                                    new RequestNotifications(getContext(),
-                                            "dJCH4IFM184:APA91bHmQEWF7FOdYvjSTnUS_t1yZ7atCP3wPUnLgzKE22D_jNC255D7Qh4MIP2TYALQov2KRXnm9C-KUTkkubZ3p9Q0d9W1W_J5-fWOUGCV9ygXc6FMFPGgaGOdv9tSmcku9h8fLQxL"
-                                    ,tempRequest);
                                     Util.makeToast(getContext(),getString(R.string.loading));
-                                    //new RequestNotifications(getContext(),tempRequest.getDeviceToken());
+
 
                                 }
                             })
@@ -413,11 +396,12 @@ public class ViewRequests extends Fragment  implements
         LinearLayout profileText, callText, serveText;
     }
 
-    public static void SuccessSendingNotifications(boolean didSuccess, final Requests request)
+    public static void SuccessSendingNotifications(boolean didSuccess, final Requests request, final Context context)
     {
         // to know if notification was successful so we can update the Requests.serveDrivers list
         if(didSuccess)
         {
+
             final ArrayList<Users> tempUsersList;
             if(request.getServeDrivers()==null)
             {
@@ -438,6 +422,18 @@ public class ViewRequests extends Fragment  implements
                     Users tempUser = dataSnapshot.getValue(Users.class);
                     tempUser.setUserID(dataSnapshot.getKey());
 
+                    String deviceToken = Util.DeviceToken(context);
+                    if(deviceToken==null)
+                    {
+                        Util.makeToast(context, "Something Wrong!");
+                        return;
+                    }
+                    else
+                    {
+                        tempUser.setDeviceToken(deviceToken);
+                    }
+
+
                     boolean toAdd = true;
                     for (Users users : tempUsersList)
                     {
@@ -450,10 +446,11 @@ public class ViewRequests extends Fragment  implements
                     }
 
                     request.setServeDrivers(tempUsersList);
-                    request.setDistanceFromRequestToUser(null);
+                    request.setDistanceFromRequestToUser(null);//empty this field
                     DatabaseReference myRef2 = FirebaseDatabase.getInstance().getReference()
                             .child(Util.RDB_REQUESTS+"/"+request.getUser().getUserID());
                     myRef2.setValue(request);
+
                 }
 
                 @Override
@@ -461,9 +458,6 @@ public class ViewRequests extends Fragment  implements
 
                 }
             });
-
-
-
 
         }
     }
@@ -519,8 +513,8 @@ public class ViewRequests extends Fragment  implements
                 }
                 else
                 {
-                    Log.v("Main","geoLocation.Latitude "+Latitude);
-                    Log.v("Main","geoLocation.Longitude "+Longitude);
+                    //Log.v("Main","geoLocation.Latitude "+Latitude);
+                    //Log.v("Main","geoLocation.Longitude "+Longitude);
 
                     for (DataSnapshot ds1: dataSnapshot.getChildren())
                     {
@@ -636,13 +630,11 @@ public class ViewRequests extends Fragment  implements
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s)
             {
-
             }
-
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s)
             {
-                //Log.v("Main","onChildChanged");
+
                 Requests tempRequest = dataSnapshot.getValue(Requests.class);
                 int objIndex = RequestObjIndex(tempRequest);
                 if(objIndex != -1)// -1 means : not found or list is empty or null
@@ -735,7 +727,7 @@ public class ViewRequests extends Fragment  implements
         Longitude = location.getLongitude();
         Latitude = location.getLatitude();
 
-        Log.v("Main","UpdateLocation: "+location.getLatitude()+ "," + location.getLongitude());
+        //Log.v("Main","UpdateLocation: "+location.getLatitude()+ "," + location.getLongitude());
         new android.os.Handler().postDelayed(new Runnable() {
             @Override
             public void run()

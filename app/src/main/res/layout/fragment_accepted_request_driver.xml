@@ -1,0 +1,61 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="devgam.vansit.AcceptedRequest"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:gravity="center">
+
+
+    <TextView
+        android:textAllCaps="true"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DRIVER" />
+    <TextView
+        android:id="@+id/accepted_request_driver_user"
+        android:textAllCaps="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User is ...." />
+    <TextView
+        android:id="@+id/accepted_request_driver_Phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Phone:"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        />
+    <TextView
+        android:id="@+id/accepted_request_driver_phoneData"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:paddingLeft="20dp"
+        />
+    <Button
+        android:id="@+id/accepted_request_driver_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/view_requests_map"
+
+        />
+    <Button
+        android:id="@+id/accepted_request_driver_navigation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/view_requests_map_navigation"
+        />
+    <Button
+        android:id="@+id/accepted_request_driver_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/layout_button_cancel"
+        />
+
+
+
+</LinearLayout>

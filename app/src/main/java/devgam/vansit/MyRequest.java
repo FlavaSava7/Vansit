@@ -1,8 +1,10 @@
 package devgam.vansit;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -24,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import devgam.vansit.JSON_Classes.Requests;
 import devgam.vansit.JSON_Classes.Users;
@@ -36,10 +39,11 @@ public class MyRequest extends Dialog implements android.view.View.OnClickListen
     private Context context;
     private FragmentManager fragmentManager;
 
+
     private TextView addressText, timeText, typeText, updateText, isThereDriversText;
-    private ListView listView;
-    private ArrayList<Users> driversList;
-    private ArrayAdapter driversAdapter;
+    private static ListView listView;
+    private static ArrayList<Users> driversList;
+    private static ArrayAdapter driversAdapter;
 
 
     private static final long WaitTimeBeforeExit=1500;
@@ -191,19 +195,21 @@ public class MyRequest extends Dialog implements android.view.View.OnClickListen
         myRequest.setTimeStamp(System.currentTimeMillis());
         databaseReference.setValue(myRequest);
 
-        timer.cancel();
+        RefreshTimer();
 
+    }
+
+    private void RefreshTimer()
+    {
+        timer.cancel();
         requestTimeEnds = Calendar.getInstance();
         requestTimeEnds.setTimeInMillis(myRequest.getTimeStamp());
         requestTimeEnds.add(Calendar.MINUTE,requestMaxTime);
-
         currentTime = Calendar.getInstance();
         currentTime.setTimeInMillis(System.currentTimeMillis());
-
         timer=CountDownTimer();
         timer.start();
     }
-
     private class itemsAdapter extends ArrayAdapter<Users>
     {
         Context context;
@@ -241,7 +247,54 @@ public class MyRequest extends Dialog implements android.view.View.OnClickListen
                 @Override
                 public void onClick(View v)
                 {
-                    Toast.makeText(context, "accepted", Toast.LENGTH_SHORT).show();
+                    new AlertDialog.Builder(context)
+                            .setTitle(context.getString(R.string.my_offer_sure))
+                            .setMessage("(The App Will Notify the Driver)")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
+                            {
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                    RequestNotifications requestNotifications =
+                                            new RequestNotifications(getContext(),
+                                                    tempDriver.getDeviceToken()
+                                                    ,myRequest);
+                                    requestNotifications.SendNotificationToDriver(myRequest.getUser(),Boolean.TRUE);
+
+                                    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference()
+                                            .child(Util.RDB_REQUESTS+"/"+myRequest.getUser().getUserID());
+
+                                    List<Users> tempList = new ArrayList<>();
+
+                                    for(Users driver : myRequest.getServeDrivers())
+                                    {
+                                        if(!driver.getUserID().equals(tempDriver.getUserID()))
+                                        {
+                                            tempList.add(driver);
+                                        }
+                                    }
+                                    driversList.removeAll(tempList);
+                                    myRequest.setServed(Boolean.TRUE);
+                                    myRequest.setServeDrivers(driversList);
+                                    myRequest.setTimeStamp(System.currentTimeMillis());
+                                    myRef.setValue(myRequest);
+                                    //driversAdapter.notifyDataSetChanged();
+                                    //RefreshTimer();
+
+                                    AcceptedRequest addRequestPage = new AcceptedRequest();
+                                    hideLayout();
+                                    fragmentManager.popBackStack();
+                                    Util.ChangeFrag(addRequestPage, fragmentManager);
+
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener()
+                            {
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
                 }
             });
 
@@ -261,7 +314,29 @@ public class MyRequest extends Dialog implements android.view.View.OnClickListen
                 @Override
                 public void onClick(View v)
                 {
-                    Toast.makeText(context, "declineText", Toast.LENGTH_SHORT).show();
+                    RequestNotifications requestNotifications =
+                            new RequestNotifications(getContext(),
+                                    tempDriver.getDeviceToken()
+                                    ,myRequest);
+                    requestNotifications.SendNotificationToDriver(myRequest.getUser(),Boolean.FALSE);
+                    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference()
+                            .child(Util.RDB_REQUESTS+"/"+myRequest.getUser().getUserID());
+
+                    driversList.remove(tempDriver);
+                    myRequest.setServeDrivers(driversList);
+
+                    myRequest.setTimeStamp(System.currentTimeMillis());
+
+                    if(myRequest.getServeDrivers().isEmpty())
+                    {
+                        myRequest.setServed(Boolean.FALSE);
+                    }
+
+
+                    myRef.setValue(myRequest);
+                    driversAdapter.notifyDataSetChanged();
+
+                    RefreshTimer();
                 }
             });
 
@@ -281,7 +356,6 @@ public class MyRequest extends Dialog implements android.view.View.OnClickListen
         }
 
     }
-
 
     private static class ViewHolder {
         TextView Name, ratingService, ratingPrice;
