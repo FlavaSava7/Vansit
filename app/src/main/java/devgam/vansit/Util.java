@@ -2,13 +2,17 @@ package devgam.vansit;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -17,6 +21,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +30,22 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
 
 
+import org.apache.http.params.HttpParams;
+
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -45,57 +62,68 @@ import devgam.vansit.JSON_Classes.Users;
  - Global Variables should be in ALL_CAPS
  */
 
-class Util
+public class Util
 {
 
-    Util()
+    public Util()
     {
         // Empty Constructor}
     }
     // TODO: Global Normal Variables
-    static boolean IS_USER_CONNECTED = false ; // if InternetListener detected the user lost connection to internet this will be FALSE , otherwise TRUE
-    static Users currentUser = null;
+    public static boolean IS_USER_CONNECTED = false ; // if InternetListener detected the User lost connection to internet this will be FALSE , otherwise TRUE
 
     // TODO: Real Time Database Variable Names
-    static final String RDB_USERS = "Users";
-    static final String RDB_OFFERS = "Offers";
-    static final String RDB_FAVORITE = "favorite";
-    static final String RDB_COUNTRY = "Country";
-    static final String RDB_JORDAN = "Jordan";
-    static final String RDB_TYPE = "type";
+    public static final String RDB_USERS = "Users";
+    public static final String RDB_OFFERS = "Offers";
+    public static final String RDB_FAVOURITE = "Favourites";
+    public static final String RDB_REQUESTS = "Requests";
+    public static final String RDB_JORDAN = "Jordan";
+    public static final String RDB_TYPE = "type";
 
-    static final String RDB_AMMAN = "Amman";
-    static final String RDB_ZARQA = "Zarqa";
+    // TODO: Real Time Database Variable FOR USERS CLASS
 
-    // TODO: Real Time Database Variable Names FOR USERS CLASS
+    public static final String FIRST_NAME = "firstName";
+    public static final String LAST_NAME = "lastName";
+    public static final String CITY = "city";
+    public static final String PHONE = "phone";
+    public static final String GENDER = "gender";
+    public static final String DATE_DAY = "dateDay";
+    public static final String DATE_MONTH = "dateMonth";
+    public static final String DATE_YEAR = "dateYear";
+    public static final String RATED_FOR = "ratedFor";
 
-    static final String FIRST_NAME = "firstName";
-    static final String LAST_NAME = "lastName";
-    static final String CITY = "city";
-    static final String PHONE = "phone";
-    static final String GENDER = "gender";
+    public static final String RATE_SERVICE = "rateService";
+    public static final String RATE_SERVICE_COUNT = "rateServiceCount";
+    public static final String RATE_PRICE = "ratePrice";
+    public static final String RATE_PRICE_COUNT = "ratePriceCount";
 
-    static final String DATE_DAY = "dateDay";
-    static final String DATE_MONTH = "dateMonth";
-    static final String DATE_YEAR = "dateYear";
+    // TODO: Real Time Database Variable FOR OFFERS CLASS
+    // no city var cuz we have the same on users class
+    public static final String USER_ID = "userID";
+    public static final String COUNTRY = "country";
+    public static final String TYPE = "type";
+    public static final String DESCRIPTION = "description";
+    public static final String TITLE = "title";
+    public static final String TIME_STAMP = "timeStamp";
 
-    static final String RATE_SERVICE = "rateService";
-    static final String RATE_SERVICE_COUNT = "rateServiceCount";
-    static final String RATE_PRICE = "ratePrice";
-    static final String RATE_PRICE_COUNT = "ratePriceCount";
-    static final String RATED_FOR = "ratedFor";
 
-    final static Calendar CALENDAR = Calendar.getInstance();
+    public final static Calendar CALENDAR = Calendar.getInstance();
     //These values to get current date and open date picker on current date
-    static int dayNow = CALENDAR.get(Calendar.DAY_OF_MONTH);
-    static int monthNow = CALENDAR.get(Calendar.MONTH);
-    static int yearNow = CALENDAR.get(Calendar.YEAR);
+    public static int dayNow = CALENDAR.get(Calendar.DAY_OF_MONTH);
+    public static int monthNow = CALENDAR.get(Calendar.MONTH);
+    public static int yearNow = CALENDAR.get(Calendar.YEAR);
 
+    // TODO: METHODS
 
-
-
-    // TODO: Methods
-    static boolean CheckConnection(Context context)//this will use isOnline or isOnlineApi18 to check for internet
+    /**
+     * Initial filling of the IS_USER_CONNECTED boolean
+     * Check Connection is used to check if the User is connected to the internet, it uses isOnline() method
+     * And You should use isOnline18 , if the API target is 18
+     * However The InternetListener broadcast receiver is used to change IS_USER_CONNECTED to true or false.
+     * @param context
+     * @return
+     */
+    public static boolean CheckConnection(Context context)
     {
         ConnectivityManager cm =
                 (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -103,8 +131,9 @@ class Util
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return (activeNetwork != null && activeNetwork.isConnectedOrConnecting() && isOnline());
     }
-    static private boolean isOnline()
+    private static  boolean isOnline()
     { // this works with Check Connection Function
+
 
         Runtime runtime = Runtime.getRuntime();
         try {
@@ -119,7 +148,7 @@ class Util
 
         return false;
     }
-    static boolean isOnlineApi18(Context context)
+    public static boolean isOnlineApi18(Context context)
     {
         ConnectivityManager connectivity = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -138,14 +167,22 @@ class Util
         return false;
     }
 
-    static boolean isLogged()// to check if user is already logged
+    /**
+     * Is the User Logged?
+     * @return True if User is Logged
+     */
+    public static boolean isLogged()// to check if User is already logged
     {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         return ( firebaseAuth.getCurrentUser() != null);
     }
 
-
-    static void ChangeFrag(Fragment fragment, FragmentManager fragmentManager)//change fragments
+    /**
+     * Change the Current Fragment to Other One
+     * @param fragment : fragment to go to
+     * @param fragmentManager
+     */
+    public static void ChangeFrag(Fragment fragment, FragmentManager fragmentManager)//change fragments
     {
         String backStateName = fragment.getClass().getName();
         boolean fragmentPopped = fragmentManager.popBackStackImmediate(backStateName, 0);
@@ -159,11 +196,14 @@ class Util
         }
     }
 
-
-    static void ProgDialogStarter(ProgressDialog progressDialog , @Nullable String message )
+    /**
+     * Starts a Progress Dialog OR Stop Progress Dialog if it got called from ProgDialogDelay
+     * @param progressDialog
+     * @param message : Message to show, Can be null because we call this method from ProgDialogDelay to stop the progress after X time
+     */
+    public static void ProgDialogStarter(ProgressDialog progressDialog , @Nullable String message )
     {
-        // to show progress bar ,then u need to call ProgDialogDelay method with time parameter to stop ProgressDialog after time Ends.
-        // @Nullable String message so we can call this method from  ProgDialogDelay without passing msg , because JAVA does not have default values ex. (String msg="")
+
         if(progressDialog.isShowing())
         {
             progressDialog.dismiss();
@@ -181,7 +221,13 @@ class Util
 
         }
     }
-    static void ProgDialogDelay(final ProgressDialog progressDialog, long timer) // to stop progress bar after timer seconds
+
+    /**
+     * This Is used to Delay the Progress Dialog that was started by ProgDialogStarter
+     * @param progressDialog
+     * @param timer
+     */
+    public static void ProgDialogDelay(final ProgressDialog progressDialog, long timer) // to stop progress bar after timer seconds
     {
         if(progressDialog==null)
             return;
@@ -193,11 +239,22 @@ class Util
         }, timer);
     }
 
-    static void makeToast(Context context, String msg)
+    /**
+     * Create A Toast
+     * @param context
+     * @param msg : Message to Show
+     */
+    public static void makeToast(Context context, String msg)
     {
         Toast.makeText(context ,msg, Toast.LENGTH_SHORT ).show();
     }
-    static void OutsideTouchKeyBoardHider(View view, final FragmentActivity fragmentActivity)// use this so u can click outside an Editbox to hide he keyboard
+
+    /**
+     * Use This So Yopu Can Click Outside an EditText to Hide The Keyboard Using HideKeyboard Method
+     * @param view : the layout that contains the edit texts
+     * @param fragmentActivity : getActivity()
+     */
+    public static void OutsideTouchKeyBoardHider(View view, final FragmentActivity fragmentActivity)
     {
 
         //Set up touch listener for non-text box views to hide keyboard.
@@ -225,7 +282,11 @@ class Util
         }
     }
 
-    static void HideKeyboard(FragmentActivity fragmentActivity)
+    /**
+     * Hide The KeyBoard, used in OutsideTouchKeyBoardHider Method
+     * @param fragmentActivity : getActivity()
+     */
+    public static void HideKeyboard(FragmentActivity fragmentActivity)
     {
 
         FrameLayout frameLayout = (FrameLayout)fragmentActivity.findViewById(R.id.FragmentContainer);
@@ -233,11 +294,21 @@ class Util
         imm.hideSoftInputFromWindow(frameLayout.getWindowToken(), 0);
     }
 
-    //used in list view to set icons to rows
-    static Drawable getDrawableResource(Activity activity, int resID) {
+    /**
+     * Used in List View to Set Icons to Rows
+     * @param activity : getActivity()
+     * @param resID : ID of the Image
+     * @return Vaild Image To Use
+     */
+    public static Drawable getDrawableResource(Activity activity, int resID) {
         return ContextCompat.getDrawable(activity.getApplicationContext(), resID);//context.compat checks the version implicitly
     }
 
+    /**
+     *
+     * @param type : name of the Type
+     * @return : ID of the icon
+     */
     static int changeIcon(String type){
         int typeIcon = R.drawable.common_google_signin_btn_icon_dark;
         switch(type) {
@@ -258,6 +329,11 @@ class Util
         return typeIcon;
     }
 
+    /**
+     *
+     * @param target : the character to check if email is valid
+     * @return false of target parameter is null, otherwise check if Email is vaild
+     */
     public final static boolean isValidEmail(CharSequence target) {
         if (target == null) {
             return false;
@@ -266,10 +342,17 @@ class Util
         }
     }
 
-    //To check first, last name & phone edit text is empty or not !
-    static boolean checkEdit(Activity activity,  Drawable errorIcon, EditText editText, String errorMsg){
+    /**
+     * To Check First, Last Name & Phone Edit Text Is Empty or Not !
+     * @param activity : getActivity()
+     * @param errorIcon : Icon of the Error
+     * @param editText : The Edit Text to check on
+     * @param errorMsg : Message of The Error
+     * @return True if EditText.getText is Valid, otherwise false
+     */
+    public static boolean checkEdit(Activity activity,  Drawable errorIcon, EditText editText, String errorMsg){
         Util.setErrorMsg(activity, errorIcon);
-        if(! editText.getText().toString().isEmpty() && !(editText.getText().toString() == "")) {
+        if(! editText.getText().toString().isEmpty() && !(editText.getText().toString().equals(""))) {
             //Util.makeToast(getContext(), "name done");
             return true;
         } else {
@@ -281,14 +364,23 @@ class Util
         }
     }
 
-    //to set an error icon on edit text if it was empty
+    /**
+     * To Set an Error Icon on Edit Text If It Was Empty
+     * @param activity : getActivity()
+     * @param errorIcon : Icon of the Error
+     */
     private static void setErrorMsg(Activity activity, Drawable errorIcon){
         errorIcon = activity.getResources().getDrawable(R.drawable.ic_error);
         errorIcon.setBounds(new Rect(0, 0, errorIcon.getIntrinsicWidth(), errorIcon.getIntrinsicHeight()));
         //editText.setError(null,errorIcon);
     }
 
-    static ArrayList<Offers>  SortByTimeStampDesc(ArrayList<Offers> arrayToSort)// sort offers by date
+    /**
+     * Sort ArrayList by Date that is in Offer Class
+     * @param arrayToSort
+     * @return Sorted ArrayList
+     */
+    public static ArrayList<Offers>  SortByTimeStampDesc(ArrayList<Offers> arrayToSort)// sort offers by date
     {
         Collections.sort(arrayToSort, new Comparator<Offers>() {
             @Override
@@ -299,4 +391,103 @@ class Util
         Collections.reverse(arrayToSort);
         return arrayToSort;
     }
+
+    /**
+     * Change the Title of the page.
+     * @param fragmentActivity : use getActivity()
+     * @param titleID : R.string.ID_OF_THE_STRING
+     */
+    public static void ChangePageTitle(FragmentActivity fragmentActivity, int titleID)
+    {
+        try {
+            if(!fragmentActivity.getTitle().equals(fragmentActivity.getResources().getString(titleID)))
+                fragmentActivity.setTitle(fragmentActivity.getResources().getString(titleID));
+        }
+        catch (NullPointerException e ) {
+        }
+    }
+
+    /**
+     * Create a Dialog with intent.Used for Location Permissions
+     * @param context
+     * @param title
+     * @param message
+     * @param intentYes : what to do after user click YES
+     */
+    public static void AlertDialog(final Context context, String title, String message, final Intent intentYes)
+    {
+        new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        context.startActivity(intentYes);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    /**
+     * Get The Current Device Token
+     * @param context
+     * @return Token if exists otherwise null
+     */
+    public static String DeviceToken(Context context)
+    {
+        String spKey = context.getResources().getString(R.string.vansit_shared_preferences);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(spKey,Context.MODE_PRIVATE);
+        String deviceToken = sharedPreferences.getString("deviceToken",null);
+        if(deviceToken==null)
+        {
+            return null;
+        }
+        else
+        {
+            return deviceToken;
+        }
+
+    }
+    // still under tests
+    public static void isNetworkAvailable()
+    {
+        new Thread(new Runnable(){
+            @Override
+            public void run()
+            {
+                HttpURLConnection connection = null;
+                try {
+                    URL u = new URL("http://www.google.com/");
+                    connection = (HttpURLConnection) u.openConnection();
+                    connection.setRequestMethod("HEAD");
+                    int code = connection.getResponseCode();
+                    Log.v("Main","code "+ code);
+
+                    IS_USER_CONNECTED = code == 200;
+                    Log.v("Main","IS_USER_CONNECTED "+ IS_USER_CONNECTED);
+                    // You can determine on HTTP return code received. 200 is success.
+                } catch (MalformedURLException e)
+                {
+                    Log.v("Main","MalformedURLException "+e.getLocalizedMessage());
+                } catch (IOException e) {
+                    Log.v("Main","IOException "+e.getLocalizedMessage());
+                } finally
+                {
+                    if (connection != null)
+                    {
+                        connection.disconnect();
+                    }
+                }
+            }
+        }).start();
+    }
+
 }

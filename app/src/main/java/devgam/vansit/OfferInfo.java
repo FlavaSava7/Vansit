@@ -197,18 +197,18 @@ public class OfferInfo extends Fragment {
             public void onClick(View v)
             {
                 new AlertDialog.Builder(getContext())
-                        .setTitle("want?")
-                        .setMessage("sure?")
+                        .setTitle("Are you sure ?")
+                        .setMessage("")
                         .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
                         {
                             public void onClick(DialogInterface dialog, int which)
                             {
 
-                                if(!Util.isLogged()) // user is not logged
+                                if(!Util.isLogged()) // User is not logged
                                     return ;
 
                                 final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-                                if(userDriver.getUserID().equals(firebaseAuth.getCurrentUser().getUid()))// user cant vote for self.
+                                if(userDriver.getUserID().equals(firebaseAuth.getCurrentUser().getUid()))// User cant vote for self.
                                     return ;
 
 
@@ -220,7 +220,6 @@ public class OfferInfo extends Fragment {
                                     public void onDataChange(DataSnapshot dataSnapshot)
                                     {
                                         ArrayList<String> ratedForList = (ArrayList<String>) dataSnapshot.getValue();
-                                        //Log.v("Main",""+p3.toString());
                                         if( ratedForList == null )
                                             Util.makeToast(getContext(),"Something wrong happened!");
                                         else
@@ -228,7 +227,7 @@ public class OfferInfo extends Fragment {
                                             boolean canRate=true;
                                             for(String value : ratedForList)
                                             {
-                                                if(value.equals(userDriver.getUserID()))//user already voted for this driver
+                                                if(value.equals(userDriver.getUserID()))//User already voted for this driver
                                                     canRate = false;
                                             }
 
@@ -236,7 +235,7 @@ public class OfferInfo extends Fragment {
                                             {
                                                 ratedForList.add(userDriver.getUserID());
 
-                                                commitRating(ratedForList,firebaseAuth.getCurrentUser().getUid() );//apply rate and add this driver to user
+                                                commitRating(ratedForList,firebaseAuth.getCurrentUser().getUid() );//apply rate and add this driver to User
 
                                             }
 
@@ -266,7 +265,7 @@ public class OfferInfo extends Fragment {
     }
     void commitRating(ArrayList<String> updatedRatedForList , String userKey)
     {
-        //current userKey so we can search and add the updatedRatedForList for user.
+        //current userKey so we can search and add the updatedRatedForList for User.
         if(ratingPrice.getRating() != 0)
         {
             //Log.v("Main","ratingPrice.getRating() != 0");

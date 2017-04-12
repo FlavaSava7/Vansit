@@ -1,11 +1,17 @@
 <resources>
+
     <string name="app_name">Vansit</string>
 
+    <!-- TODO: Global Strings-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_settings">Settings</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="loading">Loading&#8230;</string><!-- the &#8230; so you can represent the ... -->
+    <string name="fail_input_edittext">Please Check Your Inputs</string><!-- general inputs fails in add offers page -->
+    <string name="server_key" translatable="false">AAAAXuVOldU:APA91bF9Kz_udNp0VmuK8dzL7bLQ2hTx6vB_xFAq_X_hHvsOkLImNFOWm0LCpzE_mspc9jrWK5UnzRwctDLy3lt_JhJXfhT2aJRmb8gqNyfn9Nj3fJtqlSFHUhPzqbNhPVGzHSO1lBjmRDzk89W0CS4msa4WoBLUPA</string>
+    <string name="fcm_url" translatable="false">https://fcm.googleapis.com/fcm/send</string>
+    <string name="vansit_shared_preferences">Vansit_SP</string>
 
     <!-- TODO: MainController Strings-->
     <string name="city">City</string>
@@ -29,10 +35,9 @@
     <string name="hello_blank_fragment">Soon Will be Available</string>
 
     <!-- Strings for layouts -->
-    <string name="login_email_null_error">email is required</string>
-    <string name="login_email_invalid_error">incorrect email</string>
-    <string name="login_password_null_error">password is required</string>
-
+    <string name="login_email_null_error">Email is required</string>
+    <string name="login_email_invalid_error">Incorrect email</string>
+    <string name="login_password_null_error">Password is required</string>
 
     <string name="my_account_title_text">Personal Data</string>
     <string name="my_account_firstName_text">First Name</string>
@@ -58,18 +63,21 @@
     <string name="menu_logout_text">Sign Out</string>
     <string name="menu_my_account_text">My Account</string>
     <string name="menu_home_text">Home</string>
-    <string name="menu_fav_text">Favorite</string>
+    <string name="menu_fav_text">Favourite</string>
     <string name="menu_rec_text">Recommended</string>
+    <string name="menu_req_text">Requests</string>
     <string name="menu_account_text">Account</string>
     <string name="menu_my_offers_text">My Offers</string>
     <string name="menu_settings_text">Settings</string>
-    
+    <string name="menu_requests_text">Settings</string>
+
     <string name="main_order_city">Order by city</string>
     <string name="main_order_type">Order by type</string>
     <string name="main_no_result">no matches srevices</string>
     <string name="main_fab_text_add_request">add request</string>
     <string name="main_fab_text_add_offer">add offer</string>
     <string name="user_information_title">Profile</string>
+    <string name="main_show_more">Show More</string><!--show more button inside the Main Page -->
 
     <string name="add_offer_title_text">Title </string>
     <string name="add_offer_title_hint">Example : Transport school students</string>
@@ -80,6 +88,13 @@
     <string name="add_offer_info_user_text">User  </string>
     <string name="add_offer_user_name_text">Name : </string>
     <string name="add_offer_user_phone_text">Phone : </string>
+    <string name="add_offer_title_null_error">Title is required</string>
+    <string name="add_offer_desc_null_error">Description is required</string>
+    <string name="add_offer_city_null_error">City is required</string>
+    <string name="add_offer_type_null_error">Type is required</string>
+    <string name="add_offer_click_again_to_exit">Please click BACK again to exit</string>
+
+    <string name="my_offer_sure">Are You Sure?</string><!-- for dialog inside my offers page -->
 
     <string name="sign_in_with_google">SIGN IN WITH GOOGLE</string>
     <string name="sign_in_title">Sign in</string>
@@ -93,6 +108,15 @@
     <string name="reset_title">Reset Password</string>
     <string name="reset_desc">To reset your password, enter the email address you use to sign in to this application</string>
 
+    <string name="view_requests_address">Address:</string>
+    <string name="view_requests_distance">Distance:</string>
+    <string name="view_requests_status">Status:</string>
+    <string name="view_requests_map">Open Map</string>
+    <string name="view_requests_serve">Serve</string>
+    <string name="view_requests_map_navigation">Open Navigation</string>
+
+    <string name="my_request_title">My Request</string>
+    <string name="my_request_refresh">Refresh Request</string>
 
     <!-- shared by layouts -->
     <string name="layout_button_save">save</string>
@@ -106,7 +130,6 @@
     <string name="add_rate">Add Rate</string>
     <string name="user_information_home_city">Living in </string>
     <string name="user_information_age">Age is  </string>
-
 
 
     <!-- TODO: String Array for spinners -->
@@ -136,18 +159,18 @@
 
     <!-- TODO: String Array for Ratings Bars -->
     <string-array name="rating_service">
-        <item>3adi</item>
-        <item>mshi 7alak</item>
-        <item>no9 no9</item>
-        <item>mnee7</item>
-        <item>6a8e3</item>
+        <item>Bad</item>
+        <item>Not Good</item>
+        <item>Good</item>
+        <item>Very Good</item>
+        <item>Excellent</item>
     </string-array>
     <string-array name="rating_price">
-        <item>r5ee9!</item>
-        <item>tmam</item>
-        <item>wsa6</item>
-        <item>waaal</item>
-        <item>rf3o el-2s3ar?</item>
+        <item>Cheap</item>
+        <item>Too Good</item>
+        <item>Good</item>
+        <item>normal</item>
+        <item>Bad</item>
     </string-array>
     <string name="title_activity_user_info">userInfo</string>
     <string name="large_text">

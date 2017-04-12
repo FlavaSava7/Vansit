@@ -40,7 +40,7 @@ public class MoreOffers extends Fragment {
     private TextView userName,userAge,userCity,userPhone;
 
     private ListView listView;
-    private ArrayList<Offers> offerList;// this will be refilled with Offers each time a user change City Filter
+    private ArrayList<Offers> offerList;// this will be refilled with Offers each time a User change City Filter
     private ArrayAdapter offerAdapter;
 
     Users userDriver = null;
@@ -115,40 +115,44 @@ public class MoreOffers extends Fragment {
 
         if(offerList==null)
         {
-            Util.ProgDialogStarter(progressDialog,"Loading...");
+            Util.ProgDialogStarter(progressDialog,getResources().getString(R.string.loading));
             offerList = new ArrayList<>();
 
             DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference()
-                    .child(Util.RDB_OFFERS+"/"+userDriver.getUserID());
+                    .child(Util.RDB_OFFERS);
 
-            Query query = DataBaseRoot;
+            Query query = DataBaseRoot.orderByChild(Util.USER_ID).equalTo(userDriver.getUserID());
             ValueEventListener QVEL= new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot)
                 {
-                    for(DataSnapshot offers : dataSnapshot.getChildren())
+                    if(!dataSnapshot.exists())// This User have no offer
                     {
-                        //Log.v("Main","Key:"+offers.getKey());
-                        Offers tempOffer = offers.getValue(Offers.class);
-                        tempOffer.setOfferKey(offers.getKey());
-
-                        boolean toAdd = true;
-                        for (Offers offer : offerList)
-                            if (offer.getOfferKey().equals(tempOffer.getOfferKey()))
-                                toAdd = false;
-
-                        if (toAdd)
-                            if (tempOffer.getUserID().equals(userDriver.getUserID()))
-                                offerList.add(tempOffer);
+                        Util.makeToast(getActivity(), userDriver.getFirstName()+" Does not have any Offers");
                     }
+                    else {
+                        for (DataSnapshot offers : dataSnapshot.getChildren()) {
+                            //Log.v("Main","Key:"+offers.getKey());
+                            Offers tempOffer = offers.getValue(Offers.class);
+                            tempOffer.setOfferKey(offers.getKey());
 
-                    for(Offers offer : offerList)
-                    {
-                        //Log.v("Main", "offerList for this user: " + offer.getOfferKey());
+                            boolean toAdd = true;
+                            for (Offers offer : offerList)
+                                if (offer.getOfferKey().equals(tempOffer.getOfferKey()))
+                                    toAdd = false;
+
+                            if (toAdd)
+                                if (tempOffer.getUserID().equals(userDriver.getUserID()))
+                                    offerList.add(tempOffer);
+                        }
+
+                        for (Offers offer : offerList) {
+                            //Log.v("Main", "offerList for this User: " + offer.getOfferKey());
+                        }
+                        Util.SortByTimeStampDesc(offerList);
+                        listView.setAdapter(offerAdapter);
                     }
-                    Util.SortByTimeStampDesc(offerList);
-                    listView.setAdapter(offerAdapter);
-                    Util.ProgDialogDelay(progressDialog,1000L);
+                    Util.ProgDialogDelay(progressDialog,100L);
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError)
@@ -231,10 +235,5 @@ public class MoreOffers extends Fragment {
         // this class is called in getView and assigned it all "items" layouts Views,for smooth scrolling
         TextView Title, City;
         ImageView typeIcon;
-    }
-
-    private Drawable getDrawableResource(int resID)//used in list view to set icons to rows
-    {
-        return ContextCompat.getDrawable(getActivity().getApplicationContext(), resID);//context.compat checks the version implicitly
     }
 }

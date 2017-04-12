@@ -14,7 +14,10 @@
             android:id="@+id/nav_rec"
             android:icon="@drawable/ic_menu_rec"
             android:title="@string/menu_rec_text" />
-
+        <item
+            android:id="@+id/nav_requests"
+            android:icon="@drawable/ic_menu_rec"
+            android:title="@string/menu_req_text" />
         <item
             android:id="@+id/nav_my_offers"
             android:icon="@drawable/ic_list"

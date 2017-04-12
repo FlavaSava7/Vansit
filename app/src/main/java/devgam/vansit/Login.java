@@ -29,6 +29,12 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class Login extends Fragment implements View.OnClickListener{
 
@@ -84,8 +90,6 @@ public class Login extends Fragment implements View.OnClickListener{
                 }).addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        // Configure Google Sign In
-
 
 
     }
@@ -101,6 +105,8 @@ public class Login extends Fragment implements View.OnClickListener{
     public void onResume()
     {
         super.onResume();
+        Util.ChangePageTitle(getActivity(),R.string.menu_login_text);
+
         //Initialize signing in progress Dialog :
         progressDialog = new ProgressDialog(getContext());
 
@@ -115,7 +121,7 @@ public class Login extends Fragment implements View.OnClickListener{
         passInput = (TextInputLayout) getActivity().findViewById(R.id.login_password_input);
         googleSignIn = (LinearLayout) getActivity().findViewById(R.id.login_google_layout);
 
-        //to set error text not visible if user out from app and come again :
+        //to set error text not visible if User out from app and come again :
         errorText.setVisibility(View.INVISIBLE);
 
         //on click listener for buttons :
@@ -130,7 +136,14 @@ public class Login extends Fragment implements View.OnClickListener{
         super.onStart();
         firebaseAuth.addAuthStateListener(firebaseListener);
     }
-
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        // fix mGoogleApiClient crash bug
+        mGoogleApiClient.stopAutoManage(getActivity());
+        mGoogleApiClient.disconnect();
+    }
     private void userSignIn(){
         if( ! checkEditText())
             return;
@@ -153,8 +166,11 @@ public class Login extends Fragment implements View.OnClickListener{
                         //Util.ProgDialogDelay(progressDialog,1000L);// wait 1 more second
                         progressDialog.dismiss();
 
-                        if (task.isSuccessful()) {
+                        if (task.isSuccessful())
+                        {
                             //sign in done
+                            MainController.GlobalHideItem(MainController.globalNavigationView.getMenu());//update menu
+                            MainController.GlobalSetDataToViews(MainController.globalNavigationView);
                             Util.makeToast(getContext(), "Authentication successful");
                             Util.ChangeFrag(mainPage,fragmentManager);// use like this to go from fragment to other
 
@@ -260,38 +276,43 @@ public class Login extends Fragment implements View.OnClickListener{
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>()
+                {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        myAccount ma = new myAccount();
-                        Util.ChangeFrag(ma, fragmentManager);
+                    public void onComplete(@NonNull Task<AuthResult> task)
+                    {
+
+                        // we need Progress Dialog here , because it take some time to process. But it get stuck for a weird reason.
+                        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().
+                                child(Util.RDB_USERS + "/" + firebaseAuth.getCurrentUser().getUid());
+                        Query query = mRef;
+                        query.addListenerForSingleValueEvent(new ValueEventListener()
+                        {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot)
+                            {
+                                if (dataSnapshot.exists())//User exists
+                                {
+                                    MainController.GlobalHideItem(MainController.globalNavigationView.getMenu());//update menu
+                                    MainController.GlobalSetDataToViews(MainController.globalNavigationView);
+                                    Main mainPage = new Main();
+                                    Util.ChangeFrag(mainPage, fragmentManager);
+                                } else {
+                                    myAccount ma = new myAccount();
+                                    Util.ChangeFrag(ma, fragmentManager);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError)
+                            {
+
+                            }
+                        });
                     }
-
                 });
-        try{
-
-
-
-
-
-
-
-
-
-
-
-
-
-        }catch(Exception e){
-
-        }
 
 
     }
-
-
-
-
-
 
 }

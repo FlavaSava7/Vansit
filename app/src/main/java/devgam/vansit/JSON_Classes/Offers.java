@@ -14,30 +14,25 @@ public class Offers implements Serializable
     private String Description;
     private String Type;
     private String City;
+    private String Country;
     private Long timeStamp;
     // The following variables will not be shown in the DataBase Offers Object Just to get more Information
     private String offerKey;//this is used inside the list views so we can know if a certain obj already exists or not inside the list
-
 
     public Offers()
     {
         //empty cons for Firebase
 
     }
-    public Offers(String mUserID, String mTitle,String mDesc,String mType, String mCity, Long timeStamp)
+    public Offers(String mUserID, String mTitle,String mDesc,String mType, String mCity,String mCountry, Long timeStamp)
     {
         this.userID = mUserID;
         this.Title = mTitle;
         this.Description = mDesc;
         this.Type = mType;
         this.City = mCity;
+        this.Country = mCountry;
         this.timeStamp = timeStamp;
-    }
-
-    //constructor added by Nimer for my offers activity
-    public Offers(String title, String city) {
-        Title = title;
-        City = city;
     }
 
     public String getTitle() {
@@ -95,5 +90,13 @@ public class Offers implements Serializable
 
     public void setTimeStamp(Long timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public String getCountry() {
+        return Country;
+    }
+
+    public void setCountry(String country) {
+        Country = country;
     }
 }

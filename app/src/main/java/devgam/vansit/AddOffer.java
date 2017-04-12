@@ -1,11 +1,14 @@
 package devgam.vansit;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -49,6 +53,8 @@ public class AddOffer extends Fragment {
     public Offers editOffer = null; // this will be set of we came from myOffers pages to edit an offer
 
     boolean doubleBackToExitPressedOnce = false;
+    private Drawable errorIcon;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -130,7 +136,7 @@ public class AddOffer extends Fragment {
                     }
 
                     doubleBackToExitPressedOnce = true;
-                    Util.makeToast(getContext(),"Please click BACK again to exit");
+                    Util.makeToast(getContext(),getResources().getString(R.string.add_offer_click_again_to_exit));
 
                     new Handler().postDelayed(new Runnable() {
 
@@ -166,83 +172,53 @@ public class AddOffer extends Fragment {
     public void SaveOffer()
     {
         // Send the Offer to the DataBase
-        // must check for internet
-        if(editDesc.getText().toString().isEmpty() || editTitle.getText().toString().isEmpty()||
-                editDesc.getText().toString().equals("") || editTitle.getText().toString().equals(""))
-        {
-            return;
-        }
         if(!Util.IS_USER_CONNECTED)
         {
-            makeToast(getContext(), String.valueOf(R.string.noInternetMsg));
+            makeToast(getContext(), getString(R.string.noInternetMsg));
             return;
         }
+        if(!checkEditText(editTitle.getText().toString(),editDesc.getText().toString()))
+            return;
 
         Offers myOffer = new Offers(FirebaseAuth.getInstance().getCurrentUser().getUid(),
-                editTitle.getText().toString(),
-                editDesc.getText().toString(),
-                spinnerType.getSelectedItem().toString(),spinnerCity.getSelectedItem().toString(), System.currentTimeMillis());
+                editTitle.getText().toString(), editDesc.getText().toString(),
+                spinnerType.getSelectedItem().toString(),spinnerCity.getSelectedItem().toString(),
+                Util.RDB_JORDAN, System.currentTimeMillis());
 
-        // here we will AUTO go to the child where his Country == the country he signed up in the app
-        //Edit it later cuz for now we dont have the User details yet
         DatabaseReference mRef = FirebaseDatabase.getInstance().
-                getReference(Util.RDB_COUNTRY+"/"+
-                        Util.RDB_JORDAN+"/"+
-                        spinnerCity.getSelectedItem().toString()+"/"+
-                        Util.RDB_OFFERS);
-        String offerKey =  mRef.push().getKey();
-        mRef.child(offerKey).setValue(myOffer);//add to offers under Country
-        mRef = FirebaseDatabase.getInstance().
-                getReference(Util.RDB_OFFERS
-                        +"/"+ FirebaseAuth.getInstance().getCurrentUser().getUid()
-                        +"/"+ offerKey);
-        mRef.setValue(myOffer);
-
-        Util.makeToast(getContext(),"Success!");
+                getReference(Util.RDB_OFFERS);
+        mRef.push().setValue(myOffer);
 
         myOffers offer = new myOffers();
         Util.ChangeFrag(offer, fragmentManager);
-    }
-    public void CancelOffer()
-    {
-        editDesc.setText("");
-        editTitle.setText("");
     }
     public void EditOffer()
     {
         if(!Util.IS_USER_CONNECTED)
         {
-            makeToast(getContext(), String.valueOf(R.string.noInternetMsg));
+            Util.makeToast(getContext(), String.valueOf(R.string.noInternetMsg));
             return;
         }
-        String tempKeyHolder  = editOffer.getOfferKey();// to fix stupid bug with null keys when updating to Offers/UserKey/offer
+
+        //String tempKeyHolder  = editOffer.getOfferKey();// to fix stupid bug with null keys when updating to Offers/UserKey/offer
 
         DatabaseReference mRef = FirebaseDatabase.getInstance().
-                getReference(Util.RDB_COUNTRY+"/"+
-                        Util.RDB_JORDAN+"/"+
-                        editOffer.getCity()+"/"+
-                        Util.RDB_OFFERS+"/"+editOffer.getOfferKey());
-        mRef.removeValue();// remove the old value
+                getReference(Util.RDB_OFFERS+"/"+editOffer.getOfferKey());
+        if(checkEditText(editTitle.getText().toString(),editDesc.getText().toString()))
+        {
+            editOffer.setTitle(editTitle.getText().toString());
+            editOffer.setDescription(editDesc.getText().toString());
+            editOffer.setCity(spinnerCity.getSelectedItem().toString());
+            editOffer.setType(spinnerType.getSelectedItem().toString());
+            editOffer.setTimeStamp(System.currentTimeMillis());
+            editOffer.setOfferKey(null);
+            mRef.setValue(editOffer);// set the new value
+        }
+        else
+        {
+            return;
+        }
 
-        mRef = FirebaseDatabase.getInstance().
-                getReference(Util.RDB_COUNTRY+"/"+
-                        Util.RDB_JORDAN+"/"+
-                        spinnerCity.getSelectedItem().toString()+"/"+
-                        Util.RDB_OFFERS+"/"+editOffer.getOfferKey());
-
-        editOffer.setTitle(editTitle.getText().toString());
-        editOffer.setDescription(editDesc.getText().toString());
-        editOffer.setCity(spinnerCity.getSelectedItem().toString());
-        editOffer.setType(spinnerType.getSelectedItem().toString());
-        editOffer.setTimeStamp(System.currentTimeMillis());
-        editOffer.setOfferKey(null);
-        mRef.setValue(editOffer);// set the new value
-
-        mRef = FirebaseDatabase.getInstance().
-                getReference(Util.RDB_OFFERS+"/"+
-                        FirebaseAuth.getInstance().getCurrentUser().getUid()+"/"+
-                        tempKeyHolder);
-        mRef.setValue(editOffer);// set the new value
 
         editOffer= null;//reset
 
@@ -270,5 +246,29 @@ public class AddOffer extends Fragment {
 
             }
         });
+    }
+
+
+    private boolean checkEditText(String title, String desc)
+    {
+        // checks edit texts and spinners
+        boolean isValid = true;
+        if(TextUtils.isEmpty(title))
+        {
+
+            isValid = false;
+        }
+        if(TextUtils.isEmpty(desc))
+        {
+
+            isValid = false;
+        }
+        if(spinnerCity.getSelectedItem().toString().isEmpty()|| spinnerCity.getSelectedItem().toString().equals("Select City") ||
+                spinnerType.getSelectedItem().toString().isEmpty()|| spinnerType.getSelectedItem().toString().equals("Select Type") )
+        {
+            isValid = false;
+        }
+
+        return isValid;
     }
 }

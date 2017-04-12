@@ -1,5 +1,7 @@
 package devgam.vansit.JSON_Classes;
 
+import org.json.JSONObject;
+
 import java.lang.*;
 import java.util.*;
 import java.io.Serializable;
@@ -28,7 +30,7 @@ public class Users implements Serializable
 
     // The following variables will not be shown in the DataBase Users Object Just to get more Information
     private String userID;//this is used inside the list views so we can know if a certain obj already exists or not inside the list
-
+    private String deviceToken;// for requests to communicate from users to drivers
     public Users()
     {
         //empty constructor for Firebase API
@@ -139,5 +141,13 @@ public class Users implements Serializable
 
     public void setUserID(String userID) {
         this.userID = userID;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 }

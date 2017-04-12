@@ -1,16 +1,10 @@
 package devgam.vansit;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +22,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 import devgam.vansit.JSON_Classes.Users;
 
@@ -57,7 +48,7 @@ public class myAccount extends Fragment implements View.OnClickListener{
 
 
     //temp day, month, year to save data from picker until data click save
-    //because may be user cancel change
+    //because may be User cancel change
     //that's will product real data on fireBase
     private int tempDayOfBirth, tempMonthOfBirth, tempYearOfBirth ;
     private static String tempUserFirstName, tempUserLastName , tempPhoneNumber, tempUserCity, tempUserGander ;
@@ -84,10 +75,8 @@ public class myAccount extends Fragment implements View.OnClickListener{
     @Override
     public void onResume() {
         super.onResume();
-        // A.J.I. : Hide Fab
-        //FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        //if(fab!=null)
-            //fab.setVisibility(View.GONE);
+
+        Util.ChangePageTitle(getActivity(),R.string.menu_my_account_text);
 
         firebaseAuth = FirebaseAuth.getInstance();
         tempUID = firebaseAuth.getCurrentUser().getUid();
@@ -145,7 +134,7 @@ public class myAccount extends Fragment implements View.OnClickListener{
         maleRadio.setOnClickListener(this);
         femaleRadio.setOnClickListener(this);
 
-        //may be user don't click because it's already clicked
+        //may be User don't click because it's already clicked
         if(maleRadio.isChecked())
             tempUserGander = "male";
         else
@@ -195,6 +184,7 @@ public class myAccount extends Fragment implements View.OnClickListener{
                 if(Util.IS_USER_CONNECTED) {
                     saveDataToDatabase();
                     MainController.GlobalHideItem(MainController.globalNavigationView.getMenu());//update menu
+                    MainController.GlobalSetDataToViews(MainController.globalNavigationView);
                     Main mainPage = new Main();
                     Util.ChangeFrag(mainPage, fragmentManager);
                 } else {
@@ -229,19 +219,23 @@ public class myAccount extends Fragment implements View.OnClickListener{
             tempUserFirstName = firstNameEdit.getText().toString();
 
         if(tempYearOfBirth == 0 || Util.yearNow < tempYearOfBirth + 16) {
-            //Check if user add real birthDate not current date !
+            //Check if User add real birthDate not current date !
             //Just year because no body born in this year can make account
             //No one less than 16 can drive or make deal with other people
             Util.makeToast(getActivity(), "Invalid Birth day");
             return false;
         }
-
+        if(tempUserCity.isEmpty() || tempUserCity.equals("Select City"))
+        {
+            return false;
+        }
         return true;
     }
 
-    private void saveDataToDatabase(){
-        //user object to push data on DB
-        //TODO: UPDATE THE VALUE HERE TO PUT FIRST NAME , LAST NAME ( constructer take one more parameter for last name now )
+    private void saveDataToDatabase()
+    {
+
+        //User object to push data on DB
         Users userData = new Users(tempUserFirstName, tempUserLastName,tempUserCity,tempPhoneNumber,tempUserGander,
                 tempDayOfBirth + "", tempMonthOfBirth + "", tempYearOfBirth + "");
 

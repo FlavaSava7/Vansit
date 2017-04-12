@@ -6,14 +6,18 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.util.Log;
 
 import java.io.IOException;
+
+import devgam.vansit.Util;
 
 public class InternetListener extends BroadcastReceiver
 {
     public InternetListener()
     {
     }
+
 
     /**
      * THIS TO KEEP CHECKING IF WE HAVE INTERNET OR NOT
@@ -32,17 +36,17 @@ public class InternetListener extends BroadcastReceiver
         if(activeNetwork != null && activeNetwork.isConnectedOrConnecting() && isOnline())// internet still ON
         {
             Util.IS_USER_CONNECTED =true;
-            //Log.v("Fragment:", "InternetListener : NETWORK IS AVAILABLE");
+            //Log.v("Main", "InternetListener : NETWORK IS AVAILABLE");
         }
         else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN_MR2)
         {
             Util.IS_USER_CONNECTED =isOnlineApi18(context);
-            //Log.v("Fragment:","InternetListener : NETWORK(18 Api) IS "+ApplicationLinking.JuBooks_isUserConnected);
+            //Log.v("Main","InternetListener : NETWORK(18 Api) IS "+Util.IS_USER_CONNECTED);
         }
         else
         {
             Util.IS_USER_CONNECTED = false;
-            //Log.v("Fragment:","InternetListener : NETWORK IS NOT AVAILABLE");
+            //Log.v("Main","InternetListener : NETWORK IS NOT AVAILABLE");
         }
 
     }

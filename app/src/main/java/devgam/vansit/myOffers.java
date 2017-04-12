@@ -63,6 +63,7 @@ public class myOffers extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        Util.ChangePageTitle(getActivity(),R.string.menu_my_offers_text);
         myOffersList = (ListView) getActivity().findViewById(R.id.my_offers_listView);
         myOffersAdapter = new itemsAdapter(getContext());
         progressDialog = new ProgressDialog(getContext(),ProgressDialog.STYLE_SPINNER);
@@ -79,7 +80,7 @@ public class myOffers extends Fragment {
 
         if(myOffersArray==null)
         {
-            Util.ProgDialogStarter(progressDialog,"Loading...");
+            Util.ProgDialogStarter(progressDialog,getResources().getString(R.string.loading));
             myOffersArray = new ArrayList<>();
             SetUpMyOffers();
         }
@@ -94,25 +95,38 @@ public class myOffers extends Fragment {
 
     private void SetUpMyOffers()
     {
+        if(!Util.IS_USER_CONNECTED)
+        {
+            Util.ProgDialogDelay(progressDialog,100L);
+            return;
+        }
         DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference()
-                .child(Util.RDB_OFFERS+"/"+ FirebaseAuth.getInstance().getCurrentUser().getUid());
+                .child(Util.RDB_OFFERS);
 
-        Query query = DataBaseRoot;
+        Query query = DataBaseRoot.orderByChild(Util.USER_ID).equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
         ValueEventListener QVEL= new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
-                for(DataSnapshot offers : dataSnapshot.getChildren())
+                if(!dataSnapshot.exists())// This User have no offer
                 {
-                    //Log.v("Main","Key:"+offers.getKey());
-                    Offers tempOffer = offers.getValue(Offers.class);
-                    tempOffer.setOfferKey(offers.getKey());
-                    myOffersArray.add(tempOffer);
+                    Util.makeToast(getActivity(), "You Don't Have Offers!");
                 }
-                Util.SortByTimeStampDesc(myOffersArray);
-                myOffersList.setAdapter(myOffersAdapter);
+                else
+                {
+                    for(DataSnapshot offers : dataSnapshot.getChildren())
+                    {
+                        //Log.v("Main","Key:"+offers.getKey());
+                        Offers tempOffer = offers.getValue(Offers.class);
+                        tempOffer.setOfferKey(offers.getKey());
+                        myOffersArray.add(tempOffer);
+                    }
+                    Util.SortByTimeStampDesc(myOffersArray);
+                    myOffersList.setAdapter(myOffersAdapter);
+                }
 
-                Util.ProgDialogDelay(progressDialog,1000L);
+
+                Util.ProgDialogDelay(progressDialog,100L);
             }
             @Override
             public void onCancelled(DatabaseError databaseError)
@@ -199,22 +213,15 @@ public class myOffers extends Fragment {
             return;
         }
         new AlertDialog.Builder(getContext())
-                .setTitle("want?")
-                .setMessage("sure?")
+                .setTitle("")
+                .setMessage(getResources().getString(R.string.my_offer_sure))
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int which)
                     {
                         DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference()
-                                .child(Util.RDB_OFFERS+"/"+ FirebaseAuth.getInstance().getCurrentUser().getUid()
-                                +"/"+offerToDelete.getOfferKey());
+                                .child(Util.RDB_OFFERS +"/"+offerToDelete.getOfferKey());
                         DataBaseRoot.removeValue();
-
-
-                        DatabaseReference DataBaseRoot2 = FirebaseDatabase.getInstance().getReference()
-                                .child(Util.RDB_COUNTRY+"/"+Util.RDB_JORDAN+"/"+ offerToDelete.getCity()+"/"+Util.RDB_OFFERS
-                                        +"/"+offerToDelete.getOfferKey());
-                        DataBaseRoot2.removeValue();
 
                         myOffersArray.remove(offerToDelete);
                         myOffersAdapter.notifyDataSetChanged();

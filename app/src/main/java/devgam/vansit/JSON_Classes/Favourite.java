@@ -1,22 +1,34 @@
 package devgam.vansit.JSON_Classes;
 
+import java.io.Serializable;
+
+import devgam.vansit.Util;
+
 /**
- * Created by Nimer Esam on 08/03/2017.
+ * we will fetch EACH offer the user favoured by using Offer Key ,
+ * if they Offer returned null when we queried then delete this offer favourite from the user.
  */
+public class Favourite implements Serializable
+{
 
-public class Favourite {
-    private String offerKey, offerCity;
+    private String offerKey;
 
-    public Favourite(String offerKey, String offerCity) {
+    public Favourite()
+    {
+
+        //empty constructor for Firebase API
+    }
+
+    public Favourite(String offerKey) {
         this.offerKey = offerKey;
-        this.offerCity = offerCity;
     }
 
     public String getOfferKey() {
         return offerKey;
     }
 
-    public String getOfferCity() {
-        return offerCity;
+    public void setOfferKey(String offerKey) {
+        this.offerKey = offerKey;
     }
+
 }
