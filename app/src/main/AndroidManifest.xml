@@ -37,6 +37,13 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".moreUserInformation"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
         <service android:name=".RequestNotifications"
             android:enabled="true"
             android:exported="true">

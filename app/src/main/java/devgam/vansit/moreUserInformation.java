@@ -3,13 +3,12 @@ package devgam.vansit;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,94 +26,110 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Users;
 
-public class MoreOffers extends Fragment {
-
+public class moreUserInformation extends AppCompatActivity {
 
     private ImageView userImage;
-    private TextView userName,userAge,userCity,userPhone;
-
+    private TextView userName, userAge, userCity, userCall;
     private ListView listView;
     private ArrayList<Offers> offerList;// this will be refilled with Offers each time a User change City Filter
     private ArrayAdapter offerAdapter;
 
-    Users userDriver = null;
-    FragmentManager fragmentManager;// this is used for the ChangeFrag method
+    //Users userDriver = null;
+    Users userDriver;
 
-    public MoreOffers() {
-        // Required empty public constructor
-    }
+
+
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_more_user_information);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-    }
+        userImage = (ImageView) findViewById(R.id.more_user_information_img);
+        userName = (TextView) findViewById(R.id.more_user_information_name);
+        userAge = (TextView) findViewById(R.id.more_user_information_age);
+        userCity = (TextView) findViewById(R.id.more_user_information_city);
+        listView = (ListView) findViewById(R.id.more_user_information_list);
+        userCall = (TextView) findViewById(R.id.more_user_information_call_text);
+        offerAdapter = new moreUserInformation.itemsAdapter(this);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        Bundle bundle = this.getArguments();
+        try {
+            Intent intent = getIntent();
+            Bundle bundle = intent.getExtras();
+            userDriver = (Users) bundle.getSerializable("userDriver");
+        } catch (Exception e){
+
+        }
+
+        /*Bundle bundle = this.getArguments();
         if (bundle != null)
         {
             userDriver = (Users) bundle.getSerializable("userDriver");
-        }
-        return inflater.inflate(R.layout.fragment_more_offers, container, false);
+        }*/
+
+        //offerAdapter = new itemsAdapter(this);
+        setUpInfo();
+
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });*/
     }
 
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-        userImage = (ImageView) getActivity().findViewById(R.id.moreOffers_img);
-        userName = (TextView) getActivity().findViewById(R.id.moreOffers_name);
-        userAge = (TextView) getActivity().findViewById(R.id.moreOffers_age);
-        userCity = (TextView) getActivity().findViewById(R.id.moreOffers_city);
-        userPhone = (TextView) getActivity().findViewById(R.id.moreOffers_phone);
-        listView = (ListView) getActivity().findViewById(R.id.moreOffers_offersList);
-        offerAdapter = new itemsAdapter(getContext());
-        fragmentManager = getActivity().getSupportFragmentManager();
-        setUpInfo();
-    }
-    void setUpInfo()
-    {
-        if(!Util.IS_USER_CONNECTED)
-        {
+    void setUpInfo() {
+        if (!Util.IS_USER_CONNECTED) {
             // error msg
             return;
         }
-        final ProgressDialog progressDialog = new ProgressDialog(getContext(),ProgressDialog.STYLE_SPINNER);
+        final ProgressDialog progressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
 
+        //Temp :
+        /*userDriver = new Users();
+        userDriver.setGender("female");
+        userDriver.setFirstName("Ana");
+        userDriver.setLastName("Esam");
+        userDriver.setDateYear("1995");
+        userDriver.setDateMonth("10");
+        userDriver.setDateDay("3");
+        userDriver.setCity("Amman");
+        userDriver.setPhone("0780998168");*/
+        //End of Temp
 
         if (userDriver.getGender().equals("male"))
             userImage.setImageResource(R.drawable.ic_user_male);
         else
             userImage.setImageResource(R.drawable.ic_user_female);
 
-        userName.setText(userDriver.getFirstName()+" "+userDriver.getLastName());
+        userName.setText(userDriver.getFirstName() + " " + userDriver.getLastName());
 
-        int age =  Util.yearNow - Integer.parseInt(userDriver.getDateYear()) ;
-        age = (Util.monthNow > Integer.parseInt(userDriver.getDateMonth()) ? age : age -1 );
+        int age = Util.yearNow - Integer.parseInt(userDriver.getDateYear());
+        age = (Util.monthNow > Integer.parseInt(userDriver.getDateMonth()) ? age : age - 1);
         userAge.setText("Age is " + age + " years old");
 
         userCity.setText("City: " + userDriver.getCity());
 
-        userPhone.setText("Phone: "+ userDriver.getPhone());
-        userPhone.setOnClickListener(new View.OnClickListener() {
+        //userPhone.setText("Phone: "+ userDriver.getPhone());
+        userCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:"+userDriver.getPhone()));
+                intent.setData(Uri.parse("tel:" + userDriver.getPhone()));
                 startActivity(intent);
             }
         });
 
-        if(offerList == null)
-        {
+
+        if(offerList == null) {
             Util.ProgDialogStarter(progressDialog,getResources().getString(R.string.loading));
             offerList = new ArrayList<>();
 
@@ -128,7 +143,7 @@ public class MoreOffers extends Fragment {
                 {
                     if(!dataSnapshot.exists())// This User have no offer
                     {
-                        Util.makeToast(getActivity(), userDriver.getFirstName()+" Does not have any Offers");
+                        Util.makeToast(getApplicationContext(), userDriver.getFirstName()+" Does not have any Offers");
                     }
                     else {
                         for (DataSnapshot offers : dataSnapshot.getChildren()) {
@@ -167,7 +182,6 @@ public class MoreOffers extends Fragment {
         }
 
 
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
@@ -183,7 +197,7 @@ public class MoreOffers extends Fragment {
                 offerInfoPage.setArguments(bundle);
                 //Log.v("Main","Sending to OfferInfo: "+offerList.get(position).getTitle());
 
-                Util.ChangeFrag(offerInfoPage,fragmentManager);
+                //Util.ChangeFrag(offerInfoPage,fragmentManager);
             }
         });
     }
@@ -191,9 +205,8 @@ public class MoreOffers extends Fragment {
     private class itemsAdapter extends ArrayAdapter<Offers>
     {
         Context context;
-        itemsAdapter(Context c)
-        {
-            super(c, R.layout.fragment_main_listview_items, offerList);
+        itemsAdapter(Context c) {
+            super(c, R.layout.activity_more_user_information_list_item, offerList);
             this.context = c;
         }
 
@@ -203,18 +216,18 @@ public class MoreOffers extends Fragment {
         {
             final Main.ViewHolder holder = new Main.ViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowItem = inflater.inflate(R.layout.fragment_more_offers_listview_items, parent, false);
+            View rowItem = inflater.inflate(R.layout.activity_more_user_information_list_item, parent, false);
 
             Offers tempOffer = offerList.get(position);
 
-            holder.Title = (TextView) rowItem.findViewById(R.id.moreOffers_items_TitleData);
+            holder.Title = (TextView) rowItem.findViewById(R.id.more_user_information_list_items_title);
             holder.Title.setText(tempOffer.getTitle());
 
-            holder.City = (TextView) rowItem.findViewById(R.id.moreOffers_items_cityData);
+            holder.City = (TextView) rowItem.findViewById(R.id.more_user_information_list_items_city);
             holder.City.setText(tempOffer.getCity());
 
-            holder.typeIcon = (ImageView) rowItem.findViewById(R.id.moreOffers_items_typeIcon);
-            holder.typeIcon.setImageDrawable(Util.getDrawableResource(getActivity(), Util.changeIcon(tempOffer.getType())));
+            holder.typeIcon = (ImageView) rowItem.findViewById(R.id.more_user_information_list_item_img);
+            holder.typeIcon.setImageDrawable(Util.getDrawableResource(moreUserInformation.this, Util.changeIcon(tempOffer.getType())));
             return rowItem;
         }
         @Override
@@ -236,4 +249,5 @@ public class MoreOffers extends Fragment {
         TextView Title, City;
         ImageView typeIcon;
     }
+
 }
