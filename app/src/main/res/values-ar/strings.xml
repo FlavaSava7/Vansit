@@ -60,5 +60,20 @@
     <string name="sign_up_login_link">تمتلك حساب بالفعل؟ ادخل الآن</string>
     <string name="sign_up_title">سجل</string>
     <string name="title_activity_login"></string>
+    <string name="user_rate_1">سيء</string>
+    <string name="user_rate_2">عادي</string>
+    <string name="user_rate_3">جيد</string>
+    <string name="user_rate_4">جيد جدا</string>
+    <string name="user_rate_5">ممتاز</string>
+    <string name="user_rating">تقييم المستخدم :</string>
+    <string name="view_requests_address"></string>
+    <string name="user_information_age">العمر هو</string>
+    <string name="user_information_home_city">يسكن في</string>
+    <string name="price_rate_1">رخيص جدا</string>
+    <string name="price_rate_2">رخيص</string>
+    <string name="price_rate_3">عادي</string>
+    <string name="price_rate_4">غالي</string>
+    <string name="price_rate_5">غالي جدا</string>
+    <string name="price_rating">تقييم السعر :</string>
 
 </resources>

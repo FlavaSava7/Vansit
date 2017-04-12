@@ -132,6 +132,19 @@
     <string name="user_information_age">Age is  </string>
 
 
+    <string name="user_rate_5">Excellent</string>
+    <string name="user_rate_4">Very Good</string>
+    <string name="user_rate_3">Good</string>
+    <string name="user_rate_2">Not Bad</string>
+    <string name="user_rate_1">Bad</string>
+
+    <string name="price_rate_1">Very Cheap</string>
+    <string name="price_rate_2">Cheap</string>
+    <string name="price_rate_3">Normal</string>
+    <string name="price_rate_4">Expensive</string>
+    <string name="price_rate_5">Very Expensive</string>
+
+
     <!-- TODO: String Array for spinners -->
     <string-array name="city_list">
         <item>Select City</item>

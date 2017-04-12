@@ -130,6 +130,7 @@
                         android:numStars="5"
                         android:stepSize="1"
                         android:rating="0"
+                        android:isIndicator="true"
                         style="@style/user_rating_small_style" />
 
                     <TextView
@@ -173,6 +174,7 @@
                         android:numStars="5"
                         android:stepSize="1"
                         android:rating="0"
+                        android:isIndicator="true"
                         style="@style/price_rating_small_style"
                         />
 
@@ -289,6 +291,7 @@
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
+
 
     <include layout="@layout/content_more_user_information" />
 

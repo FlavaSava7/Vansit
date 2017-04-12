@@ -81,7 +81,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/more_user_information_list_items_city"
-                            android:layout_weight="1"
                             android:textSize="12sp"
                             android:layout_marginLeft="@dimen/views_top_margin"
                             android:layout_marginRight="@dimen/views_top_margin" />
@@ -110,10 +109,9 @@
                             android:textStyle="normal|bold"
                             android:textSize="12sp" />
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/more_user_information_list_items_desc"
-                            android:layout_weight="1"
                             android:textSize="12sp"
                             android:maxLines="1"
                             android:singleLine="true" />

@@ -490,4 +490,29 @@ public class Util
         }).start();
     }
 
+    static String getRateDesc(Activity activity, int type, int rate){
+        String desc = "";
+        //Type 1 : user rate
+        if(type == 1)
+            switch (rate){
+                case 1 : desc = activity.getResources().getString(R.string.user_rate_1) ; break;
+                case 2 : desc = activity.getResources().getString(R.string.user_rate_2) ; break;
+                case 3 : desc = activity.getResources().getString(R.string.user_rate_3) ; break;
+                case 4 : desc = activity.getResources().getString(R.string.user_rate_4) ; break;
+                case 5 : desc = activity.getResources().getString(R.string.user_rate_5) ; break;
+            }
+
+        //Type 2 : user rate
+        if(type == 2)
+            switch (rate){
+                case 1 : desc = activity.getResources().getString(R.string.price_rate_1) ; break;
+                case 2 : desc = activity.getResources().getString(R.string.price_rate_2) ; break;
+                case 3 : desc = activity.getResources().getString(R.string.price_rate_3) ; break;
+                case 4 : desc = activity.getResources().getString(R.string.price_rate_4) ; break;
+                case 5 : desc = activity.getResources().getString(R.string.price_rate_5) ; break;
+            }
+
+        return desc;
+    }
+
 }
