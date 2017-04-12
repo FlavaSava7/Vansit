@@ -1,12 +1,10 @@
 package devgam.vansit;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,7 +24,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import devgam.vansit.JSON_Classes.Requests;
 import devgam.vansit.JSON_Classes.Users;
 
 
@@ -277,6 +274,7 @@ public class MainController extends AppCompatActivity
             nav_Menu.findItem(R.id.nav_requests).setVisible(false);
         }
     }
+
     //to set data to views after data set it one time
     private void setDataToViews()
     {

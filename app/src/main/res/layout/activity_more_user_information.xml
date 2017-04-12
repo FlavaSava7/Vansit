@@ -17,7 +17,7 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -70,7 +70,7 @@
                             android:layout_marginTop="@dimen/views_margin" />
 
                         <TextView
-                            android:text="TextView"
+                            android:text="@string/user_information_home_city"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/more_user_information_age"
@@ -85,7 +85,7 @@
                             android:layout_marginTop="@dimen/views_top_margin" />
 
                         <TextView
-                            android:text="TextView"
+                            android:text="@string/user_information_age"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/more_user_information_city"
@@ -192,7 +192,8 @@
                     android:weightSum="1"
                     android:layout_weight="0.5"
                     android:layout_marginLeft="@dimen/views_margin_xl"
-                    android:layout_marginRight="@dimen/views_margin_xl">
+                    android:layout_marginRight="@dimen/views_margin_xl"
+                    android:layout_marginBottom="@dimen/views_margin">
 
                     <LinearLayout
                         android:orientation="horizontal"
@@ -279,7 +280,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                android:visibility="invisible" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>

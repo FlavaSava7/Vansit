@@ -53,7 +53,7 @@
             android:textStyle="normal|bold" />
 
         <TextView
-            android:text="Age : "
+            android:text="@string/user_information_age"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/user_information_age"

@@ -104,6 +104,8 @@
     <string name="user_rating">User Rating :</string>
     <string name="price_rating">Price Rating :</string>
     <string name="add_rate">Add Rate</string>
+    <string name="user_information_home_city">Living in </string>
+    <string name="user_information_age">Age is  </string>
 
 
 
