@@ -1,7 +1,9 @@
 package devgam.vansit;
+import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -17,8 +19,6 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import devgam.vansit.JSON_Classes.Requests;
 import devgam.vansit.JSON_Classes.Users;
 
 
@@ -36,23 +37,48 @@ public class MainController extends AppCompatActivity
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
     DrawerLayout drawer;
     FirebaseAuth firebaseAuth;
-    DatabaseReference mRef;
-    String tempUID;
     TextView name, email;
     ImageView img;
     public static NavigationView globalNavigationView;//used to get navigation view from other fragments
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if(intent.hasExtra(RequestNotifications.TYPE_OF_SERVE))// did we receive a notification
+        {
+            String serveType = intent.getStringExtra(RequestNotifications.TYPE_OF_SERVE);
+            String userKey = intent.getStringExtra(RequestNotifications.USER_KEY);
+            switch (serveType)
+            {
+                case RequestNotifications.ASK_TO_SERVE : Util.ChangeFrag(new addRequest(),fragmentManager);
+                    break;
+                case RequestNotifications.ACCEPTED_SERVE :
+                    AcceptedRequest acceptedRequest = new AcceptedRequest();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(RequestNotifications.USER_KEY,userKey);
+                    acceptedRequest.setArguments(bundle);
+                    Util.ChangeFrag(acceptedRequest,fragmentManager);
+
+                    break;
+                case RequestNotifications.DECLINED_SERVE : Util.ChangeFrag(new Main(),fragmentManager);
+                    break;
+            }
+
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         fragmentManager  = getSupportFragmentManager();
 
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -80,15 +106,51 @@ public class MainController extends AppCompatActivity
 
         // to check for the first time if we have internet , then internet listener will keep checking
         if(Util.CheckConnection(this)) //INTERNET IS ON
+        {
             Util.IS_USER_CONNECTED =true;
+            //Log.v("Fragment:", "MainActivity : NETWORK(18 Api) IS ");
+        }
         else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN_MR2)
         {
             Util.IS_USER_CONNECTED =Util.isOnlineApi18(this);
-            //Log.v("Fragment:", "MainActivity : NETWORK(18 Api) IS " + ApplicationLinking.JuBooks_isUserConnected);
+            //Log.v("Fragment:", "MainActivity : NETWORK(18 Api) IS ");
         }
 
-        Main mainPage = new Main();
-        Util.ChangeFrag(mainPage,fragmentManager);
+        Bundle bundle = getIntent().getExtras();
+        if(bundle!=null)// did we receive a notification
+        {
+            String serveType = bundle.getString(RequestNotifications.TYPE_OF_SERVE);
+            String userKey = bundle.getString(RequestNotifications.USER_KEY);
+            if(serveType!=null)
+            {
+                switch (serveType)
+                {
+                    case RequestNotifications.ASK_TO_SERVE : Util.ChangeFrag(new addRequest(),fragmentManager);
+                        break;
+                    case RequestNotifications.ACCEPTED_SERVE :
+                        AcceptedRequest acceptedRequest = new AcceptedRequest();
+                        Bundle bundle2 = new Bundle();
+                        bundle2.putString(RequestNotifications.USER_KEY,userKey);
+                        acceptedRequest.setArguments(bundle2);
+                        Util.ChangeFrag(acceptedRequest,fragmentManager);
+                        break;
+                    case RequestNotifications.DECLINED_SERVE : Util.ChangeFrag(new Main(),fragmentManager);
+                        break;
+                }
+            }
+            else
+            {
+                Main mainPage = new Main();
+                Util.ChangeFrag(mainPage,fragmentManager);
+            }
+
+        }
+        else
+        {
+            Main mainPage = new Main();
+            Util.ChangeFrag(mainPage,fragmentManager);
+        }
+
         //Log.v("Main:","Util.IS_USER_CONNECTED: "+Util.IS_USER_CONNECTED);
 
         hideItem();
@@ -96,24 +158,22 @@ public class MainController extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        if (drawer.isDrawerOpen(GravityCompat.START))
+        {
             drawer.closeDrawer(GravityCompat.START);
         }if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             finish();
+
         } else {
             super.onBackPressed();
         }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -123,7 +183,7 @@ public class MainController extends AppCompatActivity
         int id = item.getItemId();
         /**
          *
-         * Check what ID user clicked (change IDs in activity_main_drawer.xml)
+         * Check what ID User clicked (change IDs in activity_main_drawer.xml)
          * Then navigate to the selected Page
          * each time u need to create new instance and call ChangeFrag method
          */
@@ -141,8 +201,8 @@ public class MainController extends AppCompatActivity
             Util.ChangeFrag(myOffers, fragmentManager);
             drawer.closeDrawer(GravityCompat.START);
         } else  if(id == R.id.nav_fav) {
-            favorite favorite = new favorite();
-            Util.ChangeFrag(favorite, fragmentManager);
+            favourite favourite = new favourite();
+            Util.ChangeFrag(favourite, fragmentManager);
             drawer.closeDrawer(GravityCompat.START);
             return true;
         } else  if(id == R.id.nav_rec) {
@@ -163,6 +223,11 @@ public class MainController extends AppCompatActivity
             email.setVisibility(View.INVISIBLE);
             img.setVisibility(View.INVISIBLE);
             return true;
+        }else  if(id == R.id.nav_requests) {
+            ViewRequests viewRequests = new ViewRequests();
+            Util.ChangeFrag(viewRequests, fragmentManager);
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
         }
 
 
@@ -174,13 +239,14 @@ public class MainController extends AppCompatActivity
     {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu nav_Menu = navigationView.getMenu();
-        if (Util.isLogged()) {//user is logged in
+        if (Util.isLogged()) {//User is logged in
             nav_Menu.findItem(R.id.nav_login).setVisible(false);
             nav_Menu.findItem(R.id.nav_rec).setVisible(true);
             nav_Menu.findItem(R.id.nav_fav).setVisible(true);
             nav_Menu.findItem(R.id.nav_my_account).setVisible(true);
             nav_Menu.findItem(R.id.nav_logout).setVisible(true);
             nav_Menu.findItem(R.id.nav_my_offers).setVisible(true);
+            nav_Menu.findItem(R.id.nav_requests).setVisible(true);
         } else {
             nav_Menu.findItem(R.id.nav_login).setVisible(true);
             nav_Menu.findItem(R.id.nav_rec).setVisible(false);
@@ -188,17 +254,19 @@ public class MainController extends AppCompatActivity
             nav_Menu.findItem(R.id.nav_my_account).setVisible(false);
             nav_Menu.findItem(R.id.nav_logout).setVisible(false);
             nav_Menu.findItem(R.id.nav_my_offers).setVisible(false);
+            nav_Menu.findItem(R.id.nav_requests).setVisible(false);
         }
     }
     public static void GlobalHideItem(Menu nav_Menu)
     {
-        if (Util.isLogged()) {//user is logged in
+        if (Util.isLogged()) {//User is logged in
             nav_Menu.findItem(R.id.nav_login).setVisible(false);
             nav_Menu.findItem(R.id.nav_rec).setVisible(true);
             nav_Menu.findItem(R.id.nav_fav).setVisible(true);
             nav_Menu.findItem(R.id.nav_my_account).setVisible(true);
             nav_Menu.findItem(R.id.nav_logout).setVisible(true);
             nav_Menu.findItem(R.id.nav_my_offers).setVisible(true);
+            nav_Menu.findItem(R.id.nav_requests).setVisible(true);
         } else {
             nav_Menu.findItem(R.id.nav_login).setVisible(true);
             nav_Menu.findItem(R.id.nav_rec).setVisible(false);
@@ -206,6 +274,7 @@ public class MainController extends AppCompatActivity
             nav_Menu.findItem(R.id.nav_my_account).setVisible(false);
             nav_Menu.findItem(R.id.nav_logout).setVisible(false);
             nav_Menu.findItem(R.id.nav_my_offers).setVisible(false);
+            nav_Menu.findItem(R.id.nav_requests).setVisible(false);
         }
     }
     //to set data to views after data set it one time
@@ -215,7 +284,7 @@ public class MainController extends AppCompatActivity
                 getReference(Util.RDB_USERS + "/" +
                         FirebaseAuth.getInstance().getCurrentUser().getUid());
         //temp code:
-        mRef.addValueEventListener(new ValueEventListener() {
+        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
@@ -255,7 +324,7 @@ public class MainController extends AppCompatActivity
                 getReference(Util.RDB_USERS + "/" +
                         FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        mRef.addValueEventListener(new ValueEventListener() {
+        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
@@ -286,5 +355,11 @@ public class MainController extends AppCompatActivity
         name.setVisibility(View.VISIBLE);
         email.setVisibility(View.VISIBLE);
         img.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
     }
 }

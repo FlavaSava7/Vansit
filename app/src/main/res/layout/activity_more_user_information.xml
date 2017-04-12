@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="devgam.vansit.moreUserInformation">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_below="@+id/more_user_information_img"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="40dp">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                    android:layout_width="139dp"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_user_male"
+                    android:id="@+id/user_information_img"
+                    android:padding="10dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true" />
+
+                    <TextView
+                    android:text="TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/more_user_information_name"
+                    android:textColor="@color/editText_background"
+                    android:layout_below="@+id/more_user_information_img"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textSize="24sp"
+                    android:textStyle="normal|bold"
+                        android:layout_marginTop="@dimen/views_margin" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/views_top_margin">
+
+                <TextView
+                    android:text="@string/user_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:textStyle="normal|bold"
+                    android:textAlignment="center"
+                    android:layout_marginLeft="@dimen/views_top_margin"
+                    android:layout_marginRight="@dimen/views_top_margin"
+                    android:textColor="@color/cardview_light_background" />
+
+                    <RatingBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/more_user_information_user_rate"
+                        android:numStars="5"
+                        android:stepSize="1"
+                        android:rating="0"
+                        style="@style/user_rating_small_style" />
+
+                    <TextView
+                    android:id="@+id/more_user_information_user_rate_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                        android:gravity="center"
+                    android:textSize="10sp"
+                    android:textStyle="normal|bold"
+                    android:layout_marginLeft="@dimen/views_top_margin"
+                    android:layout_marginRight="@dimen/views_top_margin"
+                    android:textAlignment="center"
+                        android:textColor="@color/cardview_light_background" />
+            </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/views_top_margin">
+
+                    <TextView
+                        android:text="@string/price_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textSize="12sp"
+                        android:textStyle="normal|bold"
+                        android:textAlignment="center"
+                        android:layout_marginLeft="@dimen/views_top_margin"
+                        android:layout_marginRight="@dimen/views_top_margin"
+                        android:textColor="@color/cardview_light_background" />
+
+                    <RatingBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/more_user_information_price_rate"
+                        android:numStars="5"
+                        android:stepSize="1"
+                        android:rating="0"
+                        style="@style/price_rating_small_style"
+                        />
+
+                    <TextView
+                        android:id="@+id/more_user_information_price_rate_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textSize="10sp"
+                        android:textStyle="normal|bold"
+                        android:layout_marginLeft="@dimen/views_top_margin"
+                        android:layout_marginRight="@dimen/views_top_margin"
+                        android:textAlignment="center"
+                        android:textColor="@color/cardview_light_background" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="1"
+                    android:layout_weight="0.5"
+                    android:layout_marginLeft="@dimen/views_margin_xl"
+                    android:layout_marginRight="@dimen/views_margin_xl">
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.9"
+                        android:id="@+id/more_user_information_call_layout"
+                        android:layout_marginLeft="@dimen/views_margin"
+                        android:layout_marginRight="@dimen/views_margin">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            app:srcCompat="@drawable/ic_call"
+                            android:drawableTint="@color/gray"
+                            android:drawableTintMode="src_atop"
+                            android:id="@+id/more_user_information_call_img"
+                            android:tint="@color/common_google_signin_btn_text_dark_pressed" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/list_item_call_text"
+                            android:id="@+id/more_user_information_call_text"
+                            android:textAllCaps="true"
+                            android:textStyle="normal|bold"
+                            android:textAppearance="@style/TextAppearance.AppCompat"
+                            android:textSize="12sp"
+                            android:textColor="@color/common_google_signin_btn_text_dark_pressed"
+                            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                            android:layout_weight="0.45"
+                            android:gravity="center_vertical"
+                            android:clickable="false"
+                            android:longClickable="false" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/more_user_information_profile_layout"
+                        android:layout_marginLeft="@dimen/views_margin"
+                        android:layout_marginRight="@dimen/views_margin">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            app:srcCompat="@drawable/ic_person"
+                            android:drawableTint="@color/gray"
+                            android:drawableTintMode="src_atop"
+                            android:tint="@color/common_google_signin_btn_text_dark_pressed" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:text="@string/list_item_profile_text"
+                            android:id="@+id/more_user_information_profile_text"
+                            android:textAllCaps="true"
+                            android:textStyle="normal|bold"
+                            android:layout_weight="0.45"
+                            android:textAppearance="@style/TextAppearance.AppCompat"
+                            android:textSize="12sp"
+                            android:textColor="@color/common_google_signin_btn_text_dark_pressed"
+                            android:drawableTint="@color/gray"
+                            android:drawableTintMode="src_atop"
+                            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                            android:textAlignment="gravity"
+                            android:gravity="center_vertical" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_anchor="@id/app_bar"
+        app:layout_anchorGravity="bottom|end"
+        app:srcCompat="@drawable/ic_user_rating"
+        app:backgroundTint="@color/fab_add_offer" />
+
+    <include layout="@layout/content_more_user_information" />
+
+</android.support.design.widget.CoordinatorLayout>

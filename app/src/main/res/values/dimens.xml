@@ -13,10 +13,12 @@
     <dimen name="fab_margin3">144dp</dimen>
 
     <!-- App Dimen add for layouts -->
-    <dimen name="views_margin_xl"> 30dp </dimen>
-    <dimen name="views_margin"> 15dp </dimen>
-    <dimen name="views_button_margin"> 10dp </dimen>
-    <dimen name="views_top_margin"> 5dp </dimen>
-    <dimen name="views_margin_s"> 2dp </dimen>
+    <dimen name="views_margin_xl">30dp</dimen>
+    <dimen name="views_margin">15dp</dimen>
+    <dimen name="views_button_margin">10dp</dimen>
+    <dimen name="views_top_margin">5dp</dimen>
+    <dimen name="views_margin_s">2dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 
 </resources>

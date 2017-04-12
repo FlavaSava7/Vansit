@@ -25,6 +25,11 @@
             android:icon="@drawable/ic_menu_fav"
             android:title="@string/menu_fav_text" />
 
+        <item
+            android:id="@+id/nav_info"
+            android:icon="@drawable/ic_menu_fav"
+            android:title="user info test" />
+
     </item>
 
     <item android:title="@string/menu_account_text">
