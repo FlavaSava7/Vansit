@@ -113,7 +113,7 @@ public class MoreOffers extends Fragment {
             }
         });
 
-        if(offerList==null)
+        if(offerList == null)
         {
             Util.ProgDialogStarter(progressDialog,getResources().getString(R.string.loading));
             offerList = new ArrayList<>();

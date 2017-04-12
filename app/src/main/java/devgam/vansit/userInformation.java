@@ -3,11 +3,9 @@ package devgam.vansit;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.util.DebugUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -66,7 +64,7 @@ public class userInformation extends Dialog implements
         cityText = (TextView) findViewById(R.id.user_information_city);
         moreOffersText = (TextView) findViewById(R.id.user_information_more);
 
-        userImg = (ImageView) findViewById(R.id.user_information_img);
+        userImg = (ImageView) findViewById(R.id.more_user_information_img);
 
         moreOffersText.setOnClickListener(this);
 
@@ -102,11 +100,16 @@ public class userInformation extends Dialog implements
     @Override
     public void onClick(View v)
     {
-        MoreOffers moreOffersPage = new MoreOffers();
+        /*MoreOffers moreOffersPage = new MoreOffers();
         Bundle bundle = new Bundle();
         bundle.putSerializable("userDriver",tempUserDriver);
         moreOffersPage.setArguments(bundle);
         this.hide();
-        Util.ChangeFrag(moreOffersPage,tempFragmentManager);
+        Util.ChangeFrag(moreOffersPage,tempFragmentManager);*/
+
+
+        Intent intent = new Intent(c, moreUserInformation.class);
+        intent.putExtra("userDriver", tempUserDriver);
+        c.startActivity(intent);
     }
 }

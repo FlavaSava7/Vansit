@@ -32,8 +32,7 @@
                 android:layout_below="@+id/more_user_information_img"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="40dp">
+                android:layout_margin="@dimen/views_margin">
 
                 <LinearLayout
                     android:orientation="horizontal"
@@ -44,7 +43,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/ic_user_male"
-                    android:id="@+id/user_information_img"
+                    android:id="@+id/more_user_information_img"
                     android:padding="10dp"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true" />
@@ -52,7 +51,9 @@
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/views_margin"
+                        android:layout_marginBottom="@dimen/views_margin">
 
                         <TextView
                         android:text="TextView"
@@ -66,11 +67,10 @@
                             android:gravity="center"
                         android:textAppearance="@style/TextAppearance.AppCompat"
                         android:textSize="24sp"
-                        android:textStyle="normal|bold"
-                            android:layout_marginTop="@dimen/views_margin" />
+                        android:textStyle="normal|bold" />
 
                         <TextView
-                            android:text="@string/user_information_home_city"
+                            android:text="@string/user_information_age"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/more_user_information_age"
@@ -85,7 +85,7 @@
                             android:layout_marginTop="@dimen/views_top_margin" />
 
                         <TextView
-                            android:text="@string/user_information_age"
+                            android:text="@string/user_information_home_city"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/more_user_information_city"
@@ -96,8 +96,7 @@
                             android:gravity="center"
                             android:textAppearance="@style/TextAppearance.AppCompat"
                             android:textSize="14sp"
-                            android:textStyle="normal|bold"
-                            android:layout_marginTop="@dimen/views_top_margin" />
+                            android:textStyle="normal|bold" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -107,19 +106,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_margin="@dimen/views_top_margin">
+                    android:layout_marginLeft="@dimen/views_margin"
+                    android:layout_marginRight="@dimen/views_margin"
+                    android:weightSum="1"
+                    android:layout_marginTop="@dimen/views_top_margin">
 
-                <TextView
-                    android:text="@string/user_rating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textSize="12sp"
-                    android:textStyle="normal|bold"
-                    android:textAlignment="center"
-                    android:layout_marginLeft="@dimen/views_top_margin"
-                    android:layout_marginRight="@dimen/views_top_margin"
-                    android:textColor="@color/cardview_light_background" />
+                    <TextView
+                        android:text="@string/user_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textSize="12sp"
+                        android:textStyle="normal|bold"
+                        android:textAlignment="center"
+                        android:layout_marginLeft="@dimen/views_top_margin"
+                        android:layout_marginRight="@dimen/views_top_margin"
+                        android:textColor="@color/cardview_light_background" />
 
                     <RatingBar
                         android:layout_width="wrap_content"
@@ -148,7 +150,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_margin="@dimen/views_top_margin">
+                    android:layout_marginLeft="@dimen/views_margin"
+                    android:layout_marginRight="@dimen/views_margin"
+                    android:layout_marginTop="@dimen/views_top_margin">
 
                     <TextView
                         android:text="@string/price_rating"
@@ -242,7 +246,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            app:srcCompat="@drawable/ic_user_rating"
+                            app:srcCompat="@drawable/ic_rate"
                             android:drawableTint="@color/gray"
                             android:drawableTintMode="src_atop"
                             android:tint="@color/common_google_signin_btn_text_dark_pressed" />
@@ -252,7 +256,7 @@
                             android:layout_height="wrap_content"
                             android:clickable="false"
                             android:text="@string/add_rate"
-                            android:id="@+id/more_user_information_profile_text"
+                            android:id="@+id/more_user_information_rate"
                             android:textAllCaps="true"
                             android:textStyle="normal|bold"
                             android:layout_weight="0.45"

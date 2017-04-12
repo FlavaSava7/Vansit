@@ -228,6 +228,9 @@ public class MainController extends AppCompatActivity
             Util.ChangeFrag(viewRequests, fragmentManager);
             drawer.closeDrawer(GravityCompat.START);
             return true;
+        }else if(id == R.id.nav_info){
+            Intent intent = new Intent(this, moreUserInformation.class);
+            startActivity(intent);
         }
 
 
