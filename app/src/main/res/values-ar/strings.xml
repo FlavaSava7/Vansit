@@ -39,7 +39,7 @@
     <string name="user_information_title">الحساب</string>
     <string name="yes">نعم</string>
     <string name="prompt_password"></string>
-    <string name="add_offer_desc_text">الوصف</string>
+    <string name="add_offer_desc_text">"الوصف : "</string>
     <string name="add_offer_info_offer_text">الموقع ونوع المركبة</string>
     <string name="add_offer_info_user_text">المستخدم</string>
     <string name="add_offer_title_hint">مثال : نقل طلاب المدارس</string>

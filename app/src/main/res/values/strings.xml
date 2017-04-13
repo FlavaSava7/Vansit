@@ -81,7 +81,7 @@
 
     <string name="add_offer_title_text">Title </string>
     <string name="add_offer_title_hint">Example : Transport school students</string>
-    <string name="add_offer_desc_text">Description </string>
+    <string name="add_offer_desc_text">Description : </string>
     <string name="add_offer_desc_hint"> Here add your notes about this offer, like : \n - your work time  </string>
     <string name="add_offer_info_offer_text">Location and Type </string>
     <string name="add_offer_about_offer_text">About service </string>

@@ -113,7 +113,9 @@
                             android:textSize="12sp"
                             android:maxLines="1"
                             android:singleLine="false"
-                            android:lines="2" />
+                            android:lines="2"
+                            android:layout_marginLeft="@dimen/views_margin_s"
+                            android:layout_marginRight="@dimen/views_margin_s" />
 
                     </LinearLayout>
 
