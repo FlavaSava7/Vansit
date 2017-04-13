@@ -1,0 +1,199 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".userInformation"
+    android:background="@drawable/layout_bg_rating"
+    android:layout_marginRight="@dimen/views_margin_xl"
+    android:layout_marginLeft="@dimen/views_margin_xl"
+    android:paddingTop="@dimen/views_button_margin">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rating_dialog_name_text"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:layout_marginTop="@dimen/views_button_margin"
+            android:layout_marginBottom="@dimen/views_button_margin"
+            android:textStyle="normal|bold"
+            android:layout_marginRight="@dimen/views_margin_xl"
+            android:layout_marginLeft="@dimen/views_margin_xl"
+            android:textColor="@color/colorAccent" />
+
+        <TextView
+        android:text="@string/list_item_user_rating_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rating_dialog_user_rate_text"
+        android:textSize="14sp"
+        android:textStyle="normal|bold"
+        android:layout_marginLeft="@dimen/views_button_margin"
+        android:layout_marginRight="@dimen/views_button_margin" />
+
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rating_dialog_user_rate_bar"
+        android:numStars="5"
+        android:layout_gravity="center"
+        style="@style/user_rating_style"
+        android:layout_marginTop="@dimen/views_top_margin"
+        android:stepSize="1" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rating_dialog_user_rate_desc"
+        android:textAlignment="center"
+        android:textSize="12sp"
+        android:textColor="@color/colorAccent"
+        android:visibility="invisible" />
+
+        <TextView
+        android:text="@string/list_item_price_rating_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rating_dialog_price_rate_text"
+        android:textSize="14sp"
+        android:textStyle="normal|bold"
+        android:layout_marginLeft="@dimen/views_button_margin"
+        android:layout_marginRight="@dimen/views_button_margin"
+        android:layout_marginTop="@dimen/views_button_margin" />
+
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rating_dialog_price_rate_bar"
+        android:numStars="5"
+        android:layout_gravity="center"
+        style="@style/price_rating_style"
+        android:layout_marginTop="@dimen/views_top_margin"
+        android:stepSize="1" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rating_dialog_price_rate_desc"
+        android:textAlignment="center"
+        android:textSize="12sp"
+        android:layout_marginTop="@dimen/views_margin_s"
+        android:textColor="@color/colorAccent"
+        android:visibility="invisible" />
+
+        <Button
+            android:text="@string/add_rate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rating_dialog_add_rate_btn"
+            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+            android:layout_marginTop="@dimen/views_margin"
+            android:textSize="16sp"
+            android:layout_weight="1.09" />
+
+    </LinearLayout>
+
+</RelativeLayout>
+
+
+    <!--<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/views_button_margin"
+        tools:context="devgam.vansit.ratingDialog"
+        android:background="@drawable/layout_bg_rating"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/views_margin_xl"
+        android:layout_marginTop="@dimen/views_margin_xl"
+        android:weightSum="1"
+        android:layout_marginLeft="@dimen/views_margin_xl"
+        android:layout_marginRight="@dimen/views_margin_xl">
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rating_dialog_name_text"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:layout_marginTop="@dimen/views_button_margin"
+            android:layout_marginBottom="@dimen/views_button_margin"
+            android:textStyle="normal|bold"
+            android:layout_marginRight="@dimen/views_margin_xl"
+            android:layout_marginLeft="@dimen/views_margin_xl" />
+
+        <TextView
+            android:text="@string/list_item_user_rating_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rating_dialog_user_rate_text"
+            android:textSize="14sp"
+            android:textStyle="normal|bold"
+            android:layout_marginLeft="@dimen/views_top_margin"
+            android:layout_marginRight="@dimen/views_top_margin" />
+
+        <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rating_dialog_user_rate_bar"
+            android:numStars="5"
+            android:layout_gravity="center"
+            style="@style/user_rating_style"
+            android:layout_marginTop="@dimen/views_top_margin" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rating_dialog_user_rate_desc"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            android:layout_marginTop="@dimen/views_margin_s" />
+
+        <TextView
+            android:text="@string/list_item_price_rating_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rating_dialog_price_rate_text"
+            android:textSize="14sp"
+            android:textStyle="normal|bold"
+            android:layout_marginLeft="@dimen/views_top_margin"
+            android:layout_marginRight="@dimen/views_top_margin"
+            android:layout_marginTop="@dimen/views_button_margin" />
+
+        <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/rating_dialog_price_rate_bar"
+            android:numStars="5"
+            android:layout_gravity="center"
+            style="@style/price_rating_style"
+            android:layout_weight="2.92"
+            android:layout_marginTop="@dimen/views_top_margin" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rating_dialog_price_rate_desc"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            android:layout_marginTop="@dimen/views_margin_s" />
+
+    </LinearLayout>-->

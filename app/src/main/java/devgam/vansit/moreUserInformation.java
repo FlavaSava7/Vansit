@@ -3,18 +3,21 @@ package devgam.vansit;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -34,11 +37,12 @@ import devgam.vansit.JSON_Classes.Users;
 public class moreUserInformation extends AppCompatActivity {
 
     private ImageView userImage;
-    private TextView userName, userAge, userCity, userCall, userRatingDesc, priceRatingDesc;
+    private TextView userName, userAge, userCity,  userRatingDesc, priceRatingDesc;
     private ListView listView;
     private ArrayList<Offers> offerList;// this will be refilled with Offers each time a User change City Filter
     private ArrayAdapter offerAdapter;
     private RatingBar userRating, priceRating;
+    private LinearLayout callLayout, rateLayout;
 
     //Users userDriver = null;
     Users userDriver;
@@ -60,9 +64,10 @@ public class moreUserInformation extends AppCompatActivity {
         userRatingDesc = (TextView) findViewById(R.id.more_user_information_user_rate_desc);
         priceRatingDesc = (TextView) findViewById(R.id.more_user_information_price_rate_desc);
         listView = (ListView) findViewById(R.id.more_user_information_list);
-        userCall = (TextView) findViewById(R.id.more_user_information_call_text);
         userRating = (RatingBar) findViewById(R.id.more_user_information_user_rate);
         priceRating = (RatingBar) findViewById(R.id.more_user_information_price_rate);
+        callLayout = (LinearLayout) findViewById(R.id.more_user_information_call_layout);
+        rateLayout = (LinearLayout) findViewById(R.id.more_user_information_rate_layout);
         offerAdapter = new moreUserInformation.itemsAdapter(this);
 
         try {
@@ -128,12 +133,22 @@ public class moreUserInformation extends AppCompatActivity {
         priceRatingDesc.setText("("+priceRate+") "+Util.getRateDesc(this, 2, priceRate));
 
         //userPhone.setText("Phone: "+ userDriver.getPhone());
-        userCall.setOnClickListener(new View.OnClickListener() {
+        callLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:" + userDriver.getPhone()));
                 startActivity(intent);
+            }
+        });
+
+        final ratingDialog rateUser = new ratingDialog(this, userDriver);
+        rateLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                rateUser.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                rateUser.show();
             }
         });
 

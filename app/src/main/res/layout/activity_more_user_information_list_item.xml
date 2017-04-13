@@ -14,8 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/views_button_margin"
         android:layout_marginRight="@dimen/views_button_margin"
-        android:layout_marginTop="@dimen/views_button_margin"
-        >
+        android:layout_marginTop="@dimen/views_button_margin">
 
         <LinearLayout
             android:orientation="vertical"
@@ -24,13 +23,12 @@
 
             <TextView
                 android:text="TextView"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/more_user_information_list_items_title"
                 android:layout_alignParentTop="true"
                 android:layout_toRightOf="@+id/main_items_typeIcon"
                 android:layout_toEndOf="@+id/main_items_typeIcon"
-                android:layout_weight="1"
                 android:layout_marginRight="@dimen/views_margin"
                 android:layout_marginLeft="@dimen/views_margin"
                 android:layout_marginTop="@dimen/views_top_margin"
@@ -98,12 +96,12 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
+                        android:orientation="horizontal"
                         android:layout_marginTop="@dimen/views_margin_s">
 
                         <TextView
                             android:text="@string/add_offer_desc_text"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView3"
                             android:textStyle="normal|bold"
@@ -114,7 +112,8 @@
                             android:id="@+id/more_user_information_list_items_desc"
                             android:textSize="12sp"
                             android:maxLines="1"
-                            android:singleLine="true" />
+                            android:singleLine="false"
+                            android:lines="2" />
 
                     </LinearLayout>
 

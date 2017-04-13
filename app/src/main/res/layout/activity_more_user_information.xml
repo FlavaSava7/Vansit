@@ -241,7 +241,7 @@
                         android:orientation="horizontal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/more_user_information_profile_layout"
+                        android:id="@+id/more_user_information_rate_layout"
                         android:layout_marginLeft="@dimen/views_margin"
                         android:layout_marginRight="@dimen/views_margin">
 
