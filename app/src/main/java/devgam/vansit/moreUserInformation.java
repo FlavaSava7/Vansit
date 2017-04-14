@@ -266,6 +266,9 @@ public class moreUserInformation extends AppCompatActivity {
             holder.City = (TextView) rowItem.findViewById(R.id.more_user_information_list_items_city);
             holder.City.setText(tempOffer.getCity());
 
+            holder.Type = (TextView) rowItem.findViewById(R.id.more_user_information_list_items_type);
+            holder.Type.setText(tempOffer.getType());
+
             holder.Desc = (TextView) rowItem.findViewById(R.id.more_user_information_list_items_desc);
             holder.Desc.setText(tempOffer.getDescription());
 
@@ -289,7 +292,7 @@ public class moreUserInformation extends AppCompatActivity {
     static class ViewHolder
     {
         // this class is called in getView and assigned it all "items" layouts Views,for smooth scrolling
-        TextView Title, City, Desc;
+        TextView Title, City, Type, Desc;
         ImageView typeIcon;
     }
 

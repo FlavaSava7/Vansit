@@ -92,5 +92,6 @@
     <string name="Tafila">الطفيلة</string>
     <string name="Zarqa">الزرقاء</string>
     <string name="select_city">اختيار المدينة</string>
+    <string name="list_item_type_text">النوع :</string>
 
 </resources>

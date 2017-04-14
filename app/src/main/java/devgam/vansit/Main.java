@@ -410,6 +410,9 @@ public class Main extends Fragment implements View.OnClickListener{
                 holder.City = (TextView) rowItem.findViewById(R.id.main_items_cityData);
                 holder.City.setText(tempOffer.getCity());
 
+                holder.Type = (TextView) rowItem.findViewById(R.id.main_items_typeData);
+                holder.Type.setText(tempOffer.getType());
+
                 holder.typeIcon = (ImageView) rowItem.findViewById(R.id.main_items_typeIcon);
                 holder.typeIcon.setImageDrawable(Util.getDrawableResource(getActivity(), Util.changeIcon(tempOffer.getType())));
 
@@ -512,7 +515,7 @@ public class Main extends Fragment implements View.OnClickListener{
 
     static class ViewHolder {
         // this class is called in getView and assigned it all "items" layouts Views,for smooth scrolling
-        TextView Title, City, ratingService, ratingPrice;
+        TextView Title, City, Type, ratingService, ratingPrice;
         ImageView typeIcon;
         private RatingBar userRating, priceRating;
 

@@ -117,10 +117,9 @@ public class ratingDialog extends Dialog implements
                         if (canRate) {
                             ratedForList.add(tempUserDriver.getUserID());
                             commitRating(ratedForList, firebaseAuth.getCurrentUser().getUid());//apply rate and add this driver to User
+
                         }
-
                     }
-
                 }
 
                 @Override

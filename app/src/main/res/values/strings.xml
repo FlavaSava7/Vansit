@@ -50,6 +50,7 @@
     <string name="my_account_homeCity_text">Home city :</string>
 
     <string name="list_item_city_text">City : </string>
+    <string name="list_item_type_text">Type : </string>
     <string name="list_item_user_rating_text">User Rating : </string>
     <string name="list_item_price_rating_text">Price Rating : </string>
     <string name="list_item_delete_text">Delete </string>
