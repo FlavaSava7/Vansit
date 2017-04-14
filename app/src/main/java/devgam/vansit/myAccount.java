@@ -42,6 +42,8 @@ public class myAccount extends Fragment implements View.OnClickListener{
     private Drawable errorIcon;
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
 
+
+
     FirebaseAuth firebaseAuth;
     DatabaseReference mRef;
     String tempUID;

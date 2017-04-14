@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -89,9 +90,10 @@ public class ratingDialog extends Dialog implements
     public void onClick(View v){
         if(v == addRateButton) {
 
+            //Check is now before dialog shown
+            /*if (!Util.isLogged()) // User is not logged
+                return;*/
 
-            if (!Util.isLogged()) // User is not logged
-                return;
 
             final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
             if (tempUserDriver.getUserID().equals(firebaseAuth.getCurrentUser().getUid()))// User cant vote for self.

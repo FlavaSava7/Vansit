@@ -1,12 +1,13 @@
 package devgam.vansit;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -76,6 +77,7 @@ public class MainController extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         fragmentManager  = getSupportFragmentManager();
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -123,8 +125,7 @@ public class MainController extends AppCompatActivity
             String userKey = bundle.getString(RequestNotifications.USER_KEY);
             if(serveType!=null)
             {
-                switch (serveType)
-                {
+                switch (serveType) {
                     case RequestNotifications.ASK_TO_SERVE : Util.ChangeFrag(new addRequest(),fragmentManager);
                         break;
                     case RequestNotifications.ACCEPTED_SERVE :
@@ -138,20 +139,16 @@ public class MainController extends AppCompatActivity
                         break;
                 }
             }
-            else
-            {
+            else {
                 Main mainPage = new Main();
                 Util.ChangeFrag(mainPage,fragmentManager);
             }
 
         }
-        else
-        {
+        else {
             Main mainPage = new Main();
             Util.ChangeFrag(mainPage,fragmentManager);
         }
-
-        //Log.v("Main:","Util.IS_USER_CONNECTED: "+Util.IS_USER_CONNECTED);
 
         hideItem();
     }
@@ -228,10 +225,10 @@ public class MainController extends AppCompatActivity
             Util.ChangeFrag(viewRequests, fragmentManager);
             drawer.closeDrawer(GravityCompat.START);
             return true;
-        }else if(id == R.id.nav_info){
+        }/*else if(id == R.id.nav_info){
             Intent intent = new Intent(this, moreUserInformation.class);
             startActivity(intent);
-        }
+        }*/
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

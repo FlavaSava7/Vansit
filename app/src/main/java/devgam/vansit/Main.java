@@ -32,6 +32,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -71,6 +72,8 @@ public class Main extends Fragment implements View.OnClickListener{
     private static String whichType="";// to give it a new value in a spinner to fetch new items
     private static ArrayList<String> allCities;//this will contain the values that are in strings.xml
     private static ArrayList<String> allTypes;//this will contain the values that are in strings.xml, used inside the getView to choose icon for type
+    String[] cityArray;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,6 +93,22 @@ public class Main extends Fragment implements View.OnClickListener{
     {
         super.onResume();
         Util.ChangePageTitle(getActivity(),R.string.menu_home_text);
+
+        cityArray = new String[]{
+                getResources().getString(R.string.select_city),
+                getResources().getString(R.string.Amman),
+                getResources().getString(R.string.Zarqa),
+                getResources().getString(R.string.Irbid),
+                getResources().getString(R.string.Ajloun),
+                getResources().getString(R.string.Aqaba),
+                getResources().getString(R.string.Jarash),
+                getResources().getString(R.string.Maan),
+                getResources().getString(R.string.Madaba),
+                getResources().getString(R.string.Mafraq),
+                getResources().getString(R.string.Balqa),
+                getResources().getString(R.string.Karak),
+                getResources().getString(R.string.Tafila)
+        };
 
         allCities  = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.city_list)));
         allTypes = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.type_list)));
@@ -174,6 +193,8 @@ public class Main extends Fragment implements View.OnClickListener{
 
 
 
+
+
         spinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             boolean stopAutoFiringCode=false;
@@ -241,7 +262,7 @@ public class Main extends Fragment implements View.OnClickListener{
     {
 
         //City
-        ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(),
+        ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item,allCities);
         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCity.setAdapter(cityAdapter);

@@ -8,7 +8,7 @@
     tools:context="devgam.vansit.moreUserInformation">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
+        android:id="@+id/more_user_app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
@@ -19,8 +19,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:contentScrim="?attr/colorPrimary" >
+            <!-- app:layout_scrollFlags="scroll|exitUntilCollapsed" -->
+
 
 
 
@@ -37,7 +38,8 @@
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/views_margin">
 
                     <ImageView
                     android:layout_width="wrap_content"
@@ -67,7 +69,8 @@
                             android:gravity="center"
                         android:textAppearance="@style/TextAppearance.AppCompat"
                         android:textSize="24sp"
-                        android:textStyle="normal|bold" />
+                        android:textStyle="normal|bold"
+                            android:singleLine="true" />
 
                         <TextView
                             android:text="@string/user_information_age"
@@ -280,14 +283,14 @@
             </LinearLayout>
 
 
-
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="wrap_content"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
-                android:visibility="invisible" />
+                android:visibility="visible"
+                />
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>

@@ -76,5 +76,21 @@
     <string name="price_rate_5">غالي جدا</string>
     <string name="price_rating">تقييم السعر :</string>
     <string name="add_rate">أضف تقييم</string>
+    <string name="main_show_more"></string>
+    <string name="user_not_logged">الرجاء تسجيل الدخول أولا قبل تقييم المستخدمين</string>
+    <string name="user_information_more_offers">مشاهدة المزيد</string>
+    <string name="Ajloun">عجلون</string>
+    <string name="Amman">عمّان</string>
+    <string name="Aqaba">العقبة</string>
+    <string name="Balqa">البلقاء</string>
+    <string name="Irbid">اربد</string>
+    <string name="Jarash">جرش</string>
+    <string name="Karak">الكرك</string>
+    <string name="Maan">معان</string>
+    <string name="Madaba">مادبا</string>
+    <string name="Mafraq">المفرق</string>
+    <string name="Tafila">الطفيلة</string>
+    <string name="Zarqa">الزرقاء</string>
+    <string name="select_city">اختيار المدينة</string>
 
 </resources>

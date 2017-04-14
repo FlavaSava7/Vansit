@@ -76,11 +76,11 @@ public class userInformation extends Dialog implements
             //set User age to text on dialog
             int age =  Util.yearNow - Integer.parseInt(tempUserAgeYear) ;
             age = (Util.monthNow > Integer.parseInt(tempUserAgeMonth) ? age : age -1 );
-            ageText.setText("Age is " + age + " years old");
+            ageText.setText(getContext().getResources().getString(R.string.user_information_age)+ " " + age );
 
             //set User name to text on dialog
             if(tempUserCity != "" || ! tempUserCity.isEmpty())
-                cityText.setText("Lives in " + tempUserCity );
+                cityText.setText(getContext().getResources().getString(R.string.user_information_home_city)+ " " + tempUserCity );
 
             if(!tempUserGender.isEmpty() || tempUserGender != ""){
                 if (tempUserGender.equals("male"))
