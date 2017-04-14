@@ -3,19 +3,23 @@ package devgam.vansit;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -33,10 +37,12 @@ import devgam.vansit.JSON_Classes.Users;
 public class moreUserInformation extends AppCompatActivity {
 
     private ImageView userImage;
-    private TextView userName, userAge, userCity, userCall;
+    private TextView userName, userAge, userCity,  userRatingDesc, priceRatingDesc;
     private ListView listView;
     private ArrayList<Offers> offerList;// this will be refilled with Offers each time a User change City Filter
     private ArrayAdapter offerAdapter;
+    private RatingBar userRating, priceRating;
+    private LinearLayout callLayout, rateLayout;
 
     //Users userDriver = null;
     Users userDriver;
@@ -55,8 +61,13 @@ public class moreUserInformation extends AppCompatActivity {
         userName = (TextView) findViewById(R.id.more_user_information_name);
         userAge = (TextView) findViewById(R.id.more_user_information_age);
         userCity = (TextView) findViewById(R.id.more_user_information_city);
+        userRatingDesc = (TextView) findViewById(R.id.more_user_information_user_rate_desc);
+        priceRatingDesc = (TextView) findViewById(R.id.more_user_information_price_rate_desc);
         listView = (ListView) findViewById(R.id.more_user_information_list);
-        userCall = (TextView) findViewById(R.id.more_user_information_call_text);
+        userRating = (RatingBar) findViewById(R.id.more_user_information_user_rate);
+        priceRating = (RatingBar) findViewById(R.id.more_user_information_price_rate);
+        callLayout = (LinearLayout) findViewById(R.id.more_user_information_call_layout);
+        rateLayout = (LinearLayout) findViewById(R.id.more_user_information_rate_layout);
         offerAdapter = new moreUserInformation.itemsAdapter(this);
 
         try {
@@ -93,17 +104,6 @@ public class moreUserInformation extends AppCompatActivity {
         }
         final ProgressDialog progressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
 
-        //Temp :
-        /*userDriver = new Users();
-        userDriver.setGender("female");
-        userDriver.setFirstName("Ana");
-        userDriver.setLastName("Esam");
-        userDriver.setDateYear("1995");
-        userDriver.setDateMonth("10");
-        userDriver.setDateDay("3");
-        userDriver.setCity("Amman");
-        userDriver.setPhone("0780998168");*/
-        //End of Temp
 
         if (userDriver.getGender().equals("male"))
             userImage.setImageResource(R.drawable.ic_user_male);
@@ -114,17 +114,41 @@ public class moreUserInformation extends AppCompatActivity {
 
         int age = Util.yearNow - Integer.parseInt(userDriver.getDateYear());
         age = (Util.monthNow > Integer.parseInt(userDriver.getDateMonth()) ? age : age - 1);
-        userAge.setText("Age is " + age + " years old");
+        userAge.setText(getResources().getString(R.string.user_information_age)+ " "+ age );
 
-        userCity.setText("City: " + userDriver.getCity());
+        userCity.setText(getResources().getString(R.string.user_information_home_city)+ " "+ userDriver.getCity());
+
+
+        try {
+            userRating.setRating(Float.parseFloat(userDriver.getRateService() + ""));
+            priceRating.setRating(Float.parseFloat(userDriver.getRatePrice() + ""));
+        } catch (Exception e){
+
+        }
+
+        int userRate = Math.round(Float.parseFloat(userDriver.getRateService() + ""));
+        int priceRate = Math.round(Float.parseFloat(userDriver.getRatePrice() + ""));
+
+        userRatingDesc.setText("("+userRate+") "+Util.getRateDesc(this, 1, userRate));
+        priceRatingDesc.setText("("+priceRate+") "+Util.getRateDesc(this, 2, priceRate));
 
         //userPhone.setText("Phone: "+ userDriver.getPhone());
-        userCall.setOnClickListener(new View.OnClickListener() {
+        callLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:" + userDriver.getPhone()));
                 startActivity(intent);
+            }
+        });
+
+        final ratingDialog rateUser = new ratingDialog(this, userDriver);
+        rateLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                rateUser.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                rateUser.show();
             }
         });
 
@@ -214,7 +238,7 @@ public class moreUserInformation extends AppCompatActivity {
         @Override
         public View getView(final int position, View convertView, final ViewGroup parent)
         {
-            final Main.ViewHolder holder = new Main.ViewHolder();
+            final moreUserInformation.ViewHolder holder = new moreUserInformation.ViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowItem = inflater.inflate(R.layout.activity_more_user_information_list_item, parent, false);
 
@@ -225,6 +249,9 @@ public class moreUserInformation extends AppCompatActivity {
 
             holder.City = (TextView) rowItem.findViewById(R.id.more_user_information_list_items_city);
             holder.City.setText(tempOffer.getCity());
+
+            holder.Desc = (TextView) rowItem.findViewById(R.id.more_user_information_list_items_desc);
+            holder.Desc.setText(tempOffer.getDescription());
 
             holder.typeIcon = (ImageView) rowItem.findViewById(R.id.more_user_information_list_item_img);
             holder.typeIcon.setImageDrawable(Util.getDrawableResource(moreUserInformation.this, Util.changeIcon(tempOffer.getType())));
@@ -246,8 +273,10 @@ public class moreUserInformation extends AppCompatActivity {
     static class ViewHolder
     {
         // this class is called in getView and assigned it all "items" layouts Views,for smooth scrolling
-        TextView Title, City;
+        TextView Title, City, Desc;
         ImageView typeIcon;
     }
+
+
 
 }

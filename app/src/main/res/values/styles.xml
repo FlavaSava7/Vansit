@@ -32,14 +32,14 @@
 
     <style name="price_rating_style" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/price_rating</item>
-        <item name="android:minHeight">24dip</item>
-        <item name="android:maxHeight">24dip</item>
+        <item name="android:minHeight">40dip</item>
+        <item name="android:maxHeight">40dip</item>
     </style>
 
     <style name="user_rating_style" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/user_rating</item>
-        <item name="android:minHeight">24dip</item>
-        <item name="android:maxHeight">24dip</item>
+        <item name="android:minHeight">40dip</item>
+        <item name="android:maxHeight">40dip</item>
     </style>
 
     <style name="price_rating_small_style" parent="@android:style/Widget.RatingBar">
@@ -50,6 +50,18 @@
 
     <style name="user_rating_small_style" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/user_rating_small</item>
+        <item name="android:minHeight">15dip</item>
+        <item name="android:maxHeight">15dip</item>
+    </style>
+
+    <style name="price_rating_main_style" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/price_rating_main</item>
+        <item name="android:minHeight">15dip</item>
+        <item name="android:maxHeight">15dip</item>
+    </style>
+
+    <style name="user_rating_main_style" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/user_rating_main</item>
         <item name="android:minHeight">15dip</item>
         <item name="android:maxHeight">15dip</item>
     </style>

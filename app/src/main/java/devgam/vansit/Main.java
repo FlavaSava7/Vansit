@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -394,6 +395,9 @@ public class Main extends Fragment implements View.OnClickListener{
                 holder.ratingService = (TextView) rowItem.findViewById(R.id.main_items_serviceRatingData);
                 holder.ratingPrice = (TextView) rowItem.findViewById(R.id.main_items_priceRatingData);
 
+                holder.userRating = (RatingBar) rowItem.findViewById(R.id.main_items_user_rate);
+                holder.priceRating = (RatingBar) rowItem.findViewById(R.id.main_items_price_rate);
+
                 //initialized by nimer esam for text buttons on list item :
                 //holder.loveText = (Button) rowItem.findViewById(R.id.main_items_love_text);
                 holder.profileText = (LinearLayout) rowItem.findViewById(R.id.main_items_profile_layout);
@@ -416,8 +420,13 @@ public class Main extends Fragment implements View.OnClickListener{
                             if(toAdd)
                                 userList.add(tempUser);
 
-                            holder.ratingService.setText("("+tempUser.getRateService()+"/5)");
-                            holder.ratingPrice.setText("("+tempUser.getRatePrice()+"/5)");
+                            holder.ratingService.setText("("+(int) tempUser.getRateService()+")" + " " +Util.getRateDesc(getActivity(), 1,(int) tempUser.getRateService() ));
+                            holder.ratingPrice.setText("("+(int) tempUser.getRatePrice()+")" +  " " +Util.getRateDesc(getActivity(), 2,(int) tempUser.getRatePrice() ));
+
+                            holder.userRating.setRating(tempUser.getRateService());
+                            holder.priceRating.setRating(tempUser.getRatePrice());
+
+
 
                             //add by nimer esam :
                             //To make call when User click on call text :
@@ -484,6 +493,7 @@ public class Main extends Fragment implements View.OnClickListener{
         // this class is called in getView and assigned it all "items" layouts Views,for smooth scrolling
         TextView Title, City, ratingService, ratingPrice;
         ImageView typeIcon;
+        private RatingBar userRating, priceRating;
 
         //add by nimer esam for buttons :
         LinearLayout profileText, callText;

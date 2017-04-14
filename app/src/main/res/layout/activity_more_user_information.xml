@@ -130,6 +130,7 @@
                         android:numStars="5"
                         android:stepSize="1"
                         android:rating="0"
+                        android:isIndicator="true"
                         style="@style/user_rating_small_style" />
 
                     <TextView
@@ -173,6 +174,7 @@
                         android:numStars="5"
                         android:stepSize="1"
                         android:rating="0"
+                        android:isIndicator="true"
                         style="@style/price_rating_small_style"
                         />
 
@@ -239,7 +241,7 @@
                         android:orientation="horizontal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/more_user_information_profile_layout"
+                        android:id="@+id/more_user_information_rate_layout"
                         android:layout_marginLeft="@dimen/views_margin"
                         android:layout_marginRight="@dimen/views_margin">
 
@@ -289,6 +291,7 @@
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
+
 
     <include layout="@layout/content_more_user_information" />
 

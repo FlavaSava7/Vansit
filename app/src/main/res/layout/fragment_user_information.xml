@@ -68,7 +68,7 @@
             android:gravity="center"/>
 
         <TextView
-            android:text="Home city :"
+            android:text="@string/user_information_home_city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/user_information_city"
