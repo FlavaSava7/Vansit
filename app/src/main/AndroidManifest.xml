@@ -40,7 +40,7 @@
             android:name=".moreUserInformation"
             android:label=""
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".RequestNotifications"
@@ -81,7 +81,11 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
-        <activity android:name=".ratingDialog"></activity>
+        <activity android:name=".ratingDialog" />
+        <activity
+            android:name=".moreOfferInformation"
+            android:label="@string/title_activity_more_offer_information"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

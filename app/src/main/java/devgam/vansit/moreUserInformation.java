@@ -215,8 +215,7 @@ public class moreUserInformation extends AppCompatActivity {
             };
             query.addListenerForSingleValueEvent(QVEL);
         }
-        else
-        {
+        else {
             listView.setAdapter(offerAdapter);
         }
 
@@ -228,15 +227,14 @@ public class moreUserInformation extends AppCompatActivity {
             {
                 // click to go to offerinfo page
 
-                OfferInfo offerInfoPage = new OfferInfo();
                 Bundle bundle = new Bundle();
-
                 bundle.putSerializable("userOffer",offerList.get(position));
                 bundle.putSerializable("userDriver",userDriver);
-                offerInfoPage.setArguments(bundle);
-                //Log.v("Main","Sending to OfferInfo: "+offerList.get(position).getTitle());
+                Intent intent = new Intent(moreUserInformation.this, moreOfferInformation.class);
+                //intent.putExtra("userDriver", userDriver);
+                intent.putExtra("Bundle",bundle);
+                startActivity(intent);
 
-                //Util.ChangeFrag(offerInfoPage,fragmentManager);
             }
         });
     }

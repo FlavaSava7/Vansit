@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="devgam.vansit.moreOfferInformation">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:background="@color/colorPrimary">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="@color/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/views_margin"
+                android:paddingRight="@dimen/views_margin"
+                android:paddingTop="@dimen/views_margin">
+
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/offerInfo_titleData"
+                    android:textSize="24sp"
+                    android:lines="2"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/cardview_light_background"
+                    android:layout_marginLeft="@dimen/views_top_margin"
+                    android:layout_marginRight="@dimen/views_top_margin"
+                    android:layout_marginTop="@dimen/views_margin_xl" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/views_margin">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/views_button_margin"
+                            android:layout_marginRight="@dimen/views_button_margin">
+
+                            <TextView
+                                android:text="@string/list_item_city_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/textView3"
+                                android:textSize="14sp"
+                                android:textStyle="normal|bold"
+                                android:textColor="@color/cardview_light_background" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/offerInfo_cityData"
+                                android:textSize="14sp"
+                                android:layout_marginLeft="@dimen/views_top_margin"
+                                android:layout_marginRight="@dimen/views_top_margin"
+                                android:textColor="@color/cardview_light_background" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/views_button_margin"
+                            android:layout_marginRight="@dimen/views_button_margin"
+                            android:layout_marginTop="@dimen/views_top_margin">
+
+                            <TextView
+                                android:text="@string/list_item_type_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/textView3"
+                                android:textStyle="normal|bold"
+                                android:textSize="14sp"
+                                android:textColor="@color/cardview_light_background" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/offerInfo_typeData"
+                                android:textSize="14sp"
+                                android:layout_marginLeft="@dimen/views_top_margin"
+                                android:layout_marginRight="@dimen/views_top_margin"
+                                android:textColor="@color/cardview_light_background" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="1"
+                    android:layout_marginLeft="@dimen/views_margin"
+                    android:layout_marginRight="@dimen/views_margin"
+                    android:layout_marginBottom="@dimen/views_margin_xl">
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.7"
+                        android:id="@+id/offerInfo_callLayout"
+                        android:layout_marginLeft="@dimen/views_button_margin"
+                        android:layout_marginRight="@dimen/views_button_margin">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            app:srcCompat="@drawable/ic_call"
+                            android:drawableTint="@color/gray"
+                            android:drawableTintMode="src_atop"
+                            android:id="@+id/main_items_call_img"
+                            android:tint="@color/cardview_light_background" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/list_item_call_text"
+                            android:id="@+id/main_items_call_text"
+                            android:textAllCaps="true"
+                            android:textStyle="normal|bold"
+                            android:textAppearance="@style/TextAppearance.AppCompat"
+                            android:textSize="12sp"
+                            android:textColor="@color/cardview_light_background"
+                            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                            android:layout_weight="0.45"
+                            android:gravity="center_vertical"
+                            android:clickable="false"
+                            android:longClickable="false" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.7"
+                        android:id="@+id/offerInfo_favLayout"
+                        android:layout_marginLeft="@dimen/views_button_margin"
+                        android:layout_marginRight="@dimen/views_button_margin">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            app:srcCompat="@drawable/ic_favorite_border"
+                            android:drawableTint="@color/gray"
+                            android:drawableTintMode="src_atop"
+                            android:id="@+id/main_items_call_img"
+                            android:tint="@color/cardview_light_background" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/menu_fav_text"
+                            android:id="@+id/main_items_call_text"
+                            android:textAllCaps="true"
+                            android:textStyle="normal|bold"
+                            android:textAppearance="@style/TextAppearance.AppCompat"
+                            android:textSize="12sp"
+                            android:textColor="@color/cardview_light_background"
+                            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                            android:layout_weight="0.45"
+                            android:gravity="center_vertical"
+                            android:clickable="false"
+                            android:longClickable="false" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/offerInfo_profileLayout"
+                        android:layout_marginLeft="@dimen/views_button_margin"
+                        android:layout_marginRight="@dimen/views_button_margin">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            app:srcCompat="@drawable/ic_person"
+                            android:drawableTint="@color/gray"
+                            android:drawableTintMode="src_atop"
+                            android:id="@+id/imageView2"
+                            android:tint="@color/cardview_light_background" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:text="@string/list_item_profile_text"
+                            android:id="@+id/main_items_profile_text"
+                            android:textAllCaps="true"
+                            android:textStyle="normal|bold"
+                            android:layout_weight="0.45"
+                            android:textAppearance="@style/TextAppearance.AppCompat"
+                            android:textSize="12sp"
+                            android:textColor="@color/cardview_light_background"
+                            android:drawableTint="@color/gray"
+                            android:drawableTintMode="src_atop"
+                            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                            android:textAlignment="gravity"
+                            android:gravity="center_vertical" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_offers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                android:visibility="visible" />
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_more_offer_information" />
+
+</android.support.design.widget.CoordinatorLayout>

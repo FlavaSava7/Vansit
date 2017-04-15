@@ -51,6 +51,9 @@
 
     <string name="list_item_city_text">City : </string>
     <string name="list_item_type_text">Type : </string>
+    <string name="list_item_brand_text">Brand : </string>
+    <string name="list_item_model_text">Model : </string>
+    <string name="list_item_Year_text">Year : </string>
     <string name="list_item_user_rating_text">User Rating : </string>
     <string name="list_item_price_rating_text">Price Rating : </string>
     <string name="list_item_delete_text">Delete </string>
@@ -64,7 +67,7 @@
     <string name="menu_logout_text">Sign Out</string>
     <string name="menu_my_account_text">My Account</string>
     <string name="menu_home_text">Home</string>
-    <string name="menu_fav_text">Favourite</string>
+    <string name="menu_fav_text">Like</string>
     <string name="menu_rec_text">Recommended</string>
     <string name="menu_req_text">Requests</string>
     <string name="menu_account_text">Account</string>
@@ -295,6 +298,8 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="title_activity_more_offer_information">moreOfferInformation</string>
+    <string name="action_settings">Settings</string>
 
 
 

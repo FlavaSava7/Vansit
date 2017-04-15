@@ -214,6 +214,7 @@ public class Main extends Fragment implements View.OnClickListener{
 
             }
         });
+
         spinnerType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             boolean stopAutoFiringCode=false;
@@ -236,26 +237,28 @@ public class Main extends Fragment implements View.OnClickListener{
             }
         });
 
-
+        //TODO : WTF !!!
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-                {
-                    // click to go to offerinfo page
+            {
+                // click to go to offerinfo page
 
-                    OfferInfo offerInfoPage = new OfferInfo();
-                    Bundle bundle = new Bundle();
+                Util.makeToast(getContext(), "hi" + position);
 
-                    bundle.putSerializable("userOffer",offerList.get(position));
-                    for(Users user:userList)// cuz userList is distinct
-                        if(offerList.get(position).getUserID().equals(user.getUserID()))
-                            bundle.putSerializable("userDriver",user);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("userOffer",offerList.get(position));
+                for(Users user:userList)// cuz userList is distinct
+                    if(offerList.get(position).getUserID().equals(user.getUserID()))
+                        bundle.putSerializable("userDriver",user);
+                Intent intent = new Intent(getActivity(), moreOfferInformation.class);
+                intent.putExtra("Bundle",bundle);
+                startActivity(intent);
 
-                    offerInfoPage.setArguments(bundle);
-                    Util.ChangeFrag(offerInfoPage,fragmentManager);
-                }
+            }
         });
+
     }
 
     private void FillSpinners()
