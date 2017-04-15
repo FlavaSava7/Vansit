@@ -133,14 +133,18 @@
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/views_top_margin"
+                    android:layout_marginBottom="@dimen/views_top_margin">
 
                     <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/views_top_margin"
+                        android:layout_marginBottom="@dimen/views_margin_s"
                         android:layout_marginLeft="@dimen/views_top_margin"
-                        android:layout_marginTop="@dimen/views_top_margin">
+                        android:layout_marginRight="@dimen/views_top_margin">
 
                         <TextView
                             android:text="@string/city"
@@ -177,7 +181,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/views_top_margin"
-                        android:layout_marginBottom="@dimen/views_top_margin">
+                        android:layout_marginBottom="@dimen/views_top_margin"
+                        android:layout_marginRight="@dimen/views_top_margin">
 
                         <TextView
                             android:text="@string/type"
@@ -294,12 +299,11 @@
                             android:textColor="@color/fab_add_offer" />
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/addOffer_phone_text"
                             android:textStyle="normal|bold"
                             android:textSize="16sp"
-                            android:layout_weight="1"
                             android:textColor="@color/gray" />
                     </LinearLayout>
 
@@ -330,12 +334,11 @@
                             android:textColor="@color/fab_add_offer" />
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/addOffer_city_text"
                             android:textStyle="normal|bold"
                             android:textSize="16sp"
-                            android:layout_weight="1"
                             android:layout_marginBottom="@dimen/views_top_margin"
                             android:textColor="@color/gray" />
                     </LinearLayout>
@@ -350,7 +353,7 @@
             <Button
                 android:text="@string/layout_button_save"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/views_button_margin"
                 android:layout_marginRight="@dimen/views_button_margin"
                 android:layout_marginTop="@dimen/views_margin"
@@ -360,7 +363,6 @@
                 android:layout_alignParentStart="true"
                 android:background="@drawable/save_button_boarded"
                 android:textColor="@color/cardview_light_background"
-                android:layout_weight="0.40"
                 android:textSize="18sp" />
 
         </LinearLayout>

@@ -42,7 +42,7 @@ public class Login extends Fragment implements View.OnClickListener{
     private EditText emailEdit, passEdit ;
     private TextView signUpText, errorText, forgetPassText;
     private TextInputLayout emailInput, passInput;
-    LinearLayout googleSignIn, facebookSignIn;
+    LinearLayout googleSignIn;
 
     private ProgressDialog progressDialog ;
 
@@ -166,8 +166,7 @@ public class Login extends Fragment implements View.OnClickListener{
                         //Util.ProgDialogDelay(progressDialog,1000L);// wait 1 more second
                         progressDialog.dismiss();
 
-                        if (task.isSuccessful())
-                        {
+                        if (task.isSuccessful()) {
                             //sign in done
                             MainController.GlobalHideItem(MainController.globalNavigationView.getMenu());//update menu
                             MainController.GlobalSetDataToViews(MainController.globalNavigationView);

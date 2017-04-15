@@ -50,6 +50,10 @@
     <string name="my_account_homeCity_text">Home city :</string>
 
     <string name="list_item_city_text">City : </string>
+    <string name="list_item_type_text">Type : </string>
+    <string name="list_item_brand_text">Brand : </string>
+    <string name="list_item_model_text">Model : </string>
+    <string name="list_item_Year_text">Year : </string>
     <string name="list_item_user_rating_text">User Rating : </string>
     <string name="list_item_price_rating_text">Price Rating : </string>
     <string name="list_item_delete_text">Delete </string>
@@ -63,7 +67,7 @@
     <string name="menu_logout_text">Sign Out</string>
     <string name="menu_my_account_text">My Account</string>
     <string name="menu_home_text">Home</string>
-    <string name="menu_fav_text">Favourite</string>
+    <string name="menu_fav_text">Like</string>
     <string name="menu_rec_text">Recommended</string>
     <string name="menu_req_text">Requests</string>
     <string name="menu_account_text">Account</string>
@@ -77,6 +81,7 @@
     <string name="main_fab_text_add_request">add request</string>
     <string name="main_fab_text_add_offer">add offer</string>
     <string name="user_information_title">Profile</string>
+    <string name="user_information_more_offers">See more offers</string>
     <string name="main_show_more">Show More</string><!--show more button inside the Main Page -->
 
     <string name="add_offer_title_text">Title </string>
@@ -132,6 +137,9 @@
     <string name="user_information_age">Age is  </string>
 
 
+    <string name="user_not_logged">Please sign in first to rate this user</string>
+
+
     <string name="user_rate_5">Excellent</string>
     <string name="user_rate_4">Very Good</string>
     <string name="user_rate_3">Good</string>
@@ -161,6 +169,21 @@
         <item>Balqa</item>
         <item>Karak</item>
     </string-array>
+
+    <!-- new array -->
+    <string name="select_city">Select City</string>
+    <string name="Amman">Amman</string>
+    <string name="Zarqa">Zarqa</string>
+    <string name="Irbid">Irbid</string>
+    <string name="Ajloun">Ajloun</string>
+    <string name="Jarash">Jarash</string>
+    <string name="Aqaba">Aqaba</string>
+    <string name="Mafraq">Mafraq</string>
+    <string name="Tafila">Tafila</string>
+    <string name="Maan">Maan</string>
+    <string name="Madaba">Madaba</string>
+    <string name="Balqa">Balqa</string>
+    <string name="Karak">Karak</string>
 
     <string-array name="type_list">
         <item>Select Type</item>
@@ -275,6 +298,8 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="title_activity_more_offer_information">moreOfferInformation</string>
+    <string name="action_settings">Settings</string>
 
 
 

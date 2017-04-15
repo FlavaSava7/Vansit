@@ -1,17 +1,19 @@
 package devgam.vansit;
 
+
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Layout;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -21,7 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,6 +44,7 @@ public class moreUserInformation extends AppCompatActivity {
     private ArrayAdapter offerAdapter;
     private RatingBar userRating, priceRating;
     private LinearLayout callLayout, rateLayout;
+    FragmentManager fragmentManager;// this is used for the ChangeFrag method
 
     //Users userDriver = null;
     Users userDriver;
@@ -54,8 +56,13 @@ public class moreUserInformation extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_more_user_information);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         userImage = (ImageView) findViewById(R.id.more_user_information_img);
         userName = (TextView) findViewById(R.id.more_user_information_name);
@@ -69,6 +76,7 @@ public class moreUserInformation extends AppCompatActivity {
         callLayout = (LinearLayout) findViewById(R.id.more_user_information_call_layout);
         rateLayout = (LinearLayout) findViewById(R.id.more_user_information_rate_layout);
         offerAdapter = new moreUserInformation.itemsAdapter(this);
+        fragmentManager  = getSupportFragmentManager();
 
         try {
             Intent intent = getIntent();
@@ -77,6 +85,7 @@ public class moreUserInformation extends AppCompatActivity {
         } catch (Exception e){
 
         }
+
 
         /*Bundle bundle = this.getArguments();
         if (bundle != null)
@@ -142,11 +151,17 @@ public class moreUserInformation extends AppCompatActivity {
             }
         });
 
+
+
         final ratingDialog rateUser = new ratingDialog(this, userDriver);
         rateLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (!Util.isLogged()) {
+                    // User is not logged
+                    Util.makeSnackbar(v, getResources().getString(R.string.user_not_logged));
+                    return;
+                }
                 rateUser.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 rateUser.show();
             }
@@ -200,8 +215,7 @@ public class moreUserInformation extends AppCompatActivity {
             };
             query.addListenerForSingleValueEvent(QVEL);
         }
-        else
-        {
+        else {
             listView.setAdapter(offerAdapter);
         }
 
@@ -213,18 +227,18 @@ public class moreUserInformation extends AppCompatActivity {
             {
                 // click to go to offerinfo page
 
-                OfferInfo offerInfoPage = new OfferInfo();
                 Bundle bundle = new Bundle();
-
                 bundle.putSerializable("userOffer",offerList.get(position));
                 bundle.putSerializable("userDriver",userDriver);
-                offerInfoPage.setArguments(bundle);
-                //Log.v("Main","Sending to OfferInfo: "+offerList.get(position).getTitle());
+                Intent intent = new Intent(moreUserInformation.this, moreOfferInformation.class);
+                //intent.putExtra("userDriver", userDriver);
+                intent.putExtra("Bundle",bundle);
+                startActivity(intent);
 
-                //Util.ChangeFrag(offerInfoPage,fragmentManager);
             }
         });
     }
+
 
     private class itemsAdapter extends ArrayAdapter<Offers>
     {
@@ -250,6 +264,9 @@ public class moreUserInformation extends AppCompatActivity {
             holder.City = (TextView) rowItem.findViewById(R.id.more_user_information_list_items_city);
             holder.City.setText(tempOffer.getCity());
 
+            holder.Type = (TextView) rowItem.findViewById(R.id.more_user_information_list_items_type);
+            holder.Type.setText(tempOffer.getType());
+
             holder.Desc = (TextView) rowItem.findViewById(R.id.more_user_information_list_items_desc);
             holder.Desc.setText(tempOffer.getDescription());
 
@@ -273,8 +290,23 @@ public class moreUserInformation extends AppCompatActivity {
     static class ViewHolder
     {
         // this class is called in getView and assigned it all "items" layouts Views,for smooth scrolling
-        TextView Title, City, Desc;
+        TextView Title, City, Type, Desc;
         ImageView typeIcon;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
 

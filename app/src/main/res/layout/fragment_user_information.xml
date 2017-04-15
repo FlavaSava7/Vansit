@@ -91,7 +91,7 @@
             android:layout_marginTop="@dimen/views_margin_xl" />
 
         <TextView
-            android:text="see more offers"
+            android:text="@string/user_information_more_offers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/user_information_more"

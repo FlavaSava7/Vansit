@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -237,6 +238,16 @@ public class Util
                 Util.ProgDialogStarter(progressDialog,null);
             }
         }, timer);
+    }
+
+    /**
+     * Create A Snackbar
+     * @param view : view when click
+     * @param msg : Message to Show
+     */
+    public static void makeSnackbar(View view, String msg) {
+        Snackbar.make(view, msg, Snackbar.LENGTH_LONG)
+                .show();
     }
 
     /**
@@ -514,5 +525,6 @@ public class Util
 
         return desc;
     }
+
 
 }

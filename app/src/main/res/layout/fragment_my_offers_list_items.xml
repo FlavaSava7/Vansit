@@ -81,7 +81,29 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/my_offers_list_items_city"
-                            android:layout_weight="1"
+                            android:textSize="12sp"
+                            android:layout_marginLeft="@dimen/views_top_margin"
+                            android:layout_marginRight="@dimen/views_top_margin" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textSize="12sp"
+                            android:layout_marginLeft="@dimen/views_margin_xl"
+                            android:layout_marginRight="@dimen/views_margin_xl" />
+
+                        <TextView
+                            android:text="@string/list_item_type_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView3"
+                            android:textStyle="normal|bold"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/my_offers_list_items_type"
                             android:textSize="12sp"
                             android:layout_marginLeft="@dimen/views_top_margin"
                             android:layout_marginRight="@dimen/views_top_margin" />
