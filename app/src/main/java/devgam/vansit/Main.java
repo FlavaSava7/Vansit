@@ -113,8 +113,8 @@ public class Main extends Fragment implements View.OnClickListener{
         allCities  = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.city_list)));
         allTypes = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.type_list)));
 
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.v("Main","Token "+refreshedToken);
+        //String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        //Log.v("Main","Token "+refreshedToken);
 
         addFab = (FloatingActionButton) getActivity().findViewById(R.id.add_fab);// we should show this when he is logged
         addOffer = (FloatingActionButton) getActivity().findViewById(R.id.fab_add_offer);
@@ -237,16 +237,12 @@ public class Main extends Fragment implements View.OnClickListener{
             }
         });
 
-        //TODO : WTF !!!
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                // click to go to offerinfo page
-
-                Util.makeToast(getContext(), "hi" + position);
-
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("userOffer",offerList.get(position));
                 for(Users user:userList)// cuz userList is distinct
@@ -425,8 +421,6 @@ public class Main extends Fragment implements View.OnClickListener{
                 holder.userRating = (RatingBar) rowItem.findViewById(R.id.main_items_user_rate);
                 holder.priceRating = (RatingBar) rowItem.findViewById(R.id.main_items_price_rate);
 
-                //initialized by nimer esam for text buttons on list item :
-                //holder.loveText = (Button) rowItem.findViewById(R.id.main_items_love_text);
                 holder.profileText = (LinearLayout) rowItem.findViewById(R.id.main_items_profile_layout);
                 holder.callText = (LinearLayout) rowItem.findViewById(R.id.main_items_call_layout);
                 Query query = databaseReference.child(tempOffer.getUserID());

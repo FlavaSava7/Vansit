@@ -15,8 +15,17 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+
+import devgam.vansit.JSON_Classes.Favourite;
 import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Users;
 
@@ -137,8 +146,9 @@ public class moreOfferInformation extends AppCompatActivity {
 
         favLayout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                //TODO : add to fav List
+            public void onClick(View v)
+            {
+                addAFavorite();
             }
         });
 
@@ -146,6 +156,65 @@ public class moreOfferInformation extends AppCompatActivity {
 
     }
 
+    private void addAFavorite()
+    {
+        final DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child(Util.RDB_FAVOURITE
+                +"/"+ FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                ArrayList<Favourite> favs = new ArrayList<>();
+                Favourite offerToFavourite = new Favourite(userOffer.getOfferKey());
+                DatabaseReference mRef2 = FirebaseDatabase.getInstance().getReference().child(Util.RDB_FAVOURITE
+                        +"/"+ FirebaseAuth.getInstance().getCurrentUser().getUid());
+                if(!dataSnapshot.exists())
+                {
+                    favs.add(offerToFavourite);
+                    mRef2.setValue(favs);
+                }else
+                {
+                    boolean toAdd = true;
+                    for(DataSnapshot favObj : dataSnapshot.getChildren())
+                    {
+                        Favourite fav = favObj.getValue(Favourite.class);
+                        favs.add(fav);
+                    }
+
+                    for(Favourite tempFav : favs)
+                    {
+                        if(tempFav.getOfferKey().equals(offerToFavourite.getOfferKey()))
+                        {
+                            toAdd= false;
+                            break;
+                        }
+                    }
+                    if(toAdd)
+                    {
+                        favs.add(offerToFavourite);
+                        mRef2.setValue(favs);
+
+                        Util.makeToast(getApplication(),getString(R.string.added_fav));
+                    }
+                    else
+                    {
+                        Util.makeToast(getApplication(),getString(R.string.added_fav_fail));
+                    }
+
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
