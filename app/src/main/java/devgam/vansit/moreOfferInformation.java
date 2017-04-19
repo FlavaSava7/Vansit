@@ -1,22 +1,32 @@
 package devgam.vansit;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Users;
 
@@ -31,6 +41,7 @@ public class moreOfferInformation extends AppCompatActivity {
     TextView Title,Description,Name, City, Age, HomeCity, Type, ratingNameService, ratingNamePrice;
     RatingBar ratingService, ratingPrice;
     private LinearLayout callLayout, profileLayout, favLayout;
+    CollapsingToolbarLayout collapsingToolbarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +61,11 @@ public class moreOfferInformation extends AppCompatActivity {
             userDriver = (Users) bundle.getSerializable("userDriver");
             userOffer = (Offers) bundle.getSerializable("userOffer");
         }
+
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.more_offer_toolbar_layout);
+        //AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.more_offer_app_bar);
+
+       //collapsingToolbarLayout.setBackgroundResource(R.drawable.no_photo);
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -160,5 +176,6 @@ public class moreOfferInformation extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
     }
+
 
 }

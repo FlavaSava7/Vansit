@@ -8,7 +8,7 @@
     tools:context="devgam.vansit.moreOfferInformation">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
+        android:id="@+id/more_offer_app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
@@ -16,17 +16,18 @@
         android:background="@color/colorPrimary">
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/toolbar_layout"
+            android:id="@+id/more_offer_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:contentScrim="@color/colorPrimary"
+            app:contentScrim="@drawable/login_back"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
+                android:forceHasOverlappingRendering="true"
                 android:paddingLeft="@dimen/views_margin"
                 android:paddingRight="@dimen/views_margin"
                 android:paddingTop="@dimen/views_margin">
@@ -126,7 +127,7 @@
                         android:orientation="horizontal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.7"
+                        android:layout_weight="0.75"
                         android:id="@+id/offerInfo_callLayout"
                         android:layout_marginLeft="@dimen/views_button_margin"
                         android:layout_marginRight="@dimen/views_button_margin">
@@ -161,7 +162,7 @@
                         android:orientation="horizontal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.7"
+                        android:layout_weight="0.75"
                         android:id="@+id/offerInfo_favLayout"
                         android:layout_marginLeft="@dimen/views_button_margin"
                         android:layout_marginRight="@dimen/views_button_margin">
