@@ -447,11 +447,16 @@ public class Main extends Fragment implements View.OnClickListener{
                             if(toAdd)
                                 userList.add(tempUser);
 
-                            holder.ratingService.setText("("+(int) tempUser.getRateService()+")" + " " +Util.getRateDesc(getActivity(), 1,(int) tempUser.getRateService() ));
-                            holder.ratingPrice.setText("("+(int) tempUser.getRatePrice()+")" +  " " +Util.getRateDesc(getActivity(), 2,(int) tempUser.getRatePrice() ));
 
-                            holder.userRating.setRating(tempUser.getRateService());
-                            holder.priceRating.setRating(tempUser.getRatePrice());
+
+                            holder.userRating.setRating(Float.parseFloat(tempUser.getRateService() + ""));
+                            holder.priceRating.setRating(Float.parseFloat(tempUser.getRatePrice() + ""));
+
+                            int userRate = Math.round(Float.parseFloat(tempUser.getRateService() + ""));
+                            int priceRate = Math.round(Float.parseFloat(tempUser.getRatePrice() + ""));
+
+                            holder.ratingService.setText("("+ userRate +")" + " " +Util.getRateDesc(getActivity(), 1,userRate));
+                            holder.ratingPrice.setText("("+ priceRate+")" +  " " +Util.getRateDesc(getActivity(), 2,priceRate));
 
 
 
