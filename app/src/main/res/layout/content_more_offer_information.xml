@@ -195,12 +195,12 @@
             android:textStyle="normal|bold"
             android:textColor="@color/colorPrimary"
             android:layout_marginBottom="@dimen/views_top_margin"
-            android:layout_marginTop="@dimen/views_margin" />
+            android:layout_marginTop="@dimen/views_margin_xl" />
 
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/more_offer_information_recommend_list" />
+            android:id="@+id/more_offer_information_recommend_list"
+            android:layout_height="800dp" />
 
     </LinearLayout>
 

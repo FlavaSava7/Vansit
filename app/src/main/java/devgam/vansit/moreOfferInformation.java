@@ -2,10 +2,8 @@ package devgam.vansit;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,8 +15,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,6 +26,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Users;
@@ -38,10 +40,14 @@ public class moreOfferInformation extends AppCompatActivity {
     DatabaseReference DataBaseRoot;
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
 
-    TextView Title,Description,Name, City, Age, HomeCity, Type, ratingNameService, ratingNamePrice;
-    RatingBar ratingService, ratingPrice;
+    private TextView Title,Description,Name, City, Age, HomeCity, Type, ratingNameService, ratingNamePrice;
+    private RatingBar ratingService, ratingPrice;
     private LinearLayout callLayout, profileLayout, favLayout;
-    CollapsingToolbarLayout collapsingToolbarLayout;
+    private ListView recommendList;
+    ArrayList<Offers> offersArrayList;
+    ArrayAdapter arrayAdapter;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +68,7 @@ public class moreOfferInformation extends AppCompatActivity {
             userOffer = (Offers) bundle.getSerializable("userOffer");
         }
 
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.more_offer_toolbar_layout);
+        //collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.more_offer_toolbar_layout);
         //AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.more_offer_app_bar);
 
        //collapsingToolbarLayout.setBackgroundResource(R.drawable.no_photo);
@@ -94,6 +100,7 @@ public class moreOfferInformation extends AppCompatActivity {
         HomeCity = (TextView) findViewById(R.id.offerInfo_homeCityData);
         ratingNameService = (TextView) findViewById(R.id.offerInfo_serviceRatingName);
         ratingNamePrice = (TextView) findViewById(R.id.offerInfo_priceRatingName);
+        recommendList = (ListView) findViewById(R.id.more_offer_information_recommend_list);
 
         callLayout = (LinearLayout) findViewById(R.id.offerInfo_callLayout);
         favLayout = (LinearLayout) findViewById(R.id.offerInfo_favLayout);
@@ -102,6 +109,14 @@ public class moreOfferInformation extends AppCompatActivity {
 
         ratingService = (RatingBar) findViewById(R.id.offerInfo_serviceRatingData);
         ratingPrice = (RatingBar) findViewById(R.id.offerInfo_priceRatingData);
+
+        fillRecommendedList();
+
+        arrayAdapter = new moreOfferInformation.itemAdapter(this);
+        offersArrayList = new ArrayList<>();
+        recommendList.setAdapter(arrayAdapter);
+
+
 
 
         SetUpInfo();
@@ -172,9 +187,119 @@ public class moreOfferInformation extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void fillRecommendedList(){
+        DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference()
+                .child(Util.RDB_OFFERS);
+        Query query = DataBaseRoot.orderByChild(Util.TIME_STAMP).limitToLast(10);
+
+        final recommendedSharedPref recommended = new recommendedSharedPref(moreOfferInformation.this);
+        Toast.makeText(getApplicationContext(), recommended.getFavType(), Toast.LENGTH_SHORT ).show();
+
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot allOffers : dataSnapshot.getChildren()){
+                    Offers tempOffer = allOffers.getValue(Offers.class);
+                    tempOffer.setOfferKey(allOffers.getKey());
+
+                    //For Recommend
+                    if(tempOffer.getType().equals("Bus"))
+                    //if(tempOffer.getUserID().equals())
+                        offersArrayList.add(tempOffer);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        query.addValueEventListener(valueEventListener);
+
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    public class itemAdapter extends ArrayAdapter<Offers>{
+
+        Context context;
+
+        public itemAdapter(Context context) {
+            super(context, R.layout.fragment_main_listview_items, offersArrayList);
+            this.context = context;
+        }
+
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            final viewHolder holder = new viewHolder();
+            final Offers tempOffer = offersArrayList.get(position);
+            View rowItem;
+
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            rowItem = inflater.inflate(R.layout.fragment_main_listview_items, parent, false);
+
+            holder.Title = (TextView) rowItem.findViewById(R.id.main_items_TitleData);
+            holder.Title.setText(tempOffer.getTitle());
+
+            holder.City = (TextView) rowItem.findViewById(R.id.main_items_cityData);
+            holder.City.setText(tempOffer.getCity());
+
+            holder.Type = (TextView) rowItem.findViewById(R.id.main_items_typeData);
+            holder.Type.setText(tempOffer.getType());
+
+            holder.typeIcon = (ImageView) rowItem.findViewById(R.id.main_items_typeIcon);
+            holder.typeIcon.setImageDrawable(Util.getDrawableResource(moreOfferInformation.this, Util.changeIcon(tempOffer.getType())));
+
+            holder.ratingService = (TextView) rowItem.findViewById(R.id.main_items_serviceRatingData);
+            holder.ratingPrice = (TextView) rowItem.findViewById(R.id.main_items_priceRatingData);
+
+            holder.userRating = (RatingBar) rowItem.findViewById(R.id.main_items_user_rate);
+            holder.priceRating = (RatingBar) rowItem.findViewById(R.id.main_items_price_rate);
+
+            //initialized by nimer esam for text buttons on list item :
+            holder.profileText = (LinearLayout) rowItem.findViewById(R.id.main_items_profile_layout);
+            holder.callText = (LinearLayout) rowItem.findViewById(R.id.main_items_call_layout);
+
+            try {
+                holder.userRating.setRating(Float.parseFloat(userDriver.getRateService() + ""));
+                holder.priceRating.setRating(Float.parseFloat(userDriver.getRatePrice() + ""));
+            } catch (Exception e){
+
+            }
+
+            int userRate = Math.round(Float.parseFloat(userDriver.getRateService() + ""));
+            int priceRate = Math.round(Float.parseFloat(userDriver.getRatePrice() + ""));
+
+            holder.ratingService.setText("("+userRate+") "+Util.getRateDesc(moreOfferInformation.this, 1, userRate));
+            holder.ratingPrice.setText("("+priceRate+") "+Util.getRateDesc(moreOfferInformation.this, 2, priceRate));
+
+            return rowItem;
+        }
+
+        @Override
+        public int getCount() {
+            return offersArrayList.size();
+        }
+
+
+        @Override
+        public Offers getItem(int position) {
+            return offersArrayList.get(position);
+        }
+    }
+
+    static class viewHolder{
+        TextView Title, City, Type, ratingService, ratingPrice;
+        ImageView typeIcon;
+        private RatingBar userRating, priceRating;
+
+        //add by nimer esam for buttons :
+        LinearLayout profileText, callText;
     }
 
 

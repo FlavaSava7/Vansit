@@ -93,5 +93,6 @@
     <string name="Zarqa">الزرقاء</string>
     <string name="select_city">اختيار المدينة</string>
     <string name="list_item_type_text">النوع :</string>
+    <string name="recommended">موصى بها من أجلك :</string>
 
 </resources>

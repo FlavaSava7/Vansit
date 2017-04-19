@@ -1,7 +1,6 @@
 package devgam.vansit;
 
 
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -9,7 +8,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -107,10 +105,10 @@ public class moreUserInformation extends AppCompatActivity {
     }
 
     void setUpInfo() {
-        if (!Util.IS_USER_CONNECTED) {
+        /*if (!Util.IS_USER_CONNECTED) {
             // error msg
             return;
-        }
+        }*/
         final ProgressDialog progressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
 
 

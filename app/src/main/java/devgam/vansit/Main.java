@@ -276,8 +276,8 @@ public class Main extends Fragment implements View.OnClickListener{
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerType.setAdapter(typeAdapter);
     }
-    private void FillListView()
-    {
+
+    private void FillListView() {
         DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference()
                 .child(Util.RDB_OFFERS);
         Query query = DataBaseRoot.orderByChild(Util.TIME_STAMP).limitToLast(recentOfferCounter);
