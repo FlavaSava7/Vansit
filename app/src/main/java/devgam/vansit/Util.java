@@ -251,6 +251,21 @@ public class Util
     }
 
     /**
+     * Create A Snackbar with action
+     * @param view : view when click
+     * @param msg : Message to Show
+     * @param actionMsg : title of button
+     * @param action : when user click on actionMsg
+     */
+    public static void makeSnackbarWithAction(View view, String msg, String actionMsg, View.OnClickListener action) {
+        Snackbar.make(view, msg, Snackbar.LENGTH_LONG)
+                .setAction(actionMsg, action)
+                .show();
+    }
+
+
+
+    /**
      * Create A Toast
      * @param context
      * @param msg : Message to Show

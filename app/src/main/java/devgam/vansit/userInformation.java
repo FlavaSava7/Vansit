@@ -100,7 +100,7 @@ public class userInformation extends Dialog implements
     @Override
     public void onClick(View v)
     {
-        /*MoreOffers moreOffersPage = new MoreOffers();
+        /*oreOffers moreOffersPage = new MoreOffers();
         Bundle bundle = new Bundle();
         bundle.putSerializable("userDriver",tempUserDriver);
         moreOffersPage.setArguments(bundle);

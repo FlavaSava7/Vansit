@@ -4,222 +4,24 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:weightSum="1"
-    android:background="@color/fab_add_offer"
     android:padding="@dimen/views_margin">
 
-    <LinearLayout
+    <TextView
+        android:text="TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:id="@+id/text_title" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@mipmap/ic_type_car"
-            android:id="@+id/imageView7"
-            android:layout_marginLeft="@dimen/views_top_margin"
-            android:layout_marginRight="@dimen/views_top_margin" />
-
-        <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView9"
-            android:textSize="24sp"
-            android:lines="2"
-            android:textStyle="normal|bold"
-            android:textColor="@color/colorPrimary" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/views_button_margin"
-        android:layout_marginRight="@dimen/views_button_margin">
-
-        <TextView
-            android:text="@string/list_item_city_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView3"
-            android:textSize="14sp"
-            android:textStyle="normal|bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/main_items_cityData"
-            android:textSize="14sp"
-            android:layout_marginLeft="@dimen/views_top_margin"
-            android:layout_marginRight="@dimen/views_top_margin" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/views_button_margin"
-        android:layout_marginRight="@dimen/views_button_margin"
-        android:layout_marginTop="@dimen/views_top_margin">
-
-        <TextView
-            android:text="@string/list_item_type_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView3"
-            android:textStyle="normal|bold"
-            android:textSize="14sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/main_items_typeData"
-            android:textSize="14sp"
-            android:layout_marginLeft="@dimen/views_top_margin"
-            android:layout_marginRight="@dimen/views_top_margin" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
+    <TextView
+        android:text="TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="1">
+        android:id="@+id/text_city" />
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.7"
-            android:id="@+id/main_items_call_layout"
-            android:layout_marginLeft="@dimen/views_button_margin"
-            android:layout_marginRight="@dimen/views_button_margin">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                app:srcCompat="@drawable/ic_favorite_border"
-                android:drawableTint="@color/gray"
-                android:drawableTintMode="src_atop"
-                android:id="@+id/main_items_call_img"
-                android:tint="@color/gray" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/menu_fav_text"
-                android:id="@+id/main_items_call_text"
-                android:textAllCaps="true"
-                android:textStyle="normal|bold"
-                android:textAppearance="@style/TextAppearance.AppCompat"
-                android:textSize="12sp"
-                android:textColor="@color/gray"
-                style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
-                android:layout_weight="0.45"
-                android:gravity="center_vertical"
-                android:clickable="false"
-                android:longClickable="false" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.7"
-            android:id="@+id/main_items_call_layout"
-            android:layout_marginLeft="@dimen/views_button_margin"
-            android:layout_marginRight="@dimen/views_button_margin">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                app:srcCompat="@drawable/ic_call"
-                android:drawableTint="@color/gray"
-                android:drawableTintMode="src_atop"
-                android:id="@+id/main_items_call_img"
-                android:tint="@color/gray" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/list_item_call_text"
-                android:id="@+id/main_items_call_text"
-                android:textAllCaps="true"
-                android:textStyle="normal|bold"
-                android:textAppearance="@style/TextAppearance.AppCompat"
-                android:textSize="12sp"
-                android:textColor="@color/gray"
-                style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
-                android:layout_weight="0.45"
-                android:gravity="center_vertical"
-                android:clickable="false"
-                android:longClickable="false" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/main_items_profile_layout"
-            android:layout_marginLeft="@dimen/views_button_margin"
-            android:layout_marginRight="@dimen/views_button_margin">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                app:srcCompat="@drawable/ic_person"
-                android:drawableTint="@color/gray"
-                android:drawableTintMode="src_atop"
-                android:id="@+id/imageView2"
-                android:tint="@color/gray" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:text="@string/list_item_profile_text"
-                android:id="@+id/main_items_profile_text"
-                android:textAllCaps="true"
-                android:textStyle="normal|bold"
-                android:layout_weight="0.45"
-                android:textAppearance="@style/TextAppearance.AppCompat"
-                android:textSize="12sp"
-                android:textColor="@color/gray"
-                android:drawableTint="@color/gray"
-                android:drawableTintMode="src_atop"
-                style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
-                android:textAlignment="gravity"
-                android:gravity="center_vertical" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
+    <TextView
+        android:text="TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="@dimen/views_button_margin">
-
-        <TextView
-            android:text="@string/add_offer_desc_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView3"
-            android:textStyle="normal|bold"
-            android:textSize="14sp" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/more_user_information_list_items_desc"
-            android:textSize="14sp"
-            android:singleLine="false"
-            android:lines="5"
-            android:layout_marginLeft="@dimen/views_margin_s"
-            android:layout_marginRight="@dimen/views_margin_s" />
-
-    </LinearLayout>
+        android:id="@+id/text_type" />
 
 </LinearLayout>

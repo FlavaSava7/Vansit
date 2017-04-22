@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Vansit</string>
+    <string name="app_name">توصيله</string>
     <string name="city">المدينة</string>
     <string name="hint_text_email">البريد الالكتروني</string>
     <string name="hint_text_password">الرقم السري</string>
@@ -93,5 +93,11 @@
     <string name="Zarqa">الزرقاء</string>
     <string name="select_city">اختيار المدينة</string>
     <string name="list_item_type_text">النوع :</string>
+    <string name="recommended">موصى بها من أجلك :</string>
+    <string name="add_request_gps_off_btn">تفعيل</string>
+    <string name="add_request_gps_off_msg">خدمات الموقع غير مفعلة</string>
+    <string name="my_request_address">"العنوان : "</string>
+    <string name="my_request_title"></string>
+    <string name="my_request_time">الوقت المتبقي :</string>
 
 </resources>

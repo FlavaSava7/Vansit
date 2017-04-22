@@ -112,15 +112,14 @@
         android:visibility="invisible" />
 
     <ListView
-
         android:id="@+id/frag_main_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/main_linear_layout"
-        />
+        android:layout_below="@id/main_linear_layout" />
+
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_height="match_parent"

@@ -1,31 +1,41 @@
 package devgam.vansit;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import android.widget.Toast;
+
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import com.google.firebase.database.Query;
+
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+
 import devgam.vansit.JSON_Classes.Favourite;
+
 import devgam.vansit.JSON_Classes.Offers;
 import devgam.vansit.JSON_Classes.Users;
 
@@ -37,9 +47,14 @@ public class moreOfferInformation extends AppCompatActivity {
     DatabaseReference DataBaseRoot;
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
 
-    TextView Title,Description,Name, City, Age, HomeCity, Type, ratingNameService, ratingNamePrice;
-    RatingBar ratingService, ratingPrice;
+    private TextView Title,Description,Name, City, Age, HomeCity, Type, ratingNameService, ratingNamePrice;
+    private RatingBar ratingService, ratingPrice;
     private LinearLayout callLayout, profileLayout, favLayout;
+    private RecyclerView recommendList;
+    ArrayList<Offers> offersArrayList;
+    itemAdapter arrayAdapter;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +74,11 @@ public class moreOfferInformation extends AppCompatActivity {
             userDriver = (Users) bundle.getSerializable("userDriver");
             userOffer = (Offers) bundle.getSerializable("userOffer");
         }
+
+        //collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.more_offer_toolbar_layout);
+        //AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.more_offer_app_bar);
+
+       //collapsingToolbarLayout.setBackgroundResource(R.drawable.no_photo);
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +107,7 @@ public class moreOfferInformation extends AppCompatActivity {
         HomeCity = (TextView) findViewById(R.id.offerInfo_homeCityData);
         ratingNameService = (TextView) findViewById(R.id.offerInfo_serviceRatingName);
         ratingNamePrice = (TextView) findViewById(R.id.offerInfo_priceRatingName);
+        recommendList = (RecyclerView) findViewById(R.id.more_offer_information_recommend_list);
 
         callLayout = (LinearLayout) findViewById(R.id.offerInfo_callLayout);
         favLayout = (LinearLayout) findViewById(R.id.offerInfo_favLayout);
@@ -96,6 +117,15 @@ public class moreOfferInformation extends AppCompatActivity {
         ratingService = (RatingBar) findViewById(R.id.offerInfo_serviceRatingData);
         ratingPrice = (RatingBar) findViewById(R.id.offerInfo_priceRatingData);
 
+        offersArrayList = new ArrayList<>();
+        fillRecommendedList();
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recommendList.setLayoutManager(linearLayoutManager);
+
+        arrayAdapter = new moreOfferInformation.itemAdapter(offersArrayList);
+        recommendList.setAdapter(arrayAdapter);
 
         SetUpInfo();
     }
@@ -151,8 +181,6 @@ public class moreOfferInformation extends AppCompatActivity {
                 addAFavorite();
             }
         });
-
-
 
     }
 
@@ -225,9 +253,134 @@ public class moreOfferInformation extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void fillRecommendedList(){
+        //final ProgressDialog progressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
+
+        final DatabaseReference DataBaseRoot = FirebaseDatabase.getInstance().getReference()
+                .child(Util.RDB_OFFERS);
+        //Query query = DataBaseRoot.orderByChild(Util.TIME_STAMP);
+        Query query = DataBaseRoot;
+        final recommendedSharedPref recommended = new recommendedSharedPref(moreOfferInformation.this);
+
+        //if(offersArrayList == null)
+            //Util.ProgDialogStarter(progressDialog,getResources().getString(R.string.loading));
+
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot allOffers : dataSnapshot.getChildren()){
+
+                    if(offersArrayList.size() > 9)
+                        break;
+
+                    Offers tempOffer = allOffers.getValue(Offers.class);
+                    tempOffer.setOfferKey(allOffers.getKey());
+
+                    //For Recommend
+                    if(recommended.getFavType().equals("")) {
+                        //Thats mean no data
+                        offersArrayList.add(tempOffer);
+                        //No need to other check !
+                        continue;
+                    }
+
+                    if(tempOffer.getType().equals(recommended.getFavType()))
+                        offersArrayList.add(tempOffer);
+
+
+
+
+                }
+                //Util.ProgDialogDelay(progressDialog,100L);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        query.addValueEventListener(valueEventListener);
+
+    }
+
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
     }
+
+    public class itemAdapter extends RecyclerView.Adapter<moreOfferInformation.viewHolder> {
+
+        //private Context context;
+        ArrayList<Offers> itemList;
+
+        public itemAdapter(ArrayList<Offers> list) {
+            super();
+            this.itemList = list;
+        }
+
+        @Override
+        public moreOfferInformation.viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View rowItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.reommended_list_items_hor, parent, false);
+            viewHolder vh = new viewHolder(rowItem);
+            return vh;
+        }
+
+        @Override
+        public void onBindViewHolder(moreOfferInformation.viewHolder holder, int position) {
+            Offers tempOffer = itemList.get(position);
+
+            holder.Title.setText(tempOffer.getTitle());
+            holder.City.setText(tempOffer.getCity());
+            holder.typeIcon.setImageDrawable(Util.getDrawableResource(moreOfferInformation.this, Util.changeIcon(tempOffer.getType())));
+
+            try {
+                holder.userRating.setRating(Float.parseFloat(userDriver.getRateService() + ""));
+                holder.priceRating.setRating(Float.parseFloat(userDriver.getRatePrice() + ""));
+            } catch (Exception e){
+
+            }
+
+            int userRate = Math.round(Float.parseFloat(userDriver.getRateService() + ""));
+            int priceRate = Math.round(Float.parseFloat(userDriver.getRatePrice() + ""));
+
+            holder.ratingService.setText(Util.getRateDesc(moreOfferInformation.this, 1, userRate));
+            holder.ratingPrice.setText(Util.getRateDesc(moreOfferInformation.this, 2, priceRate));
+        }
+
+        @Override
+        public int getItemCount() {
+            return itemList.size();
+        }
+
+        @Override
+        public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+            super.onAttachedToRecyclerView(recyclerView);
+        }
+
+    }
+
+    public static class viewHolder extends RecyclerView.ViewHolder{
+        TextView Title, City, ratingService, ratingPrice;
+        ImageView typeIcon;
+        private RatingBar userRating, priceRating;
+
+        //add by nimer esam for buttons :
+        LinearLayout profileText, callText;
+
+        public viewHolder(View itemView) {
+            super(itemView);
+
+            Title = (TextView) itemView.findViewById(R.id.recommend_list_item_title);
+            City = (TextView) itemView.findViewById(R.id.recommend_list_item_city);
+            typeIcon = (ImageView) itemView.findViewById(R.id.recommend_list_item_icon);
+            ratingService = (TextView) itemView.findViewById(R.id.recommend_list_item_user_rate_desc);
+            ratingPrice = (TextView) itemView.findViewById(R.id.recommend_list_item_price_desc);
+            userRating = (RatingBar) itemView.findViewById(R.id.recommend_list_item_user_rate);
+            priceRating = (RatingBar) itemView.findViewById(R.id.recommend_list_item_price_rate);
+        }
+    }
+
 
 }

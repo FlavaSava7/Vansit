@@ -42,11 +42,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView7"
-                android:textSize="18sp"
-                android:textStyle="normal|bold"
-                android:textColor="@color/colorPrimary"
                 android:layout_marginBottom="@dimen/views_top_margin"
-                android:layout_marginTop="@dimen/views_top_margin" />
+                android:layout_marginTop="@dimen/views_top_margin"
+                android:textSize="18sp"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="normal|bold" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -185,6 +185,22 @@
                     android:gravity="center_vertical" />
             </LinearLayout>
         </LinearLayout>
+
+        <TextView
+            android:text="@string/recommended"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView7"
+            android:textSize="18sp"
+            android:textStyle="normal|bold"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginBottom="@dimen/views_top_margin"
+            android:layout_marginTop="@dimen/views_margin_xl" />
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:id="@+id/more_offer_information_recommend_list"
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
