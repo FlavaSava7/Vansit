@@ -14,7 +14,7 @@ public class recommendedSharedPref {
     private SharedPreferences recommendedSharedPref;
     private SharedPreferences.Editor recommendedSharedPrefEditor;
     private Activity activity;
-    private int car, bus, truck, taxi;
+    private int nothing, car, bus, truck, taxi;
 
     recommendedSharedPref(Activity a) {
         this.activity = a;
@@ -58,11 +58,11 @@ public class recommendedSharedPref {
 
     public String getFavType(){
         convertTypeToInt();
-        int[] maxArraySearch = {car, bus, taxi, truck};
+        int[] maxArraySearch = {nothing, car, bus, taxi, truck};
         int maxNumber = 0;
         int maxIndex = 0;
 
-        for(int i=0; i<4; i++)
+        for(int i=0; i<5; i++)
             if(maxNumber < maxArraySearch[i]) {
                 maxNumber = maxArraySearch[i];
                 maxIndex = i;
@@ -70,12 +70,14 @@ public class recommendedSharedPref {
 
         switch (maxIndex){
             case 0:
-                return "Car" ;
+                return "";
             case 1:
-                return "Bus";
+                return "Car" ;
             case 2:
-                return "Taxi";
+                return "Bus";
             case 3:
+                return "Taxi";
+            case 4:
                 return "Truck";
         }
         return "";

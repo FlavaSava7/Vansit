@@ -17,6 +17,7 @@
     <string name="city">City</string>
     <string name="type">Type</string>
     <string name="title_activity_login">Sign in</string>
+    <string name="allCities">All Cities</string>
 
     <!-- TODO: Login Strings -->
     <string name="prompt_email">Email</string>
@@ -139,6 +140,13 @@
 
     <string name="user_not_logged">Please sign in first to rate this user</string>
     <string name="recommended">Recommended for you :</string>
+
+    <string name="add_request_gps_off_msg">Location services are not enabled</string>
+    <string name="add_request_gps_off_btn">Enable</string>
+    <string name="add_request_save_btn_text">add request</string>
+    <string name="my_request_address">Address : </string>
+    <string name="my_request_time">Time remaining :</string>
+
 
 
     <string name="user_rate_5">Excellent</string>

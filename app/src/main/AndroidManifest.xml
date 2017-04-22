@@ -30,12 +30,18 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity android:name=".splash"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".moreUserInformation"
             android:label=""
@@ -86,8 +92,8 @@
             android:name=".moreOfferInformation"
             android:label="@string/title_activity_more_offer_information"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".test" />
 
-        <activity android:name=".test"></activity>
     </application>
 
 </manifest>

@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -32,6 +33,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -91,6 +94,7 @@ public class addRequest extends Fragment implements
     Requests myRequest;
     FragmentManager fragmentManager;
     String myAddress;
+    RelativeLayout addRequestLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -114,8 +118,7 @@ public class addRequest extends Fragment implements
         item.setVisible(true);
     }
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
     }
@@ -158,8 +161,18 @@ public class addRequest extends Fragment implements
                 !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             mLocationPermissionGranted = false;
 
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            Util.AlertDialog(getContext(), "Warning!", "Please Enable Location Services", intent);
+            final Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+
+            Util.makeSnackbarWithAction(addRequestLayout,
+                    getResources().getString(R.string.add_request_gps_off_msg),
+                    getResources().getString(R.string.add_request_gps_off_btn),
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            addRequest.this.startActivity(intent);
+                        }
+                    });
+            //Util.AlertDialog(getContext(), "Warning!", "Please Enable Location Services", intent);
             //Log.v("Main", "All location services are disabled");
             return;
 
@@ -184,11 +197,9 @@ public class addRequest extends Fragment implements
                 return;
             }
 
-            if(Longitude==0||Latitude==0)
-            {
+            if(Longitude==0||Latitude==0) {
                 Util.makeToast(getContext(), "Searching for Location...");
-            }else
-            {
+            }else {
                 addressText.setText(myAddress);
             }
 
@@ -209,7 +220,7 @@ public class addRequest extends Fragment implements
 
         addressText = (TextView)getActivity().findViewById(R.id.addRequest_location_text);
 
-
+        addRequestLayout = (RelativeLayout) getActivity().findViewById(R.id.fragment_add_request_linear);
         requestSendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -226,8 +237,7 @@ public class addRequest extends Fragment implements
 
         FillSpinners();
 
-        if(!Util.IS_USER_CONNECTED)
-        {
+        if(!Util.IS_USER_CONNECTED) {
             makeToast(getContext(), String.valueOf(R.string.noInternetMsg));
             return;
         }
@@ -307,9 +317,11 @@ public class addRequest extends Fragment implements
                 if(dataSnapshot.exists())
                 {
                     myRequest = dataSnapshot.getValue(Requests.class);
-                    MyRequest myRequestPage = new MyRequest(getActivity(),getContext(),myRequest, fragmentManager);
+                    /*MyRequest myRequestPage = new MyRequest(getActivity(),getContext(),myRequest, fragmentManager);
                     myRequestPage.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                    myRequestPage.show();
+                    myRequestPage.show();*/
+                    newMyRequest myRequestPage = new newMyRequest(myRequest);
+                    Util.ChangeFrag(myRequestPage, fragmentManager);
                 }
                 else
                 {
@@ -322,8 +334,7 @@ public class addRequest extends Fragment implements
             }
         });
     }
-    private void FillSpinners()
-    {
+    private void FillSpinners() {
         //City
         ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item,
@@ -339,8 +350,7 @@ public class addRequest extends Fragment implements
         spinnerType.setAdapter(typeAdapter);
 
     }
-    private void AddRequest()
-    {
+    private void AddRequest() {
         // add or update current
 
         if (ActivityCompat.checkSelfPermission(getContext(),
@@ -401,6 +411,7 @@ public class addRequest extends Fragment implements
         Util.makeToast(getContext(), "Request Sent!");
 
     }
+
     private void DeleteRequest()
     {
         if(myUser == null)
@@ -424,8 +435,8 @@ public class addRequest extends Fragment implements
 
         Util.makeToast(getContext(), "Request Deleted!");
     }
-    private boolean checkEditText(String title, String desc)
-    {
+
+    private boolean checkEditText(String title, String desc) {
         // checks edit texts and spinners
         boolean isValid = true;
         if(TextUtils.isEmpty(title))

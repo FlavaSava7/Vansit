@@ -176,8 +176,7 @@ public class moreUserInformation extends AppCompatActivity {
             Query query = DataBaseRoot.orderByChild(Util.USER_ID).equalTo(userDriver.getUserID());
             ValueEventListener QVEL= new ValueEventListener() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot)
-                {
+                public void onDataChange(DataSnapshot dataSnapshot) {
                     if(!dataSnapshot.exists())// This User have no offer
                     {
                         Util.makeToast(getApplicationContext(), userDriver.getFirstName()+" Does not have any Offers");
