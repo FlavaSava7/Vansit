@@ -4,6 +4,7 @@ package devgam.vansit;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RatingBar;
@@ -63,6 +64,7 @@ public class ratingDialog extends Dialog implements
         DataBaseRoot = FirebaseDatabase.getInstance().getReference();//connect to DB root
 
         userName.setText(tempUserName);
+        addRateButton.setOnClickListener(this);
 
         userRating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
@@ -98,18 +100,23 @@ public class ratingDialog extends Dialog implements
             DatabaseReference query = DataBaseRoot.child(Util.RDB_USERS + "/" + firebaseAuth.getCurrentUser().getUid() + "/" + Util.RATED_FOR);
             ValueEventListener VEL = new ValueEventListener() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+                public void onDataChange(DataSnapshot dataSnapshot)
+                {
+
                     ArrayList<String> ratedForList = (ArrayList<String>) dataSnapshot.getValue();
                     if (ratedForList == null)
                         Util.makeToast(getContext(), "Something wrong happened!");
                     else {
                         boolean canRate = true;
-                        for (String value : ratedForList) {
+                        for (String value : ratedForList)
+                        {
                             if (value.equals(tempUserDriver.getUserID()))//User already voted for this driver
                                 canRate = false;
                         }
 
-                        if (canRate) {
+                        if (canRate)
+                        {
+
                             ratedForList.add(tempUserDriver.getUserID());
                             commitRating(ratedForList, firebaseAuth.getCurrentUser().getUid());//apply rate and add this driver to User
 
@@ -122,12 +129,14 @@ public class ratingDialog extends Dialog implements
 
                 }
             };
+            query.addListenerForSingleValueEvent(VEL);
         }
 
     }
 
     void commitRating(ArrayList<String> updatedRatedForList , String userKey)
     {
+
         //current userKey so we can search and add the updatedRatedForList for User.
         if(priceRating.getRating() != 0)
         {
