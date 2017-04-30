@@ -39,7 +39,7 @@ public class newMain extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        categoryList = (GridView) getActivity().findViewById(R.id.new_main_list);
+        //categoryList = (GridView) getActivity().findViewById(R.id.new_main_list);
         itemAdpater adapter = new itemAdpater(getContext());
         categoryList.setAdapter(adapter);
     }
@@ -71,8 +71,8 @@ public class newMain extends Fragment {
             LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = layoutInflater.inflate(R.layout.new_main_list_item, parent);
             String type = types[position];
-            TextView title = (TextView) rowView.findViewById(R.id.new_main_title);
-            title.setText(type);
+            //TextView title = (TextView) rowView.findViewById(R.id.new_main_title);
+            //title.setText(type);
             return rowView;
         }
     }

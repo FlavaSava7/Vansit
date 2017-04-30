@@ -98,7 +98,7 @@
     <string name="add_offer_desc_null_error">Description is required</string>
     <string name="add_offer_city_null_error">City is required</string>
     <string name="add_offer_type_null_error">Type is required</string>
-    <string name="add_offer_click_again_to_exit">Please click BACK again to exit</string>
+    <string name="add_offer_click_again_to_exit">click BACK again to exit</string>
 
     <string name="my_offer_sure">Are You Sure?</string><!-- for dialog inside my offers page -->
 
@@ -139,12 +139,18 @@
 
 
     <string name="user_not_logged">Please sign in first to rate this user</string>
+    <string name="user_rate_to_hisself">You cannot rate your offers</string>
+    <string name="user_rate_agian">You rated this user before</string>
+    <string name="user_rate_done">Rating successfully done, Thank you</string>
     <string name="recommended">Recommended for you :</string>
 
     <string name="add_request_gps_off_msg">Location services are not enabled</string>
     <string name="add_request_gps_off_btn">Enable</string>
     <string name="add_request_save_btn_text">add request</string>
-    <string name="my_request_address">Address : </string>
+    <string name="add_request_searching">Searching for location ...</string>
+    <string name="add_request_gps_for_app">Allow this application to use GPS </string>
+    <string name="add_request_gps_for_app_btn">Allow</string>
+    <string name="my_request_address">"Address "</string>
     <string name="my_request_time">Time remaining :</string>
 
 

@@ -21,6 +21,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,6 +48,8 @@ public class moreUserInformation extends AppCompatActivity {
 
     //Users userDriver = null;
     Users userDriver;
+    DatabaseReference DataBaseRoot;
+
 
 
 
@@ -74,6 +78,7 @@ public class moreUserInformation extends AppCompatActivity {
         callLayout = (LinearLayout) findViewById(R.id.more_user_information_call_layout);
         rateLayout = (LinearLayout) findViewById(R.id.more_user_information_rate_layout);
         offerAdapter = new moreUserInformation.itemsAdapter(this);
+        DataBaseRoot = FirebaseDatabase.getInstance().getReference();//connect to DB root
         fragmentManager  = getSupportFragmentManager();
 
         try {
@@ -152,16 +157,58 @@ public class moreUserInformation extends AppCompatActivity {
 
 
         final ratingDialog rateUser = new ratingDialog(this, userDriver);
+        rateUser.initialDialog(rateUser);
+
+        final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
         rateLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final View view = v;
                 if (!Util.isLogged()) {
                     // User is not logged
                     Util.makeSnackbar(v, getResources().getString(R.string.user_not_logged));
                     return;
+                } else if (userDriver.getUserID().equals(firebaseAuth.getCurrentUser().getUid())) {
+                    // User cant vote for self.
+                    Util.makeSnackbar(v, getResources().getString(R.string.user_rate_to_hisself));
+                    return;
                 }
-                rateUser.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                rateUser.show();
+
+                DatabaseReference query = DataBaseRoot.child(Util.RDB_USERS + "/" + firebaseAuth.getCurrentUser().getUid() + "/" + Util.RATED_FOR);
+                ValueEventListener VEL = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot)
+                    {
+
+                        ArrayList<String> ratedForList = (ArrayList<String>) dataSnapshot.getValue();
+                        if (ratedForList == null)
+                            Util.makeToast(moreUserInformation.this, "Something wrong happened!");
+                        else {
+                            boolean canRate = true;
+                            for (String value : ratedForList) {
+                                if (value.equals(userDriver.getUserID())){//User already voted for this driver
+                                    canRate = false;
+                                    break;
+                                }
+                            }
+
+                            if (canRate) {
+                                rateUser.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                rateUser.show();
+                            } else
+                                Util.makeSnackbar(view, getResources().getString(R.string.user_rate_agian));
+                        }
+                    } @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                };
+                query.addListenerForSingleValueEvent(VEL);
+
+
+
+
             }
         });
 

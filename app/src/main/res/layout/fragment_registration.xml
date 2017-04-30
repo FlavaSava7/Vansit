@@ -16,27 +16,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:text="Sign Up"
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/views_margin"
-            android:id="@+id/nav_header_main_email_text"
-            android:textAppearance="@style/TextAppearance.AppCompat"
-            android:textSize="54sp"
-            android:textAlignment="center"
-            android:textColor="@color/fragment_background"
-            android:fontFamily="cursive"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView6"
-            android:layout_marginBottom="@dimen/views_margin_xl"
-            android:gravity="center_vertical|center_horizontal"
-            android:textColor="@color/fragment_background" />
+            fb:srcCompat="@drawable/icon2"
+            android:id="@+id/imageView"
+            android:layout_margin="@dimen/views_margin_xl" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -122,7 +107,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/register_signup_button"
-            android:background="@drawable/googe_button"
+            android:background="@drawable/save_button_boarded"
             android:layout_marginLeft="@dimen/views_button_margin"
             android:layout_marginRight="@dimen/views_button_margin"
             android:layout_marginBottom="@dimen/views_button_margin"

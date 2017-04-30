@@ -113,7 +113,7 @@
 
     <ListView
 
-<<<<<<<<< Temporary merge branch 1
+
         android:id="@+id/frag_main_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -122,7 +122,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@id/main_linear_layout"
         />
-=========
+
                 android:id="@+id/frag_main_listview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
