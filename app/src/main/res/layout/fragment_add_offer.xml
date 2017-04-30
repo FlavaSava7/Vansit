@@ -129,7 +129,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginTop="@dimen/views_top_margin"
-                            android:layout_marginBottom="@dimen/views_margin_s"
+                            android:layout_marginBottom="@dimen/views_top_margin"
                             android:layout_marginLeft="@dimen/views_top_margin"
                             android:layout_marginRight="@dimen/views_top_margin">
 
@@ -169,7 +169,8 @@
                             android:layout_height="match_parent"
                             android:layout_marginLeft="@dimen/views_top_margin"
                             android:layout_marginBottom="@dimen/views_top_margin"
-                            android:layout_marginRight="@dimen/views_top_margin">
+                            android:layout_marginRight="@dimen/views_top_margin"
+                            android:layout_marginTop="@dimen/views_top_margin">
 
                             <TextView
                                 android:text="@string/type"
@@ -231,7 +232,8 @@
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:id="@+id/add_offer_user_information_layout">
 
 
 
