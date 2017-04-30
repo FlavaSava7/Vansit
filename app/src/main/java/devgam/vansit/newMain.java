@@ -1,27 +1,23 @@
 package devgam.vansit;
 
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-
-import devgam.vansit.R;
+import android.widget.RelativeLayout;
 
 
-public class newMain extends Fragment {
+public class newMain extends Fragment implements View.OnClickListener{
 
-    GridView categoryList;
-    String[] types = new String[] { "Car", "Bus", "Taxi"};
+    RelativeLayout carLayout, taxiLayout, mircrobusLayout,
+            busLayout, pickupLayout, truckLayout,
+            bulldozerLayout, excavatorLayout;
+    FragmentManager fragmentManager;// this is used for the ChangeFrag method
 
 
     public newMain() {
@@ -32,6 +28,33 @@ public class newMain extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        fragmentManager  = getActivity().getSupportFragmentManager();
+
+        carLayout = (RelativeLayout) getActivity().findViewById(R.id.new_main_car);
+        taxiLayout = (RelativeLayout) getActivity().findViewById(R.id.new_main_taxi);
+        mircrobusLayout = (RelativeLayout) getActivity().findViewById(R.id.new_main_microbus);
+        busLayout = (RelativeLayout) getActivity().findViewById(R.id.new_main_bus);
+        pickupLayout = (RelativeLayout) getActivity().findViewById(R.id.new_main_pickup);
+        truckLayout = (RelativeLayout) getActivity().findViewById(R.id.new_main_truck);
+        bulldozerLayout = (RelativeLayout) getActivity().findViewById(R.id.new_main_bulldozer);
+        excavatorLayout = (RelativeLayout) getActivity().findViewById(R.id.new_main_excavator);
+
+        /*carLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Main viewRequests = new Main("Car");
+                Util.ChangeFrag(viewRequests, fragmentManager);
+            }
+        });
+        //taxiLayout.setOnClickListener(this);
+
+        /*
+        mircrobusLayout.setOnClickListener(this);
+        busLayout.setOnClickListener(this);
+        pickupLayout.setOnClickListener(this);
+        truckLayout.setOnClickListener(this);
+        bulldozerLayout.setOnClickListener(this);
+        excavatorLayout.setOnClickListener(this);*/
 
 
     }
@@ -39,9 +62,6 @@ public class newMain extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //categoryList = (GridView) getActivity().findViewById(R.id.new_main_list);
-        itemAdpater adapter = new itemAdpater(getContext());
-        categoryList.setAdapter(adapter);
     }
 
     @Override
@@ -51,35 +71,11 @@ public class newMain extends Fragment {
         return inflater.inflate(R.layout.fragment_new_main, container, false);
     }
 
-    class itemAdpater extends ArrayAdapter<String> {
 
-        Context context;
+    @Override
+    public void onClick(View v) {
+        if(v == carLayout){
 
-
-        public itemAdpater(Context context) {
-            super(context, R.layout.new_main_list_item, types);
-        }
-
-        @Override
-        public int getCount() {
-            return types.length;
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = layoutInflater.inflate(R.layout.new_main_list_item, parent);
-            String type = types[position];
-            //TextView title = (TextView) rowView.findViewById(R.id.new_main_title);
-            //title.setText(type);
-            return rowView;
         }
     }
-
-
-
-
-
-
 }

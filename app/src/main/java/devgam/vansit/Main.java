@@ -49,6 +49,10 @@ public class Main extends Fragment implements View.OnClickListener{
         // Required empty public constructor
     }
 
+    public Main(String type){
+        whichType = type;
+    }
+
     Button showMore;
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
 

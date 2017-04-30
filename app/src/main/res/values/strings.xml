@@ -200,6 +200,12 @@
     <string name="Balqa">Balqa</string>
     <string name="Karak">Karak</string>
 
+
+    <string name="Car">Cars</string>
+    <string name="Bus">Buses</string>
+    <string name="Truck">Trucks</string>
+    <string name="Taxi">Taxis</string>
+
     <string-array name="type_list">
         <item>Select Type</item>
         <item>Car</item>
