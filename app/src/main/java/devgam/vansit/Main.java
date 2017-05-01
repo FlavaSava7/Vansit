@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -384,6 +385,7 @@ public class Main extends Fragment implements View.OnClickListener{
         if(v == addRequest || v == addRequestText)
         {
             //foo();
+            //boo();
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             addRequest addRequestPage = new addRequest();
             Util.ChangeFrag(addRequestPage, fragmentManager);
@@ -680,18 +682,42 @@ public class Main extends Fragment implements View.OnClickListener{
                     city = "Amman";
                     break;
             }
+            Users users;
 
-            Users users = new Users("FA"+i,"KE"+i,city,"079656560","MALE","5","7","1995");
-            users.setUserID("ID"+i);
+            switch (randomInt) {
+                case 0:
+                    users = new Users("Ahmad","Khaled","Amman","0796565604","MALE","5","7","1995");
+                    users.setUserID("ID"+i);
+                    break;
+                case 1:
+                    users = new Users("Lara","Manaseer","Zarqa","0796762540","FEMALE","7","1","1999");
+                    users.setUserID("ID"+i);
+                    break;
+                case 2:
+                    users = new Users("Abdullah","Asiri","Irbid","0796659860","MALE","5","4","1990");
+                    users.setUserID("ID"+i);
+                    break;
+                case 3:
+                    users = new Users("Jamal","Moath","Ajloun","0796121160","MALE","7","12","1997");
+                    users.setUserID("ID"+i);
+                    break;
+                default:
+                    users = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+                    users.setUserID("ID"+i);
+                    break;
+            }
+
             if(randomInt%2==0)
             {
-                Requests requests1 = new Requests(users,"Tit"+i,"Desc"+i,type,city,s.get(i),
+                Requests requests1 = new Requests(users,"Title"+i,"Desc"+i,type,city,s.get(i),
                         32.021371+((double)i/1000),35.848829+((double)i/1000),
                         System.currentTimeMillis(), FirebaseInstanceId.getInstance().getToken());
                 myRef.child(Util.RDB_REQUESTS+"/"+"ID"+i).setValue(requests1);
             }else
             {
-                Requests requests1 = new Requests(users,"Tit"+i,"Desc"+i,type,city,s.get(i),
+
+                Requests requests1 = new Requests(users,"Title"+i,"Desc"+i,type,city,s.get(i),
+
                         32.021371-((double)i/1000),35.848829-((double)i/1000),
                         System.currentTimeMillis(), FirebaseInstanceId.getInstance().getToken());
                 myRef.child(Util.RDB_REQUESTS+"/"+users.getUserID()).setValue(requests1);
@@ -700,4 +726,56 @@ public class Main extends Fragment implements View.OnClickListener{
         }
 
     }
+
+    void boo()
+    {
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
+        List<Offers> offers = new ArrayList<>();
+        Random randomGenerator = new Random();
+        for(int i = 0;i<100;i++)
+        {
+                int randomInt = randomGenerator.nextInt(4);
+                String type = "";
+                switch (randomInt) {
+                case 0:
+                type = "Car";
+                break;
+                case 1:
+                type = "Bus";
+                break;
+                case 2:
+                type = "Truck";
+                break;
+                case 3:
+                type = "Taxi";
+                break;
+            default:
+                type = "Car";
+                break;
+                }
+                String city = "";
+                switch (randomInt) {
+                case 0:
+                city = "Amman";
+                break;
+                case 1:
+                city = "Zarqa";
+                break;
+                case 2:
+                city = "Irbid";
+                break;
+                case 3:
+                city = "Ajloun";
+                break;
+            default:
+                city = "Amman";
+                break;
+                }
+                Offers offer = new Offers("JRtqgsjvHvMIsSLQVVs6EDNfL582",
+                "Title" + i, "Desc" + i, type, city, Util.RDB_JORDAN, System.currentTimeMillis() + i * 10);
+                offers.add(i, offer);
+                myRef.child("Offers").push().setValue(offer);
+        }
+    }
 }
+

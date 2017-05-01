@@ -137,8 +137,16 @@ public class moreOfferInformation extends AppCompatActivity {
 
         favLayout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                //TODO : add to fav List
+
+            public void onClick(View v)
+            {
+                if(!Util.isLogged())
+                {
+                    Util.makeSnackbar(v, getResources().getString(R.string.user_not_logged));
+                    return;
+                }
+                addAFavorite();
+
             }
         });
 

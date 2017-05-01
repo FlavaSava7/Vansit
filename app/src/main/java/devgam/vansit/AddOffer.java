@@ -82,6 +82,7 @@ public class AddOffer extends Fragment {
     public void onResume()
     {
         super.onResume();
+        Util.ChangePageTitle(getActivity(), R.string.main_fab_text_add_offer);
         spinnerCity = (Spinner)getActivity().findViewById(R.id.addOffer_spinCity);
         spinnerType = (Spinner)getActivity().findViewById(R.id.addOffer_spinType);
         FillSpinners();//default filling

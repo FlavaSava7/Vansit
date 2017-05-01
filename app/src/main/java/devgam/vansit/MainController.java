@@ -209,7 +209,8 @@ public class MainController extends AppCompatActivity
             Util.ChangeFrag(favourite, fragmentManager);
             drawer.closeDrawer(GravityCompat.START);
             return true;
-        } else  if(id == R.id.nav_rec) {
+        } else  if(id == R.id.nav_rec)
+        {
             addRequest rec = new addRequest();
             Util.ChangeFrag(rec, fragmentManager);
             drawer.closeDrawer(GravityCompat.START);
