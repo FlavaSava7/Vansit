@@ -7,6 +7,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="success">Success!</string>
     <string name="loading">Loading&#8230;</string><!-- the &#8230; so you can represent the ... -->
     <string name="fail_input_edittext">Please Check Your Inputs</string><!-- general inputs fails in add offers page -->
     <string name="server_key" translatable="false">AAAAXuVOldU:APA91bF9Kz_udNp0VmuK8dzL7bLQ2hTx6vB_xFAq_X_hHvsOkLImNFOWm0LCpzE_mspc9jrWK5UnzRwctDLy3lt_JhJXfhT2aJRmb8gqNyfn9Nj3fJtqlSFHUhPzqbNhPVGzHSO1lBjmRDzk89W0CS4msa4WoBLUPA</string>
@@ -71,7 +72,7 @@
     <string name="menu_my_account_text">My Account</string>
     <string name="menu_home_text">Home</string>
     <string name="menu_fav_text">Like</string>
-    <string name="menu_rec_text">Recommended</string>
+    <string name="menu_rec_text">Add Request</string>
     <string name="menu_req_text">Requests</string>
     <string name="menu_account_text">Account</string>
     <string name="menu_my_offers_text">My Offers</string>
@@ -136,11 +137,13 @@
     <string name="user_rating">User Rating :</string>
     <string name="price_rating">Price Rating :</string>
     <string name="add_rate">Add Rate</string>
+    <string name="add_rate_duplicate">You Already Rated This User Before!</string>
     <string name="user_information_home_city">Living in </string>
     <string name="user_information_age">Age is  </string>
 
 
-    <string name="user_not_logged">Please sign in first to rate this user</string>
+    <string name="user_not_logged">Please Sign In First!</string>
+
 
     <string name="recommended">Recommended for you :</string>
 

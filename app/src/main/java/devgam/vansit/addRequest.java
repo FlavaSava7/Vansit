@@ -317,11 +317,11 @@ public class addRequest extends Fragment implements
                 if(dataSnapshot.exists())
                 {
                     myRequest = dataSnapshot.getValue(Requests.class);
-                    /*MyRequest myRequestPage = new MyRequest(getActivity(),getContext(),myRequest, fragmentManager);
+                    MyRequest myRequestPage = new MyRequest(getActivity(),getContext(),myRequest, fragmentManager);
                     myRequestPage.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                    myRequestPage.show();*/
-                    newMyRequest myRequestPage = new newMyRequest(myRequest);
-                    Util.ChangeFrag(myRequestPage, fragmentManager);
+                    myRequestPage.show();
+                    //newMyRequest myRequestPage = new newMyRequest(myRequest);
+                    //Util.ChangeFrag(myRequestPage, fragmentManager);
                 }
                 else
                 {

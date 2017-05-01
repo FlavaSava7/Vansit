@@ -178,7 +178,13 @@ public class moreOfferInformation extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
+                if(!Util.isLogged())
+                {
+                    Util.makeSnackbar(v, getResources().getString(R.string.user_not_logged));
+                    return;
+                }
                 addAFavorite();
+
             }
         });
 
