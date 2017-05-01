@@ -291,7 +291,7 @@ public class ViewRequests extends Fragment  implements
             }
             else
             {
-                holder.Status.setText(getActivity().getResources().getString(R.string.mview_requests_status_availble);
+                holder.Status.setText(getActivity().getResources().getString(R.string.mview_requests_status_availble));
                 holder.Status.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
             }
             float distanceValue;
