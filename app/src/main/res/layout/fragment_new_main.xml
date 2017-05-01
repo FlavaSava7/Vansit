@@ -1,0 +1,286 @@
+
+
+
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="layout.newMain">
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <!-- TODO: Update blank fragment layout -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/new_main_car">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/car"
+                    android:id="@+id/imageView1"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:text="@string/Car"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView1"
+                    android:layout_marginLeft="@dimen/views_top_margin"
+                    android:layout_marginRight="@dimen/views_top_margin"
+                    android:textSize="18sp"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/cardview_light_background"
+                    android:layout_alignBottom="@+id/imageView3"
+                    android:layout_marginBottom="@dimen/views_button_margin" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/new_main_taxi">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/taxi"
+                    android:id="@+id/imageView2"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:text="@string/Taxi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView2"
+                    android:layout_marginLeft="@dimen/views_top_margin"
+                    android:layout_marginRight="@dimen/views_top_margin"
+                    android:textSize="18sp"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/cardview_light_background"
+                    android:layout_alignBottom="@+id/imageView3"
+                    android:gravity="bottom"
+                    android:layout_marginBottom="@dimen/views_button_margin" />
+
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/new_main_microbus">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/microbus"
+                    android:id="@+id/imageView3"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView3"
+                    android:layout_marginLeft="@dimen/views_top_margin"
+                    android:layout_marginRight="@dimen/views_top_margin"
+                    android:textSize="18sp"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/cardview_light_background"
+
+                    android:layout_alignBottom="@+id/imageView3"
+                    android:gravity="bottom"
+                    android:layout_marginBottom="@dimen/views_button_margin" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/new_main_bus">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/bus"
+                    android:id="@+id/imageView4"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:text="bus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView4"
+                    android:layout_marginLeft="@dimen/views_top_margin"
+                    android:layout_marginRight="@dimen/views_top_margin"
+                    android:textSize="18sp"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/cardview_light_background"
+
+                    android:layout_alignBottom="@+id/imageView3"
+                    android:gravity="bottom"
+                    android:layout_marginBottom="@dimen/views_button_margin" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/new_main_pickup">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/pickup"
+                    android:id="@+id/imageView5"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView5"
+                    android:layout_marginLeft="@dimen/views_top_margin"
+                    android:layout_marginRight="@dimen/views_top_margin"
+                    android:textSize="18sp"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/cardview_light_background"
+
+                    android:layout_alignBottom="@+id/imageView3"
+                    android:gravity="bottom"
+                    android:layout_marginBottom="@dimen/views_button_margin" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/new_main_truck">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/truck"
+                    android:id="@+id/imageView6"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:text="@string/Truck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView6"
+                    android:layout_marginLeft="@dimen/views_top_margin"
+                    android:layout_marginRight="@dimen/views_top_margin"
+                    android:textSize="18sp"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/cardview_light_background"
+                    android:layout_alignBottom="@+id/imageView3"
+                    android:gravity="bottom"
+                    android:layout_marginBottom="@dimen/views_button_margin" />
+
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/new_main_bulldozer">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/bulldozer"
+                    android:id="@+id/imageView7"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/views_top_margin"
+                    android:layout_marginRight="@dimen/views_top_margin"
+                    android:textSize="18sp"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/cardview_light_background"
+                    android:layout_alignBottom="@+id/imageView3"
+                    android:gravity="bottom"
+                    android:layout_marginBottom="@dimen/views_button_margin" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/new_main_excavator">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/excavator"
+                    android:id="@+id/imageView8"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView8"
+                    android:layout_marginLeft="@dimen/views_top_margin"
+                    android:layout_marginRight="@dimen/views_top_margin"
+                    android:textSize="18sp"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/cardview_light_background"
+                    android:layout_alignBottom="@+id/imageView3"
+                    android:gravity="bottom"
+                    android:layout_marginBottom="@dimen/views_button_margin" />
+
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

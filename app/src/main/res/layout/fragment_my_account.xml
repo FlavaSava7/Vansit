@@ -23,7 +23,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_weight="1"
-            android:background="@drawable/googe_button"
+            android:background="@drawable/save_button_boarded"
             android:layout_margin="@dimen/views_margin"
             android:textColor="@color/cardview_light_background"
             android:backgroundTint="@color/fab_add_offer"

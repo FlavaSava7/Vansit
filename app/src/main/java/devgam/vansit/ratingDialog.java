@@ -4,7 +4,6 @@ package devgam.vansit;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RatingBar;
@@ -32,6 +31,7 @@ public class ratingDialog extends Dialog implements
     Users tempUserDriver;
     String tempUserName;
     DatabaseReference DataBaseRoot;
+    ratingDialog ratingDialog;
 
     public ratingDialog(Activity activity) {
         super(activity);
@@ -43,10 +43,12 @@ public class ratingDialog extends Dialog implements
         super(activity);
         // Required empty public constructor
         this.c = activity;
-
         this.tempUserDriver = userDriver;
-
         this.tempUserName = userDriver.getFirstName()+" "+userDriver.getLastName();
+    }
+
+    public void initialDialog(ratingDialog ratingDialog){
+        this.ratingDialog = ratingDialog;
     }
 
     @Override
@@ -93,8 +95,8 @@ public class ratingDialog extends Dialog implements
 
 
             final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-            if (tempUserDriver.getUserID().equals(firebaseAuth.getCurrentUser().getUid()))// User cant vote for self.
-                return;
+            /*if (tempUserDriver.getUserID().equals(firebaseAuth.getCurrentUser().getUid()))// User cant vote for self.
+                return;*/
 
 
             DatabaseReference query = DataBaseRoot.child(Util.RDB_USERS + "/" + firebaseAuth.getCurrentUser().getUid() + "/" + Util.RATED_FOR);
@@ -110,8 +112,10 @@ public class ratingDialog extends Dialog implements
                         boolean canRate = true;
                         for (String value : ratedForList)
                         {
-                            if (value.equals(tempUserDriver.getUserID()))//User already voted for this driver
+                            if (value.equals(tempUserDriver.getUserID())) {//User already voted for this driver
                                 canRate = false;
+                                break;
+                            }
                         }
 
                         if (canRate)
@@ -188,6 +192,7 @@ public class ratingDialog extends Dialog implements
                 .child(Util.RATED_FOR)
                 .setValue(updatedRatedForList);
 
-
+        ratingDialog.dismiss();
+        Util.makeToast(c, c.getResources().getString(R.string.user_rate_done));
     }
 }

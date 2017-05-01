@@ -1,118 +1,185 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="devgam.vansit.AcceptedRequest"
-    android:orientation="vertical"
-    android:layout_gravity="center"
-    android:gravity="center">
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="1"
+    android:background="@color/editText_background">
 
-        <TextView
-            android:textAllCaps="true"
-            android:textSize="20sp"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="USER" />
-        <TextView
-            android:id="@+id/accepted_request_user_Name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Name:"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            />
-        <TextView
-            android:id="@+id/accepted_request_user_nameData"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:textColor="#000000"
-            android:textSize="16sp"
-            />
+            android:layout_marginTop="@dimen/views_margin_xl">
 
-        <TextView
-            android:id="@+id/accepted_request_user_Phone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Phone:"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            />
-        <TextView
-            android:id="@+id/accepted_request_user_phoneData"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:textColor="#000000"
-            android:textSize="16sp"
-            android:paddingLeft="20dp"
-            />
-        <TextView
-            android:id="@+id/accepted_request_user_serviceRating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Driver Rating: "
-            android:textColor="#000000"
-            android:textSize="18sp"
-            />
-        <RatingBar
-            android:id="@+id/accepted_request_user_serviceRatingData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:numStars="5"
-            android:stepSize="1"
-            android:rating="0"
-            />
-        <TextView
-            android:id="@+id/accepted_request_user_serviceRatingName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="(...)"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            />
-        <TextView
-            android:id="@+id/accepted_request_user_priceRating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Price Rating: "
-            android:textColor="#000000"
-            android:textSize="18sp"
-            />
+                <TextView
+                    android:text="@string/accepted_request_user_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView9"
+                    android:textAlignment="center" />
 
-        <RatingBar
-            android:id="@+id/accepted_request_user_priceRatingData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:numStars="5"
-            android:stepSize="1"
-            android:rating="0"
-            />
-        <TextView
-            android:id="@+id/accepted_request_user_priceRatingName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="(...)"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            />
-        <Button
-            android:id="@+id/accepted_request_user_commit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Commit"
-            android:textColor="#000000"
-            android:textSize="14sp"
-            />
-        <Button
-            android:id="@+id/accepted_request_user_done"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="DONE"
-            />
-        <Button
-            android:id="@+id/accepted_request_user_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/layout_button_cancel"
-            />
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_user_male"
+                    android:id="@+id/accepted_request_user_imgData"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:padding="@dimen/views_button_margin"
+                    android:layout_marginTop="@dimen/views_margin_xl" />
 
-</LinearLayout>
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/accepted_request_user_nameData"
+                    android:textAlignment="center"
+                    android:textSize="24sp"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_marginTop="@dimen/views_top_margin" />
+
+                <TextView
+                    android:text="@string/user_information_age"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/accepted_request_user_ageData"
+                    android:layout_below="@+id/user_information_name"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:textStyle="normal|bold"
+                    android:layout_marginTop="@dimen/views_button_margin" />
+
+                <TextView
+                    android:text="@string/user_information_home_city"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/accepted_request_user_cityData"
+                    android:textAlignment="center"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:textStyle="normal|bold"
+                    android:layout_marginTop="@dimen/views_top_margin" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="1"
+                    android:layout_marginLeft="@dimen/views_margin_xl"
+                    android:layout_marginRight="@dimen/views_margin_xl"
+                    android:layout_marginBottom="@dimen/views_margin"
+                    android:layout_marginTop="@dimen/views_margin">
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.9"
+                            android:id="@+id/accepted_request_user_callData"
+                            android:layout_marginLeft="@dimen/views_margin"
+                            android:layout_marginRight="@dimen/views_margin">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    app:srcCompat="@drawable/ic_call"
+                                    android:drawableTint="@color/gray"
+                                    android:drawableTintMode="src_atop"
+                                    android:id="@+id/more_user_information_call_img" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/list_item_call_text"
+                                    android:id="@+id/more_user_information_call_text"
+                                    android:textAllCaps="true"
+                                    android:textStyle="normal|bold"
+                                    android:textAppearance="@style/TextAppearance.AppCompat"
+                                    android:textSize="12sp"
+                                    style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                                    android:layout_weight="0.45"
+                                    android:gravity="center_vertical"
+                                    android:clickable="false"
+                                    android:longClickable="false" />
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/accepted_request_user_rateData"
+                            android:layout_marginLeft="@dimen/views_margin"
+                            android:layout_marginRight="@dimen/views_margin">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    app:srcCompat="@drawable/ic_rate"
+                                    android:drawableTint="@color/gray"
+                                    android:drawableTintMode="src_atop" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:clickable="false"
+                                    android:text="@string/add_rate"
+                                    android:id="@+id/more_user_information_rate"
+                                    android:textAllCaps="true"
+                                    android:textStyle="normal|bold"
+                                    android:layout_weight="0.45"
+                                    android:textAppearance="@style/TextAppearance.AppCompat"
+                                    android:textSize="12sp"
+                                    android:drawableTint="@color/gray"
+                                    android:drawableTintMode="src_atop"
+                                    style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                                    android:textAlignment="gravity"
+                                    android:gravity="center_vertical" />
+
+                        </LinearLayout>
+
+                </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="@color/common_google_signin_btn_text_light_focused"
+            android:layout_above="@+id/l1" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/l1"
+            android:layout_alignParentBottom="true">
+
+                <Button
+                    android:text="@string/accepted_request_done"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/accepted_request_user_done"
+                    android:layout_weight="1"
+                    style="@android:style/Widget.Material.Light.Button.ButtonBar.AlertDialog" />
+
+                <Button
+                    android:text="@string/layout_button_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/accepted_request_user_cancel"
+                    android:layout_weight="1"
+                    style="@android:style/Widget.Material.Light.Button.ButtonBar.AlertDialog" />
+        </LinearLayout>
+
+</RelativeLayout>

@@ -12,27 +12,12 @@
     android:weightSum="1"
     android:background="@drawable/login_back">
 
-    <TextView
-        android:text="Sign in"
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/views_margin"
-        android:id="@+id/nav_header_main_email_text"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textSize="54sp"
-        android:textAlignment="center"
-        android:textColor="@color/fragment_background"
-        android:fontFamily="cursive" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView6"
-        android:layout_marginBottom="@dimen/views_margin_xl"
-        android:gravity="center_vertical|center_horizontal"
-        android:textColor="@color/fragment_background" />
+        fb:srcCompat="@drawable/icon2"
+        android:id="@+id/imageView"
+        android:layout_margin="@dimen/views_margin_xl" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -126,7 +111,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:text="@string/sign_in_title"
-        android:background="@drawable/googe_button"
+        android:background="@drawable/save_button_boarded"
         android:textColor="@color/cardview_light_background"
         android:backgroundTint="@color/fab_add_offer"
         android:textAlignment="center"
@@ -146,9 +131,7 @@
         android:textColor="@color/fragment_background"
         android:textSize="16sp"
         android:layout_marginTop="@dimen/views_margin"
-        android:fontFamily="sans-serif"
-        android:textAppearance="@android:style/TextAppearance.Material"
-        android:typeface="monospace" />
+        />
 
     <TextView
         android:text="@string/sign_in_register_link"
@@ -161,9 +144,7 @@
         android:textColor="@color/fragment_background"
         android:layout_marginBottom="@dimen/views_top_margin"
         android:textSize="16sp"
-        android:textAppearance="@android:style/TextAppearance.Material"
-        android:fontFamily="sans-serif"
-        android:typeface="monospace" />
+         />
 
     <LinearLayout
         android:orientation="horizontal"

@@ -50,8 +50,6 @@
     <string name="my_account_gender_female_text">Female</string>
     <string name="my_account_birthday_text">Birthday :</string>
     <string name="my_account_homeCity_text">Home city :</string>
-    <string name="title_activity_more_offer_information">moreOfferInformation</string>
-    <string name="action_settings">Settings</string>
 
     <string name="list_item_city_text">City : </string>
     <string name="list_item_type_text">Type : </string>
@@ -101,7 +99,7 @@
     <string name="add_offer_desc_null_error">Description is required</string>
     <string name="add_offer_city_null_error">City is required</string>
     <string name="add_offer_type_null_error">Type is required</string>
-    <string name="add_offer_click_again_to_exit">Please click BACK again to exit</string>
+    <string name="add_offer_click_again_to_exit">click BACK again to exit</string>
 
     <string name="my_offer_sure">Are You Sure?</string><!-- for dialog inside my offers page -->
 
@@ -125,7 +123,13 @@
     <string name="view_requests_map_navigation">Open Navigation</string>
 
     <string name="my_request_title">My Request</string>
+    <string name="my_request_deleted">Request Deleted</string>
     <string name="my_request_refresh">Refresh Request</string>
+    <string name="my_request_accept_btn">Accept</string>
+    <string name="my_request_decline_btn">Decline</string>
+
+    <string name="mview_requests_status_availble">Available to serve</string>
+    <string name="mview_requests_status_not_availble">User is being served</string>
 
     <!-- shared by layouts -->
     <string name="layout_button_save">save</string>
@@ -141,23 +145,27 @@
     <string name="user_information_home_city">Living in </string>
     <string name="user_information_age">Age is  </string>
 
-
-    <string name="user_not_logged">Please Sign In First!</string>
-
+    <string name="user_not_logged">Please sign in first to rate this user</string>
+    <string name="user_rate_to_hisself">You cannot rate your offers</string>
+    <string name="user_rate_agian">You rated this user before</string>
+    <string name="user_rate_done">Rating successfully done, Thank you</string>
 
     <string name="recommended">Recommended for you :</string>
 
     <string name="add_request_gps_off_msg">Location services are not enabled</string>
     <string name="add_request_gps_off_btn">Enable</string>
     <string name="add_request_save_btn_text">add request</string>
-    <string name="my_request_address">Address : </string>
+    <string name="add_request_searching">Searching for location ...</string>
+    <string name="add_request_gps_for_app">Allow this application to use GPS </string>
+    <string name="add_request_gps_for_app_btn">Allow</string>
+    <string name="my_request_address">"Address "</string>
     <string name="my_request_time">Time remaining :</string>
 
-
-    <string name="added_fav">A New Favorite has been Added!</string>
-    <string name="added_fav_fail">You Added this offer to favorites before!</string>
-
-
+    <string name="my_account_save_done">Save Successfully</string>
+    <string name="my_account_birth_error">Invalid Birth day</string>
+    <string name="my_account_first_name_error">First name is required</string>
+    <string name="my_account_last_name_error">Last name is required</string>
+    <string name="my_account_phone_error">Phone number is required</string>
 
     <string name="user_rate_5">Excellent</string>
     <string name="user_rate_4">Very Good</string>
@@ -171,7 +179,13 @@
     <string name="price_rate_4">Expensive</string>
     <string name="price_rate_5">Very Expensive</string>
 
-
+    <string name="accepted_request_commit">Commit</string>
+    <string name="accepted_request_done">Done</string>
+    <string name="accepted_request_cancel">Cancel</string>
+    <string name="accepted_request_map">Map</string>
+    <string name="accepted_request_Navigation">Navigation</string>
+    <string name="accepted_request_user_title">You are being served by</string>
+    <string name="accepted_request_driver_title">You are serving now </string>
     <!-- TODO: String Array for spinners -->
     <string-array name="city_list">
         <item>Select City</item>
@@ -203,6 +217,12 @@
     <string name="Madaba">Madaba</string>
     <string name="Balqa">Balqa</string>
     <string name="Karak">Karak</string>
+
+
+    <string name="Car">Cars</string>
+    <string name="Bus">Buses</string>
+    <string name="Truck">Trucks</string>
+    <string name="Taxi">Taxis</string>
 
     <string-array name="type_list">
         <item>Select Type</item>
@@ -317,7 +337,8 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
-
+    <string name="title_activity_more_offer_information">moreOfferInformation</string>
+    <string name="action_settings">Settings</string>
 
 
 

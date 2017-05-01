@@ -140,8 +140,11 @@ public class MainController extends AppCompatActivity
                 }
             }
             else {
+                newMain viewRequests = new newMain();
+                Util.ChangeFrag(viewRequests, fragmentManager);
+                /*
                 Main mainPage = new Main();
-                Util.ChangeFrag(mainPage,fragmentManager);
+                Util.ChangeFrag(mainPage,fragmentManager);*/
             }
 
         }
@@ -188,8 +191,12 @@ public class MainController extends AppCompatActivity
             Login loginPage = new Login();
             Util.ChangeFrag(loginPage,fragmentManager);
         } else if (id == R.id.nav_main) {
+            newMain viewRequests = new newMain();
+            Util.ChangeFrag(viewRequests, fragmentManager);
+            drawer.closeDrawer(GravityCompat.START);
+            /*
             Main mainPage = new Main();
-            Util.ChangeFrag(mainPage,fragmentManager);
+            Util.ChangeFrag(mainPage,fragmentManager);*/
         } else if(id == R.id.nav_my_account){
             myAccount myAccount = new myAccount();
             Util.ChangeFrag(myAccount, fragmentManager);
@@ -227,8 +234,9 @@ public class MainController extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
             return true;
         }else if(id == R.id.nav_test){
-            Intent intent = new Intent(this, test.class);
-            startActivity(intent);
+            newMain viewRequests = new newMain();
+            Util.ChangeFrag(viewRequests, fragmentManager);
+            drawer.closeDrawer(GravityCompat.START);
         }
 
 

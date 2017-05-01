@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -6,17 +6,11 @@
     android:orientation="vertical"
     tools:context=".newMyRequest">
 
-    <android.support.v7.widget.CardView
-
-        android:id="@+id/card_view"
-        android:layout_gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
+    <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+        android:id="@+id/linearLayout13">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -35,82 +29,86 @@
 
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         app:srcCompat="@mipmap/ic_type_car"
                         android:id="@+id/my_request_icon"
                         android:layout_marginTop="@dimen/views_top_margin"
                         android:layout_marginLeft="@dimen/views_button_margin"
                         android:layout_marginRight="@dimen/views_button_margin" />
 
-                    <TextView
-                        android:text="TextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/my_request_title"
-                        android:layout_alignParentTop="true"
-                        android:layout_toRightOf="@+id/main_items_typeIcon"
-                        android:layout_toEndOf="@+id/main_items_typeIcon"
-                        android:layout_marginTop="@dimen/views_top_margin"
-                        android:textColor="@color/gray"
-                        android:singleLine="true"
-                        android:textSize="18sp"
-                        android:gravity="center_vertical" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_marginLeft="@dimen/views_button_margin"
-                    android:layout_marginRight="@dimen/views_button_margin">
-
                     <LinearLayout
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/views_top_margin"
-                        android:layout_marginBottom="@dimen/views_margin_s">
+                        android:layout_weight="1"
+                        android:layout_marginLeft="@dimen/views_button_margin"
+                        android:layout_marginRight="@dimen/views_button_margin">
 
                         <TextView
-                            android:text="@string/list_item_type_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/textView3"
-                            android:textStyle="normal|bold"
-                            android:textSize="12sp" />
+                            android:text="TextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/my_request_title"
+                            android:layout_alignParentTop="true"
+                            android:layout_toRightOf="@+id/main_items_typeIcon"
+                            android:layout_toEndOf="@+id/main_items_typeIcon"
+                            android:layout_marginTop="@dimen/views_top_margin"
+                            android:textColor="?android:attr/textColorSecondary"
+                            android:singleLine="true"
+                            android:textSize="24sp"
+                            android:gravity="center_vertical" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/my_request_type"
-                            android:textSize="12sp"
-                            android:layout_marginLeft="@dimen/views_top_margin"
-                            android:layout_marginRight="@dimen/views_top_margin" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="@dimen/views_margin_s">
-
-                        <TextView
-                            android:text="@string/my_request_address"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/textView3"
-                            android:textStyle="normal|bold"
-                            android:textSize="12sp" />
-                        <TextView
+                        <LinearLayout
+                            android:orientation="horizontal"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/my_request_address"
-                            android:layout_weight="1"
-                            android:textSize="12sp"
-                            android:maxLines="1"
-                            android:singleLine="true" />
+                            android:layout_marginTop="@dimen/views_button_margin"
+                            android:layout_marginBottom="@dimen/views_margin_s">
+
+                            <TextView
+                                android:text="@string/list_item_type_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/textView3"
+                                android:textStyle="normal|bold"
+                                android:textSize="12sp"
+                                android:textColor="?android:attr/textColorSecondary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/my_request_type"
+                                android:textSize="12sp"
+                                android:layout_marginLeft="@dimen/views_top_margin"
+                                android:layout_marginRight="@dimen/views_top_margin"
+                                android:textColor="?android:attr/textColorSecondary" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="@dimen/views_margin_s">
+
+                            <TextView
+                                android:text="@string/my_request_address"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/textView3"
+                                android:textStyle="normal|bold"
+                                android:textSize="12sp"
+                                android:textColor="?android:attr/textColorSecondary" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/my_request_address"
+                                android:layout_weight="1"
+                                android:textSize="12sp"
+                                android:maxLines="1"
+                                android:singleLine="true"
+                                android:textColor="?android:attr/textColorSecondary" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -136,7 +134,7 @@
                     android:textSize="20sp"
                     android:textAlignment="center"
                     android:layout_marginTop="@dimen/views_top_margin"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/common_google_signin_btn_text_light_focused"
                     android:textStyle="normal|bold" />
 
                 <TextView
@@ -146,103 +144,121 @@
                     android:id="@+id/my_request_time"
                     android:textAlignment="center"
                     android:textSize="20sp"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/common_google_signin_btn_text_light_focused"
                     android:textStyle="normal|bold"
                     android:layout_marginBottom="@dimen/views_top_margin" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:weightSum="1"
-                android:layout_weight="0.5"
-                android:layout_marginLeft="@dimen/views_margin_xl"
-                android:layout_marginRight="@dimen/views_margin_xl">
 
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.9"
-                    android:id="@+id/my_request_edit_layout"
-                    android:layout_marginLeft="@dimen/views_margin"
-                    android:layout_marginRight="@dimen/views_margin">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        app:srcCompat="@drawable/ic_mode_edit"
-                        android:drawableTint="@color/gray"
-                        android:drawableTintMode="src_atop"
-                        android:id="@+id/main_items_call_img"
-                        android:tint="@color/gray"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/list_item_edit_text"
-                        android:id="@+id/my_offers_list_items_edit"
-                        android:textAllCaps="true"
-                        android:textStyle="normal|bold"
-                        android:textAppearance="@style/TextAppearance.AppCompat"
-                        android:textSize="12sp"
-                        android:textColor="@color/gray"
-                        style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
-                        android:layout_weight="0.45"
-                        android:gravity="center_vertical"
-                        android:clickable="false"
-                        android:longClickable="false" />
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/my_request_delete_layout"
-                    android:layout_marginLeft="@dimen/views_margin"
-                    android:layout_marginRight="@dimen/views_margin">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        app:srcCompat="@drawable/ic_delete"
-                        android:drawableTint="@color/deleteButtonColor"
-                        android:id="@+id/imageView2"
-                        android:adjustViewBounds="false"
-                        android:tint="@color/deleteButtonColor" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:text="@string/list_item_delete_text"
-                        android:id="@+id/my_offers_list_items_delete"
-                        android:textAllCaps="true"
-                        android:textStyle="normal|bold"
-                        android:layout_weight="0.45"
-                        android:textAppearance="@style/TextAppearance.AppCompat"
-                        android:textSize="12sp"
-                        android:textColor="@color/deleteButtonColor"
-                        android:drawableTint="@color/gray"
-                        android:drawableTintMode="src_atop"
-                        style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
-                        android:textAlignment="gravity"
-                        android:gravity="center_vertical" />
-
-                </LinearLayout>
-
-            </LinearLayout>
 
         </LinearLayout>
 
-    </android.support.v7.widget.CardView>
-
     <ListView
+        android:id="@+id/my_request_listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/my_request_listView" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/card_view"
+        android:layout_below="@+id/linearLayout13" />
 
-</LinearLayout>
+    <android.support.v7.widget.CardView
+    android:id="@+id/card_view"
+    android:layout_gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1"
+        android:layout_weight="0.5"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/views_margin_xl"
+            android:layout_marginRight="@dimen/views_margin_xl">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.9"
+            android:id="@+id/my_request_edit_layout"
+            android:layout_marginLeft="@dimen/views_margin"
+            android:layout_marginRight="@dimen/views_margin">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/ic_mode_edit"
+                android:drawableTint="?android:attr/textColorSecondary"
+                android:id="@+id/main_items_call_img"
+                android:tint="@color/colorPrimary"
+                android:drawableTintMode="add" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/list_item_edit_text"
+                android:id="@+id/my_offers_list_items_edit"
+                android:textAllCaps="true"
+                android:textStyle="normal|bold"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textSize="12sp"
+                android:textColor="@color/colorPrimary"
+                style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                android:layout_weight="0.45"
+                android:gravity="center_vertical"
+                android:clickable="false"
+                android:longClickable="false" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/my_request_delete_layout"
+            android:layout_marginLeft="@dimen/views_margin"
+            android:layout_marginRight="@dimen/views_margin">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/ic_delete"
+                android:drawableTint="@color/cardview_light_background"
+                android:id="@+id/imageView2"
+                android:adjustViewBounds="false"
+                android:tint="@color/deleteButtonColor" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:text="@string/list_item_delete_text"
+                android:id="@+id/my_offers_list_items_delete"
+                android:textAllCaps="true"
+                android:textStyle="normal|bold"
+                android:layout_weight="0.45"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textSize="12sp"
+                android:textColor="@color/deleteButtonColor"
+                android:drawableTint="@color/gray"
+                android:drawableTintMode="src_atop"
+                style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                android:textAlignment="gravity"
+                android:gravity="center_vertical" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+
+</RelativeLayout>

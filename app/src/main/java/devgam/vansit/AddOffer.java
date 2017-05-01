@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,10 +46,12 @@ public class AddOffer extends Fragment {
     }
 
     TextView nameText, phoneText, cityText;
+    LinearLayout userInfo;
     Spinner spinnerCity,spinnerType;
     EditText editTitle,editDesc;
     Button btnSave;
     FragmentManager fragmentManager;
+
 
     public Offers editOffer = null; // this will be set of we came from myOffers pages to edit an offer
 
@@ -98,11 +101,22 @@ public class AddOffer extends Fragment {
             spinnerType.setSelection(tempTypeList.indexOf(editOffer.getType()));
         }
 
+        fragmentManager  = getActivity().getSupportFragmentManager();
+
+        userInfo = (LinearLayout) getActivity().findViewById(R.id.add_offer_user_information_layout);
         nameText = (TextView) getActivity().findViewById(R.id.addOffer_name_text);
         phoneText = (TextView) getActivity().findViewById(R.id.addOffer_phone_text);
         cityText = (TextView) getActivity().findViewById(R.id.addOffer_city_text);
 
-        fragmentManager  = getActivity().getSupportFragmentManager();
+        userInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myAccount account = new myAccount();
+                Util.ChangeFrag(account, fragmentManager);
+            }
+        });
+
+
 
         btnSave = (Button) getActivity().findViewById(R.id.addOffer_save);
         btnSave.setOnClickListener(new View.OnClickListener() {

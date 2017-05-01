@@ -50,6 +50,10 @@ public class Main extends Fragment implements View.OnClickListener{
         // Required empty public constructor
     }
 
+    public Main(String type){
+        whichType = type;
+    }
+
     Button showMore;
     FragmentManager fragmentManager;// this is used for the ChangeFrag method
 
@@ -295,6 +299,11 @@ public class Main extends Fragment implements View.OnClickListener{
                     getActivity().findViewById(R.id.loadingPanel_main).setVisibility(View.GONE);
                 } catch (Exception e){
                 }
+
+                if(offerList.isEmpty())
+                    noResultText.setVisibility(View.VISIBLE);
+                else
+                    noResultText.setVisibility(View.INVISIBLE);
             }
             @Override
             public void onCancelled(DatabaseError databaseError)
@@ -303,10 +312,11 @@ public class Main extends Fragment implements View.OnClickListener{
             }
         };
         query.addListenerForSingleValueEvent(QVEL);
+        if(!offerList.isEmpty())
+            ShowMoreBtn(listView);
     }
 
-    public void ChangeListItems()
-    {
+    public void ChangeListItems() {
         // every time the spinner values change , update list
 
         if(whichCity.isEmpty()|| whichCity.equals("Select City") ||
@@ -322,7 +332,7 @@ public class Main extends Fragment implements View.OnClickListener{
         if(!offerAdapter.isEmpty())
             offerAdapter.clear();
 
-        ShowMoreBtn(listView);
+
         listCounter = listCounterOriginal;//reset
 
 
@@ -351,6 +361,11 @@ public class Main extends Fragment implements View.OnClickListener{
                     getActivity().findViewById(R.id.loadingPanel_main).setVisibility(View.GONE);
                 } catch (Exception e){
                 }
+
+                if(offerList.isEmpty())
+                    noResultText.setVisibility(View.VISIBLE);
+                else
+                    noResultText.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -359,6 +374,9 @@ public class Main extends Fragment implements View.OnClickListener{
             }
         };
         query.addListenerForSingleValueEvent(QVEL);
+
+        if(!offerList.isEmpty())
+            ShowMoreBtn(listView);
 
     }
 
@@ -521,8 +539,7 @@ public class Main extends Fragment implements View.OnClickListener{
         LinearLayout profileText, callText;
     }
 
-    public void ShowMoreBtn(final ListView listView)
-    {
+    public void ShowMoreBtn(final ListView listView) {
         if(listView==null)
             return;
         if(listView.getFooterViewsCount()>=1)// prevent duplications for show more button
@@ -698,7 +715,9 @@ public class Main extends Fragment implements View.OnClickListener{
                 myRef.child(Util.RDB_REQUESTS+"/"+"ID"+i).setValue(requests1);
             }else
             {
+
                 Requests requests1 = new Requests(users,"Title"+i,"Desc"+i,type,city,s.get(i),
+
                         32.021371-((double)i/1000),35.848829-((double)i/1000),
                         System.currentTimeMillis(), FirebaseInstanceId.getInstance().getToken());
                 myRef.child(Util.RDB_REQUESTS+"/"+users.getUserID()).setValue(requests1);
@@ -707,6 +726,7 @@ public class Main extends Fragment implements View.OnClickListener{
         }
 
     }
+
     void boo()
     {
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
@@ -758,5 +778,4 @@ public class Main extends Fragment implements View.OnClickListener{
         }
     }
 }
-
 
