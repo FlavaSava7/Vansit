@@ -124,6 +124,11 @@
     <string name="my_request_title">My Request</string>
     <string name="my_request_deleted">Request Deleted</string>
     <string name="my_request_refresh">Refresh Request</string>
+    <string name="my_request_accept_btn">Accept</string>
+    <string name="my_request_decline_btn">Decline</string>
+
+    <string name="mview_requests_status_availble">Available to serve</string>
+    <string name="mview_requests_status_not_availble">User is being served</string>
 
     <!-- shared by layouts -->
     <string name="layout_button_save">save</string>
@@ -172,7 +177,13 @@
     <string name="price_rate_4">Expensive</string>
     <string name="price_rate_5">Very Expensive</string>
 
-
+    <string name="accepted_request_commit">Commit</string>
+    <string name="accepted_request_done">Done</string>
+    <string name="accepted_request_cancel">Cancel</string>
+    <string name="accepted_request_map">Map</string>
+    <string name="accepted_request_Navigation">Navigation</string>
+    <string name="accepted_request_user_title">You are being served by</string>
+    <string name="accepted_request_driver_title">You are serving now </string>
     <!-- TODO: String Array for spinners -->
     <string-array name="city_list">
         <item>Select City</item>

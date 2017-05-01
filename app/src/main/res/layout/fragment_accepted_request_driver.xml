@@ -1,61 +1,144 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="devgam.vansit.AcceptedRequest"
-    android:orientation="vertical"
-    android:layout_gravity="center"
-    android:gravity="center">
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="1"
+    android:background="@color/editText_background">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/views_margin_xl">
+
+        <TextView
+            android:text="@string/accepted_request_driver_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView12"
+            android:textAlignment="center" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_user_male"
+            android:id="@+id/accepted_request_driver_img"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:padding="@dimen/views_button_margin"
+            android:layout_marginTop="@dimen/views_margin_xl" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/accepted_request_driver_user"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textStyle="normal|bold"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginTop="@dimen/views_top_margin" />
+
+        <TextView
+            android:text="@string/user_information_age"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/accepted_request_driver_age"
+            android:layout_below="@+id/user_information_name"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textStyle="normal|bold"
+            android:layout_marginTop="@dimen/views_button_margin" />
+
+        <TextView
+            android:text="@string/user_information_home_city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/accepted_request_driver_city"
+            android:textAlignment="center"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textStyle="normal|bold"
+            android:layout_marginTop="@dimen/views_top_margin" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:layout_marginLeft="@dimen/views_margin_xl"
+            android:layout_marginRight="@dimen/views_margin_xl"
+            android:layout_marginBottom="@dimen/views_margin"
+            android:layout_marginTop="@dimen/views_margin"
+            android:id="@+id/accepted_request_driver_call">
 
 
-    <TextView
-        android:textAllCaps="true"
-        android:textSize="20sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="DRIVER" />
-    <TextView
-        android:id="@+id/accepted_request_driver_user"
-        android:textAllCaps="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="User is ...." />
-    <TextView
-        android:id="@+id/accepted_request_driver_Phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Phone:"
-        android:textColor="#000000"
-        android:textSize="18sp"
-        />
-    <TextView
-        android:id="@+id/accepted_request_driver_phoneData"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:paddingLeft="20dp"
-        />
-    <Button
-        android:id="@+id/accepted_request_driver_map"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/view_requests_map"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/list_item_call_text"
+                android:id="@+id/more_user_information_call_text"
+                android:textAllCaps="true"
+                android:textStyle="normal|bold"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textSize="12sp"
+                style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                android:clickable="false"
+                android:longClickable="false"
+                android:drawableLeft="@drawable/ic_call"
+                android:layout_marginLeft="@dimen/fab_margin2"
+                android:layout_marginRight="@dimen/fab_margin2" />
 
-        />
-    <Button
-        android:id="@+id/accepted_request_driver_navigation"
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
         android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@color/common_google_signin_btn_text_light_focused"
+        android:layout_above="@+id/l1" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/view_requests_map_navigation"
-        />
-    <Button
-        android:id="@+id/accepted_request_driver_cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/layout_button_cancel"
-        />
+        android:id="@+id/l1"
+        android:layout_alignParentBottom="true">
 
+        <Button
+            android:text="@string/accepted_request_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/accepted_request_driver_map"
+            android:layout_weight="1"
+            style="@android:style/Widget.Material.Light.Button.ButtonBar.AlertDialog" />
 
+        <Button
+            android:text="@string/accepted_request_Navigation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/accepted_request_driver_navigation"
+            android:layout_weight="1"
+            style="@android:style/Widget.Material.Light.Button.ButtonBar.AlertDialog" />
 
-</LinearLayout>
+        <Button
+            android:text="@string/accepted_request_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/accepted_request_driver_cancel"
+            android:layout_weight="1"
+            style="@android:style/Widget.Material.Light.Button.ButtonBar.AlertDialog" />
+    </LinearLayout>
+
+</RelativeLayout>

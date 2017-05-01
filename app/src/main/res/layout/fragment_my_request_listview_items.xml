@@ -112,10 +112,11 @@
                 android:weightSum="1"
                 android:layout_marginLeft="@dimen/views_margin"
                 android:layout_marginRight="@dimen/views_margin">
+
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Accept"
+                    android:text="@string/my_request_accept_btn"
                     android:id="@+id/my_request_items_accept_text"
                     android:textAllCaps="true"
                     android:textStyle="normal|bold"
@@ -150,7 +151,7 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Decline"
+                    android:text="@string/my_request_decline_btn"
                     android:id="@+id/my_request_items_decline_text"
                     android:textAllCaps="true"
                     android:textStyle="normal|bold"

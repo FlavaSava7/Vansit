@@ -34,28 +34,25 @@
                 android:singleLine="true"
                 android:textSize="18sp" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                app:srcCompat="@drawable/common_google_signin_btn_icon_dark"
-                android:id="@+id/viewRequests_items_typeIcon"
-                android:layout_marginTop="@dimen/views_top_margin"
-                android:layout_marginLeft="@dimen/views_button_margin"
-                android:layout_marginRight="@dimen/views_button_margin" />
-
-
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginBottom="@dimen/views_top_margin"
-                android:layout_marginLeft="@dimen/views_button_margin"
-                android:layout_marginRight="@dimen/views_button_margin">
+                android:layout_height="wrap_content"
+                android:layout_weight="310.86">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/common_google_signin_btn_icon_dark"
+                    android:id="@+id/viewRequests_items_typeIcon"
+                    android:layout_marginTop="@dimen/views_top_margin"
+                    android:layout_marginLeft="@dimen/views_button_margin"
+                    android:layout_marginRight="@dimen/views_button_margin"
+                    android:layout_marginBottom="@dimen/views_top_margin" />
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
 
@@ -151,22 +148,23 @@
 
             </LinearLayout>
 
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:weightSum="5"
                 android:layout_weight="0.5"
-                android:layout_marginLeft="@dimen/views_margin_xl"
-                android:layout_marginRight="@dimen/views_margin_xl">
+                android:layout_marginLeft="@dimen/views_button_margin"
+                android:layout_marginRight="@dimen/views_button_margin">
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.9"
                     android:id="@+id/viewRequests_items_call_layout"
-                    android:layout_marginLeft="@dimen/views_margin"
-                    android:layout_marginRight="@dimen/views_margin">
+                    android:layout_marginLeft="@dimen/views_button_margin"
+                    android:layout_marginRight="@dimen/views_button_margin">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -199,13 +197,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.9"
                     android:id="@+id/viewRequests_items_serve_layout"
-                    android:layout_marginLeft="@dimen/views_margin"
-                    android:layout_marginRight="@dimen/views_margin">
+                    android:layout_marginLeft="@dimen/views_button_margin"
+                    android:layout_marginRight="@dimen/views_button_margin">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        app:srcCompat="@drawable/ic_call"
+                        app:srcCompat="@drawable/ic_list"
                         android:drawableTint="@color/gray"
                         android:drawableTintMode="src_atop"
                         android:id="@+id/viewRequests_items_map_img"
@@ -232,8 +230,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/viewRequests_items_profile_layout"
-                    android:layout_marginLeft="@dimen/views_margin"
-                    android:layout_marginRight="@dimen/views_margin">
+                    android:layout_marginLeft="@dimen/views_button_margin"
+                    android:layout_marginRight="@dimen/views_button_margin">
 
                     <ImageView
                         android:layout_width="wrap_content"

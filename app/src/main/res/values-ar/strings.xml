@@ -113,6 +113,26 @@
     <string name="user_rate_agian">لقد قيمت هذا المستخدم مسبقا</string>
     <string name="user_rate_done">تم التقييم بنجاح, شكرا لك</string>
     <string name="user_rate_to_hisself">لا تستطيع تقييم خدماتك</string>
-    <string name="view_requests_distance"></string>
+    <string name="view_requests_distance">المسافة :</string>
+    <string name="accepted_request_Navigation">التنقل</string>
+    <string name="accepted_request_cancel">الغاء</string>
+    <string name="accepted_request_done">منجز</string>
+    <string name="accepted_request_driver_title">أنت تقدم خدمة إلى</string>
+    <string name="accepted_request_map">الخريطة</string>
+    <string name="accepted_request_user_title">"من يقدم لك الخدمة هو "</string>
+    <string name="layout_button_cancel"></string>
+    <string name="my_account_first_name_error">الاسم الأول مطلوب</string>
+    <string name="my_account_birth_error">تاريخ ميلاد غير صالح</string>
+    <string name="my_account_last_name_error">الاسم الأخير مطلوب</string>
+    <string name="my_account_phone_error">رقم الهاتف مطلوب</string>
+    <string name="my_account_save_done">تم الحفظ بنجاح</string>
+    <string name="my_request_accept_btn">قبول</string>
+    <string name="my_request_decline_btn">رفض</string>
+    <string name="my_request_deleted">تم الغاء الطلب</string>
+    <string name="my_request_refresh">تحديث الطلب</string>
+    <string name="view_requests_map"></string>
+    <string name="view_requests_address">العنوان :</string>
+    <string name="view_requests_serve">اخدم</string>
+    <string name="view_requests_status">الحالة :</string>
 
 </resources>
