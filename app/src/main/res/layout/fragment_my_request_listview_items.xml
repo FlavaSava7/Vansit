@@ -40,7 +40,9 @@
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:layout_marginLeft="@dimen/views_margin"
+                android:layout_marginRight="@dimen/views_margin">
 
 
                 <LinearLayout
@@ -110,10 +112,11 @@
                 android:weightSum="1"
                 android:layout_marginLeft="@dimen/views_margin"
                 android:layout_marginRight="@dimen/views_margin">
+
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Accept"
+                    android:text="@string/my_request_accept_btn"
                     android:id="@+id/my_request_items_accept_text"
                     android:textAllCaps="true"
                     android:textStyle="normal|bold"
@@ -124,7 +127,9 @@
                     android:drawableTintMode="src_atop"
                     android:gravity="center_vertical"
                     android:textAlignment="center"
-                    style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"/>
+                    style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                    android:layout_weight="0.3" />
+
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -133,21 +138,20 @@
                     android:drawableLeft="@drawable/ic_person"
                     android:textAllCaps="true"
                     android:textStyle="normal|bold"
-                    android:layout_weight="0.45"
+                    android:layout_weight="0.3"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textSize="12sp"
                     android:textColor="@color/gray"
                     android:drawableTint="@color/gray"
                     android:drawableTintMode="src_atop"
                     style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
-                    android:gravity="center_vertical"
-                    android:textAlignment="gravity" />
-
+                    android:textAlignment="gravity"
+                    />
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Decline"
+                    android:text="@string/my_request_decline_btn"
                     android:id="@+id/my_request_items_decline_text"
                     android:textAllCaps="true"
                     android:textStyle="normal|bold"
@@ -158,6 +162,7 @@
                     android:drawableTintMode="src_atop"
                     android:gravity="center_vertical"
                     android:textAlignment="center"
+                    android:layout_weight="0.3"
                     style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"/>
 
 

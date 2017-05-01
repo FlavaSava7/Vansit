@@ -4,6 +4,7 @@ package devgam.vansit;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,7 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RatingBar;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,8 +28,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import devgam.vansit.JSON_Classes.Requests;
@@ -39,6 +39,7 @@ public class AcceptedRequest extends Fragment {
     ChildEventListener QCEL;
     DatabaseReference QCEL_Ref;
     FragmentManager fragmentManager;
+    DatabaseReference DataBaseRoot;
 
     private static final long TimeBeforeFinish = 1000;
 
@@ -51,13 +52,16 @@ public class AcceptedRequest extends Fragment {
     // WE WILL USE 2 LAYOUTS ONE FOR DRIVER AND ONE FOR CUSTOMER
 
     // driver layout
-    TextView userNameTxt,userPhoneTxt;
+    TextView userNameTxt, userAgeTxt, userCityTxt;
+    LinearLayout userCallLayout;
+    ImageView userImg;
     Button mapBtn,naviBtn,cancelBtnDriver;
 
     // user layout
-    TextView driverNameTxt,driverPhoneTxt,ratingNameService, ratingNamePrice;
-    Button cancelBtnUser,doneBtnUser,commitRatingBtnUser;
-    RatingBar ratingService,ratingPrice;
+    TextView driverNameTxt,  driverAgeTxt, driverCityTxt;
+    ImageView driverImg;
+    Button cancelBtnUser,doneBtnUser;
+    LinearLayout driverCallLayout, rateLayout;
 
     public AcceptedRequest()
     {
@@ -77,13 +81,11 @@ public class AcceptedRequest extends Fragment {
     {
         View view =  inflater.inflate(R.layout.fragment_accepted_request_user, container, false);// USER LAYOUT
 
-        if(getArguments()!=null)
-        {
+        if(getArguments()!=null) {
             userKeyOfRequest = getArguments().getString(RequestNotifications.USER_KEY);
         }
 
-        if(userKeyOfRequest!=null && !userKeyOfRequest.equals(""))// DRIVER LAYOUT
-        {
+        if(userKeyOfRequest!=null && !userKeyOfRequest.equals("")) {// DRIVER LAYOUT//
             view = inflater.inflate(R.layout.fragment_accepted_request_driver, container, false);
         }
         return view;
@@ -96,6 +98,7 @@ public class AcceptedRequest extends Fragment {
         fragmentManager  = getActivity().getSupportFragmentManager();
         //Log.v("Main","user key "+userKeyOfRequest);
         DatabaseReference myRef;
+        DataBaseRoot = FirebaseDatabase.getInstance().getReference();//connect to DB root
         if(userKeyOfRequest.equals(""))
         {
             myRef = FirebaseDatabase.getInstance().getReference().child(Util.RDB_REQUESTS+"/"+ FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -146,16 +149,32 @@ public class AcceptedRequest extends Fragment {
     {
         //Log.v("Main","DriverFragmentSetUp ");
         userNameTxt = (TextView) getActivity().findViewById(R.id.accepted_request_driver_user);
-        userPhoneTxt = (TextView) getActivity().findViewById(R.id.accepted_request_driver_phoneData);
+        userCityTxt = (TextView) getActivity().findViewById(R.id.accepted_request_driver_city);
+        userAgeTxt = (TextView) getActivity().findViewById(R.id.accepted_request_driver_age);
+        userCallLayout = (LinearLayout) getActivity().findViewById(R.id.accepted_request_driver_call);
+        userImg = (ImageView) getActivity().findViewById(R.id.accepted_request_driver_img);
 
         mapBtn = (Button) getActivity().findViewById(R.id.accepted_request_driver_map);
         naviBtn = (Button) getActivity().findViewById(R.id.accepted_request_driver_navigation);
 
         cancelBtnDriver = (Button) getActivity().findViewById(R.id.accepted_request_driver_cancel);
 
-        userNameTxt.setText("You Are Serving "+user.getFirstName()+" "+user.getLastName());
-        userPhoneTxt.setText(user.getPhone());
-        userPhoneTxt.setOnClickListener(new View.OnClickListener() {
+        userNameTxt.setText(user.getFirstName()+" "+user.getLastName());
+
+        userCityTxt.setText(getContext().getResources().getString(R.string.user_information_home_city)+ " " + user.getCity());
+        //set User age to text on dialog
+        int age =  Util.yearNow - Integer.parseInt(user.getDateYear()) ;
+        age = (Util.monthNow > Integer.parseInt(user.getDateMonth()) ? age : age -1 );
+        userAgeTxt.setText(getContext().getResources().getString(R.string.user_information_age)+ " " + age );
+
+        if(!user.getGender().isEmpty() || user.getGender() != ""){
+            if (user.getGender().equals("male"))
+                userImg.setImageResource(R.drawable.ic_user_male);
+            else if (user.getGender().equals("female"))
+                userImg.setImageResource(R.drawable.ic_user_female);
+        }
+
+        userCallLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
@@ -220,24 +239,43 @@ public class AcceptedRequest extends Fragment {
             }
         });
     }
+
     private void UserFragmentSetUp()
     {
         driverNameTxt = (TextView) getActivity().findViewById(R.id.accepted_request_user_nameData);
-        driverPhoneTxt = (TextView) getActivity().findViewById(R.id.accepted_request_user_phoneData);
+        driverAgeTxt = (TextView) getActivity().findViewById(R.id.accepted_request_user_ageData);
+        driverCityTxt = (TextView) getActivity().findViewById(R.id.accepted_request_user_cityData);
+        driverImg = (ImageView) getActivity().findViewById(R.id.accepted_request_user_imgData);
 
         cancelBtnUser = (Button) getActivity().findViewById(R.id.accepted_request_user_cancel);
         doneBtnUser = (Button) getActivity().findViewById(R.id.accepted_request_user_done);
-        commitRatingBtnUser = (Button) getActivity().findViewById(R.id.accepted_request_user_commit);
+        //commitRatingBtnUser = (Button) getActivity().findViewById(R.id.accepted_request_user_commit);
 
-        ratingNameService  = (TextView) getActivity().findViewById(R.id.accepted_request_user_serviceRatingName);
+        driverCallLayout = (LinearLayout) getActivity().findViewById(R.id.accepted_request_user_callData);
+        rateLayout = (LinearLayout) getActivity().findViewById(R.id.accepted_request_user_rateData);
+        /*ratingNameService  = (TextView) getActivity().findViewById(R.id.accepted_request_user_serviceRatingName);
         ratingNamePrice = (TextView) getActivity().findViewById(R.id.accepted_request_user_priceRatingName);
 
         ratingService = (RatingBar) getActivity().findViewById(R.id.accepted_request_user_serviceRatingData);
-        ratingPrice = (RatingBar) getActivity().findViewById(R.id.accepted_request_user_priceRatingData);
+        ratingPrice = (RatingBar) getActivity().findViewById(R.id.accepted_request_user_priceRatingData);*/
 
-        driverNameTxt.setText("You Are Being Served By "+driver.getFirstName()+" "+driver.getLastName());
-        driverPhoneTxt.setText(driver.getPhone());
-        driverPhoneTxt.setOnClickListener(new View.OnClickListener()
+        driverNameTxt.setText(driver.getFirstName()+" "+driver.getLastName());
+
+        //set User age to text on dialog
+        int age =  Util.yearNow - Integer.parseInt(driver.getDateYear()) ;
+        age = (Util.monthNow > Integer.parseInt(driver.getDateMonth()) ? age : age -1 );
+        driverAgeTxt.setText(getContext().getResources().getString(R.string.user_information_age)+ " " + age );
+
+        driverCityTxt.setText(getContext().getResources().getString(R.string.user_information_home_city)+ " " + driver.getCity());
+
+        if(!driver.getGender().isEmpty() || driver.getGender() != ""){
+            if (driver.getGender().equals("male"))
+                driverImg.setImageResource(R.drawable.ic_user_male);
+            else if (driver.getGender().equals("female"))
+                driverImg.setImageResource(R.drawable.ic_user_female);
+        }
+
+        driverCallLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -247,6 +285,60 @@ public class AcceptedRequest extends Fragment {
                 startActivity(intent);
             }
         });
+
+        //To show Dialog
+        final ratingDialog rateUser = new ratingDialog(getActivity(), driver);
+        rateUser.initialDialog(rateUser);
+
+        final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        rateLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final View view = v;
+                if (!Util.isLogged()) {
+                    // User is not logged
+                    Util.makeSnackbar(v, getResources().getString(R.string.user_not_logged));
+                    return;
+                } else if (driver.getUserID().equals(firebaseAuth.getCurrentUser().getUid())) {
+                    // User cant vote for self.
+                    Util.makeSnackbar(v, getResources().getString(R.string.user_rate_to_hisself));
+                    return;
+                }
+
+                DatabaseReference query = DataBaseRoot.child(Util.RDB_USERS + "/" + firebaseAuth.getCurrentUser().getUid() + "/" + Util.RATED_FOR);
+                ValueEventListener VEL = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot)
+                    {
+
+                        ArrayList<String> ratedForList = (ArrayList<String>) dataSnapshot.getValue();
+                        if (ratedForList == null)
+                            Util.makeToast(getActivity(), "Something wrong happened!");
+                        else {
+                            boolean canRate = true;
+                            for (String value : ratedForList) {
+                                if (value.equals(driver.getUserID())){//User already voted for this driver
+                                    canRate = false;
+                                    break;
+                                }
+                            }
+
+                            if (canRate) {
+                                rateUser.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                rateUser.show();
+                            } else
+                                Util.makeSnackbar(view, getResources().getString(R.string.user_rate_agian));
+                        }
+                    } @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                };
+                query.addListenerForSingleValueEvent(VEL);
+
+            }
+        });
+
         cancelBtnUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
@@ -314,7 +406,7 @@ public class AcceptedRequest extends Fragment {
             }
         });
 
-        SetUpRating();
+        //SetUpRating();
     }
     private void OpenMapUserLocation(double latitude, double longitude)
     {
@@ -413,12 +505,15 @@ public class AcceptedRequest extends Fragment {
         };
         query.addChildEventListener(QCEL);
     }
+
     public void StopRequestUpdates()
     {
         if(QCEL_Ref!=null && QCEL!=null)
             QCEL_Ref.removeEventListener(QCEL);
     }
-    void SetUpRating()// because its too messy
+
+
+    /*void SetUpRating()// because its too messy
     {
         final String[] rating_service=getResources().getStringArray(R.array.rating_service);
         final String[] rating_price=getResources().getStringArray(R.array.rating_price);
@@ -533,6 +628,7 @@ public class AcceptedRequest extends Fragment {
             }
         });
     }
+
     void commitRating(ArrayList<String> updatedRatedForList , String userKey)
     {
         //current userKey so we can search and add the updatedRatedForList for User.
@@ -580,6 +676,6 @@ public class AcceptedRequest extends Fragment {
                 .child(userKey)
                 .child(Util.RATED_FOR)
                 .setValue(updatedRatedForList);
-    }
+    }*/
 }
 

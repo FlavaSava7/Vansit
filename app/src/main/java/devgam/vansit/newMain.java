@@ -39,9 +39,10 @@ public class newMain extends Fragment implements View.OnClickListener{
         bulldozerLayout = (RelativeLayout) getActivity().findViewById(R.id.new_main_bulldozer);
         excavatorLayout = (RelativeLayout) getActivity().findViewById(R.id.new_main_excavator);
 
-        /*carLayout.setOnClickListener(new View.OnClickListener() {
+        carLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Main viewRequests = new Main("Car");
                 Util.ChangeFrag(viewRequests, fragmentManager);
             }

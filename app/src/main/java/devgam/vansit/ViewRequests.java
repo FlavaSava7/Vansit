@@ -145,8 +145,19 @@ public class ViewRequests extends Fragment  implements
                 !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             mLocationPermissionGranted = false;
 
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            Util.AlertDialog(getContext(), "Warning!", "Please Enable Location Services", intent);
+            /*Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            Util.AlertDialog(getContext(), "Warning!", "Please Enable Location Services", intent);*/
+            final Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+
+            Util.makeSnackbarWithAction(listView,
+                    getResources().getString(R.string.add_request_gps_off_msg),
+                    getResources().getString(R.string.add_request_gps_off_btn),
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            getActivity().startActivity(intent);
+                        }
+                    });
             //Log.v("Main", "All location services are disabled");
             return;
 
@@ -165,7 +176,19 @@ public class ViewRequests extends Fragment  implements
             }
             else
             {
-                Util.makeToast(getContext(),"Please Enable Location Services for This Application");
+                final Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+                intent.setData(uri);
+                Util.makeSnackbarWithAction(listView,
+                        getResources().getString(R.string.add_request_gps_for_app),
+                        getResources().getString(R.string.add_request_gps_for_app_btn),
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                getActivity().startActivity(intent);
+                            }
+                        });
+                //Util.makeToast(getContext(),"Please Enable Location Services for This Application");
                 //Log.v("Main", "We Dont Have any of the permissions for SDK_INT >= 23");
                 mLocationPermissionGranted = false;
                 return;
@@ -174,7 +197,7 @@ public class ViewRequests extends Fragment  implements
         if(Longitude==0||Latitude==0)
         {
             //this.onConnected(new Bundle());
-            Util.makeToast(getContext(), "Searching for Location...");
+            Util.makeToast(getContext(), getActivity().getResources().getString(R.string.add_request_searching));
         }
     }
 
@@ -263,12 +286,12 @@ public class ViewRequests extends Fragment  implements
             });
             if(tempRequest.isServed())
             {
-                holder.Status.setText("User Is Being Served!");
+                holder.Status.setText(getActivity().getResources().getString(R.string.mview_requests_status_not_availble));
                 holder.Status.setTextColor(getResources().getColor(R.color.deleteButtonColor));
             }
             else
             {
-                holder.Status.setText("Available To Serve!");
+                holder.Status.setText(getActivity().getResources().getString(R.string.mview_requests_status_availble));
                 holder.Status.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
             }
             float distanceValue;

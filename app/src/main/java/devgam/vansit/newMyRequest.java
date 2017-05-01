@@ -22,8 +22,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,11 +36,14 @@ import java.util.List;
 import devgam.vansit.JSON_Classes.Requests;
 import devgam.vansit.JSON_Classes.Users;
 
+import static devgam.vansit.Util.makeToast;
+
 
 public class newMyRequest extends Fragment implements View.OnClickListener{
 
     private Requests myRequest;
     private FragmentManager fragmentManager;
+
 
     private TextView addressText, timeText, typeText, titleText, updateText, isThereDriversText;
     private static ListView listView;
@@ -44,6 +51,8 @@ public class newMyRequest extends Fragment implements View.OnClickListener{
     private static ArrayAdapter driversAdapter;
     private LinearLayout editLayout, deleteLayout;
     private ImageView typeImg;
+    Users myUser;
+
 
     private static final long WaitTimeBeforeExit=1500;
     private Calendar requestTimeEnds,currentTime;
@@ -65,6 +74,7 @@ public class newMyRequest extends Fragment implements View.OnClickListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Util.ChangePageTitle(getActivity(),R.string.my_request_title);
     }
 
     @Override
@@ -79,6 +89,7 @@ public class newMyRequest extends Fragment implements View.OnClickListener{
         super.onResume();
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         //setContentView(R.layout.fragment_my_request);
+        fragmentManager  = getActivity().getSupportFragmentManager();
 
         timeText = (TextView) getActivity().findViewById(R.id.my_request_time);
         addressText = (TextView) getActivity().findViewById(R.id.my_request_address);
@@ -90,7 +101,22 @@ public class newMyRequest extends Fragment implements View.OnClickListener{
         editLayout = (LinearLayout) getActivity().findViewById(R.id.my_request_edit_layout);
         deleteLayout = (LinearLayout) getActivity().findViewById(R.id.my_request_delete_layout);
 
-        //updateText.setOnClickListener(this);
+        deleteLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DeleteRequest();
+                Main main = new Main();
+                Util.ChangeFrag(main, fragmentManager);
+            }
+        });
+
+        editLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addRequest request = new addRequest();
+                Util.ChangeFrag(request, fragmentManager);
+            }
+        });
 
         try
         {
@@ -190,6 +216,11 @@ public class newMyRequest extends Fragment implements View.OnClickListener{
         };
     }
 
+    /*private void hideLayout()
+    {
+        this.hide();
+    }*/
+
     @Override
     public void onClick(View v)// just reset time?
     {
@@ -203,6 +234,29 @@ public class newMyRequest extends Fragment implements View.OnClickListener{
 
         RefreshTimer();
 
+    }
+
+    private void DeleteRequest()
+    {
+        if(!Util.IS_USER_CONNECTED) {
+            makeToast(getContext(), getActivity().getResources().getString(R.string.noInternetMsg));
+            return;
+        }
+
+        //cause we are in request detail page
+        //never can be happen
+        /*if(myRequest==null)
+        {
+            Util.makeToast(getContext(), "You Don't Have Any Requests!");
+            return;
+        }*/
+
+        DatabaseReference myRefRequests = FirebaseDatabase.getInstance().getReference().child(Util.RDB_REQUESTS +"/"+
+                FirebaseAuth.getInstance().getCurrentUser().getUid());
+        myRefRequests.removeValue();
+
+        myRequest=null;
+        Util.makeToast(getContext(), getActivity().getResources().getString(R.string.my_request_deleted));
     }
 
     private void RefreshTimer()
@@ -220,7 +274,6 @@ public class newMyRequest extends Fragment implements View.OnClickListener{
     private class itemsAdapter extends ArrayAdapter<Users>
     {
         Context context;
-
         itemsAdapter(Context c) {
             super(c, R.layout.fragment_my_request_listview_items, driversList);
             this.context = c;
@@ -228,8 +281,8 @@ public class newMyRequest extends Fragment implements View.OnClickListener{
         }
 
         @Override
-        public View getView(final int position, View convertView, final ViewGroup parent) {
-
+        public View getView(final int position, View convertView, final ViewGroup parent)
+        {
 
             final newMyRequest.ViewHolder holder = new newMyRequest.ViewHolder();
             final Users tempDriver = driversList.get(position);
@@ -260,7 +313,8 @@ public class newMyRequest extends Fragment implements View.OnClickListener{
                             .setMessage("(The App Will Notify the Driver)")
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
                             {
-                                public void onClick(DialogInterface dialog, int which) {
+                                public void onClick(DialogInterface dialog, int which)
+                                {
                                     RequestNotifications requestNotifications =
                                             new RequestNotifications(getContext(),
                                                     tempDriver.getDeviceToken()

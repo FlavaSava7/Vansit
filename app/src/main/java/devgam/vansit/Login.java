@@ -195,7 +195,7 @@ public class Login extends Fragment implements View.OnClickListener{
         //To check password is not empty :
         if(TextUtils.isEmpty(password)){
             //password is empty
-            Util.checkEdit(getActivity(), errorIcon, passEdit, String.valueOf(R.string.login_password_null_error));
+            Util.checkEdit(getActivity(), errorIcon, passEdit, getActivity().getResources().getString(R.string.login_password_null_error));
             //to stop Function :
             isValid = false;
         }
@@ -203,7 +203,7 @@ public class Login extends Fragment implements View.OnClickListener{
 
         if(TextUtils.isEmpty(Email) ){
             //Email is empty
-            Util.checkEdit(getActivity(), errorIcon, emailEdit, String.valueOf(R.string.login_email_null_error));
+            Util.checkEdit(getActivity(), errorIcon, emailEdit, getActivity().getResources().getString(R.string.login_email_null_error));
             //to stop Function :
             isValid = false;
         }
@@ -226,7 +226,7 @@ public class Login extends Fragment implements View.OnClickListener{
             if(Util.IS_USER_CONNECTED)
                 userSignIn();
             else
-                Util.makeToast(getContext(), String.valueOf(R.string.noInternetMsg));
+                Util.makeToast(getContext(), getActivity().getResources().getString(R.string.noInternetMsg));
 
         } else if(v == signUpText) {
             // To go to sign up fragment if he hasn't account
