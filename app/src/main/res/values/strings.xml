@@ -122,6 +122,7 @@
     <string name="view_requests_map_navigation">Open Navigation</string>
 
     <string name="my_request_title">My Request</string>
+    <string name="my_request_deleted">Request Deleted</string>
     <string name="my_request_refresh">Refresh Request</string>
 
     <!-- shared by layouts -->
@@ -153,7 +154,11 @@
     <string name="my_request_address">"Address "</string>
     <string name="my_request_time">Time remaining :</string>
 
-
+    <string name="my_account_save_done">Save Successfully</string>
+    <string name="my_account_birth_error">Invalid Birth day</string>
+    <string name="my_account_first_name_error">First name is required</string>
+    <string name="my_account_last_name_error">Last name is required</string>
+    <string name="my_account_phone_error">Phone number is required</string>
 
     <string name="user_rate_5">Excellent</string>
     <string name="user_rate_4">Very Good</string>

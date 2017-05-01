@@ -203,19 +203,19 @@ public class myAccount extends Fragment implements View.OnClickListener{
         // - check value of edit text and initialize it if it is not empty
 
         //Check if phone field is not null !
-        if( ! Util.checkEdit(getActivity(), errorIcon, phoneEdit, "phone number is required"))
+        if( ! Util.checkEdit(getActivity(), errorIcon, phoneEdit, getActivity().getResources().getString(R.string.my_account_phone_error)))
             return false;
         else
             tempPhoneNumber = phoneEdit.getText().toString();
 
         //Check if last name field is not null !
-        if( ! Util.checkEdit(getActivity(), errorIcon, lastNameEdit, "last name is required"))
+        if( ! Util.checkEdit(getActivity(), errorIcon, lastNameEdit, getActivity().getResources().getString(R.string.my_account_last_name_error)))
             return false;
         else
             tempUserLastName = lastNameEdit.getText().toString();
 
         //Check if first name field is not null !
-        if( ! Util.checkEdit(getActivity(), errorIcon, firstNameEdit, "first name is required"))
+        if( ! Util.checkEdit(getActivity(), errorIcon, firstNameEdit, getActivity().getResources().getString(R.string.my_account_first_name_error)))
             return false;
         else
             tempUserFirstName = firstNameEdit.getText().toString();
@@ -224,7 +224,7 @@ public class myAccount extends Fragment implements View.OnClickListener{
             //Check if User add real birthDate not current date !
             //Just year because no body born in this year can make account
             //No one less than 16 can drive or make deal with other people
-            Util.makeToast(getActivity(), "Invalid Birth day");
+            Util.makeToast(getActivity(), getActivity().getResources().getString(R.string.my_account_birth_error));
             return false;
         }
         if(tempUserCity.isEmpty() || tempUserCity.equals("Select City"))
@@ -247,7 +247,7 @@ public class myAccount extends Fragment implements View.OnClickListener{
         //Temp code
         try{
             mRef.setValue(userData);
-            Util.makeToast(getContext(), "Save Successfully");
+            Util.makeToast(getContext(), getActivity().getResources().getString(R.string.my_account_save_done));
         } catch (Exception e){
 
         }

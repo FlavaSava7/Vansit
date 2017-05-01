@@ -67,6 +67,7 @@ public class MyRequest extends Dialog implements android.view.View.OnClickListen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.fragment_my_request);
 
+
         timeText = (TextView) findViewById(R.id.my_request_time);
         addressText = (TextView) findViewById(R.id.my_request_address);
         typeText = (TextView) findViewById(R.id.my_request_type);
@@ -184,6 +185,7 @@ public class MyRequest extends Dialog implements android.view.View.OnClickListen
     {
         this.hide();
     }
+
     @Override
     public void onClick(View v)// just reset time?
     {

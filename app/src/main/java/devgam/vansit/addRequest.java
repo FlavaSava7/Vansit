@@ -81,7 +81,7 @@ public class addRequest extends Fragment implements
     LinearLayout userInfo;
     Spinner spinnerCity,spinnerType;
     EditText editTitle,editDesc;
-    Button requestSendBtn,requestDeleteBtn;
+    Button requestSendBtn;
 
     Users myUser;
     Requests myRequest;
@@ -95,6 +95,7 @@ public class addRequest extends Fragment implements
         setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_add_request, container, false);
     }
+
     @Override
     public void onPrepareOptionsMenu(Menu menu)
     {
@@ -226,7 +227,6 @@ public class addRequest extends Fragment implements
         fragmentManager  = getActivity().getSupportFragmentManager();
 
         requestSendBtn = (Button) getActivity().findViewById(R.id.addRequest_Send);
-        requestDeleteBtn = (Button) getActivity().findViewById(R.id.addRequest_Delete);
         editTitle = (EditText) getActivity().findViewById(R.id.addRequest_editTitle);
         editDesc = (EditText) getActivity().findViewById(R.id.addRequest_editDesc);
 
@@ -240,13 +240,7 @@ public class addRequest extends Fragment implements
             @Override
             public void onClick(View v) {
                 AddRequest();
-            }
-        });
-
-        requestDeleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DeleteRequest();
+                UpdateIfRequestExists();
             }
         });
 
@@ -258,7 +252,7 @@ public class addRequest extends Fragment implements
         FillSpinners();
 
         if(!Util.IS_USER_CONNECTED) {
-            makeToast(getContext(), String.valueOf(R.string.noInternetMsg));
+            makeToast(getContext(), getActivity().getResources().getString(R.string.noInternetMsg));
             return;
         }
         DatabaseReference myRefUsers = FirebaseDatabase.getInstance().getReference().child(Util.RDB_USERS+"/"+
