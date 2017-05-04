@@ -140,11 +140,11 @@ public class MainController extends AppCompatActivity
                 }
             }
             else {
-                newMain viewRequests = new newMain();
-                Util.ChangeFrag(viewRequests, fragmentManager);
-                /*
+                /*newMain viewRequests = new newMain();
+                Util.ChangeFrag(viewRequests, fragmentManager);*/
+
                 Main mainPage = new Main();
-                Util.ChangeFrag(mainPage,fragmentManager);*/
+                Util.ChangeFrag(mainPage,fragmentManager);
             }
 
         }
@@ -191,12 +191,12 @@ public class MainController extends AppCompatActivity
             Login loginPage = new Login();
             Util.ChangeFrag(loginPage,fragmentManager);
         } else if (id == R.id.nav_main) {
-            newMain viewRequests = new newMain();
+            /*newMain viewRequests = new newMain();
             Util.ChangeFrag(viewRequests, fragmentManager);
-            drawer.closeDrawer(GravityCompat.START);
-            /*
+            drawer.closeDrawer(GravityCompat.START);*/
+
             Main mainPage = new Main();
-            Util.ChangeFrag(mainPage,fragmentManager);*/
+            Util.ChangeFrag(mainPage,fragmentManager);
         } else if(id == R.id.nav_my_account){
             myAccount myAccount = new myAccount();
             Util.ChangeFrag(myAccount, fragmentManager);
@@ -209,13 +209,7 @@ public class MainController extends AppCompatActivity
             Util.ChangeFrag(favourite, fragmentManager);
             drawer.closeDrawer(GravityCompat.START);
             return true;
-        } else  if(id == R.id.nav_rec)
-        {
-            addRequest rec = new addRequest();
-            Util.ChangeFrag(rec, fragmentManager);
-            drawer.closeDrawer(GravityCompat.START);
-            return true;
-        } else  if(id == R.id.nav_logout)
+        }  else  if(id == R.id.nav_logout)
         {
             FloatingActionButton fabMain = (FloatingActionButton) findViewById(R.id.add_fab);
             if(fabMain!=null)
@@ -234,8 +228,10 @@ public class MainController extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
             return true;
         }else if(id == R.id.nav_test){
-            newMain viewRequests = new newMain();
-            Util.ChangeFrag(viewRequests, fragmentManager);
+            //newMain viewRequests = new newMain();
+            //Util.ChangeFrag(viewRequests, fragmentManager);
+            Intent intent = new Intent(this, test.class);
+            startActivity(intent);
             drawer.closeDrawer(GravityCompat.START);
         }
 
@@ -250,7 +246,7 @@ public class MainController extends AppCompatActivity
         Menu nav_Menu = navigationView.getMenu();
         if (Util.isLogged()) {//User is logged in
             nav_Menu.findItem(R.id.nav_login).setVisible(false);
-            nav_Menu.findItem(R.id.nav_rec).setVisible(true);
+            //nav_Menu.findItem(R.id.nav_rec).setVisible(true);
             nav_Menu.findItem(R.id.nav_fav).setVisible(true);
             nav_Menu.findItem(R.id.nav_my_account).setVisible(true);
             nav_Menu.findItem(R.id.nav_logout).setVisible(true);
@@ -258,7 +254,7 @@ public class MainController extends AppCompatActivity
             nav_Menu.findItem(R.id.nav_requests).setVisible(true);
         } else {
             nav_Menu.findItem(R.id.nav_login).setVisible(true);
-            nav_Menu.findItem(R.id.nav_rec).setVisible(false);
+            //nav_Menu.findItem(R.id.nav_rec).setVisible(false);
             nav_Menu.findItem(R.id.nav_fav).setVisible(false);
             nav_Menu.findItem(R.id.nav_my_account).setVisible(false);
             nav_Menu.findItem(R.id.nav_logout).setVisible(false);
@@ -270,7 +266,7 @@ public class MainController extends AppCompatActivity
     {
         if (Util.isLogged()) {//User is logged in
             nav_Menu.findItem(R.id.nav_login).setVisible(false);
-            nav_Menu.findItem(R.id.nav_rec).setVisible(true);
+            //nav_Menu.findItem(R.id.nav_rec).setVisible(true);
             nav_Menu.findItem(R.id.nav_fav).setVisible(true);
             nav_Menu.findItem(R.id.nav_my_account).setVisible(true);
             nav_Menu.findItem(R.id.nav_logout).setVisible(true);
@@ -278,7 +274,7 @@ public class MainController extends AppCompatActivity
             nav_Menu.findItem(R.id.nav_requests).setVisible(true);
         } else {
             nav_Menu.findItem(R.id.nav_login).setVisible(true);
-            nav_Menu.findItem(R.id.nav_rec).setVisible(false);
+            //nav_Menu.findItem(R.id.nav_rec).setVisible(false);
             nav_Menu.findItem(R.id.nav_fav).setVisible(false);
             nav_Menu.findItem(R.id.nav_my_account).setVisible(false);
             nav_Menu.findItem(R.id.nav_logout).setVisible(false);

@@ -385,7 +385,7 @@ public class Main extends Fragment implements View.OnClickListener{
         if(v == addRequest || v == addRequestText)
         {
             //foo();
-            //boo();
+            //boo2();
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             addRequest addRequestPage = new addRequest();
             Util.ChangeFrag(addRequestPage, fragmentManager);
@@ -776,6 +776,134 @@ public class Main extends Fragment implements View.OnClickListener{
                 offers.add(i, offer);
                 myRef.child("Offers").push().setValue(offer);
         }
+    }
+    void boo2()
+    {
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
+        List<Users> usersList = new ArrayList<>();
+        List<String> ids = new ArrayList<>();
+
+        Random randomGenerator = new Random();
+
+
+        for(int i = 0 ; i<25 ; i++)
+        {
+            int randomInt = randomGenerator.nextInt(4);
+            ids.add(String.valueOf((i*randomInt+(randomInt*450))));
+        }
+
+
+        Users tempUser = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser);
+
+        Users tempUser2 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser2);
+
+        Users tempUser3 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser3);
+
+        Users tempUser4 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser4);
+
+        Users tempUser5 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser5);
+
+        Users tempUser6 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser6);
+
+        Users tempUser7 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser7);
+
+        Users tempUser8 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser8);
+
+        Users tempUser9 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser9);
+
+        Users tempUser10 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser10);
+
+        Users tempUser11 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser11);
+
+        Users tempUser12 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser12);
+
+        Users tempUser13 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser13);
+
+        Users tempUser14 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser14);
+
+        Users tempUser15 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser15);
+
+        Users tempUser16 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser16);
+
+        Users tempUser17 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser17);
+
+        Users tempUser18 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser18);
+
+
+        Users tempUser19 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser19);
+
+        Users tempUser20 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser20);
+
+        Users tempUser21 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser21);
+
+        Users tempUser22 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser22);
+
+        Users tempUser23 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser23);
+
+        Users tempUser24 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser24);
+
+        Users tempUser25 = new Users("Sara","Imran","Ajloun","0790000000","FEMALE","9","9","1993");
+
+        usersList.add(tempUser25);
+
+        for(int k = 0 ; k<ids.size();k++)
+        {
+            usersList.get(k).setUserID(ids.get(k));
+        }
+        for(Users user : usersList)
+        {
+            String pushKey = myRef.child("Users").push().getKey();
+            myRef.child("Users/"+pushKey).setValue(user);
+        }
+
     }
 }
 
