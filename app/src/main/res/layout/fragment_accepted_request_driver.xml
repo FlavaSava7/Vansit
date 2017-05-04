@@ -122,7 +122,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/accepted_request_driver_map"
             android:layout_weight="1"
-            style="@android:style/Widget.Material.Light.Button.ButtonBar.AlertDialog" />
+            style="@android:style/Widget.Material.Light.Button.Borderless.Small" />
 
         <Button
             android:text="@string/accepted_request_Navigation"
@@ -130,7 +130,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/accepted_request_driver_navigation"
             android:layout_weight="1"
-            style="@android:style/Widget.Material.Light.Button.ButtonBar.AlertDialog" />
+            style="@android:style/Widget.Material.Light.Button.Borderless.Small" />
 
         <Button
             android:text="@string/accepted_request_cancel"
@@ -138,7 +138,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/accepted_request_driver_cancel"
             android:layout_weight="1"
-            style="@android:style/Widget.Material.Light.Button.ButtonBar.AlertDialog" />
+            style="@android:style/Widget.Material.Light.Button.Borderless.Small" />
     </LinearLayout>
 
 </RelativeLayout>

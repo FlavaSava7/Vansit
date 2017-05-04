@@ -33,7 +33,7 @@
         completions."
     </string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Soon Will be Available</string>
 
     <!-- Strings for layouts -->
@@ -186,6 +186,11 @@
     <string name="accepted_request_Navigation">Navigation</string>
     <string name="accepted_request_user_title">You are being served by</string>
     <string name="accepted_request_driver_title">You are serving now </string>
+
+    <string name="more_offer_information_addedFav_success">Added To Favorites!</string>
+    <string name="more_offer_information_addedFav_fail">You Already Added This Offer!</string>
+
+
     <!-- TODO: String Array for spinners -->
     <string-array name="city_list">
         <item>Select City</item>
