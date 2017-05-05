@@ -358,8 +358,8 @@ public class addRequest extends Fragment implements
                     MyRequest myRequestPage = new MyRequest(getActivity(),getContext(),myRequest, fragmentManager);
                     myRequestPage.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                     myRequestPage.show();
-                    //newMyRequest myRequestPage = new newMyRequest(myRequest);
-                    //Util.ChangeFrag(myRequestPage, fragmentManager);
+                    /*newMyRequest myRequestPage = new newMyRequest(myRequest);
+                    Util.ChangeFrag(myRequestPage, fragmentManager);*/
                 }
                 else
                 {

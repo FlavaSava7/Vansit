@@ -584,7 +584,7 @@ public class ViewRequests extends Fragment  implements
 
                 listCounter +=listCounterOriginal;
                 DatabaseReference myRef = FirebaseDatabase.getInstance().getReference().child(Util.RDB_REQUESTS);
-                Query query = myRef.orderByChild("offer/"+Util.CITY).equalTo(whichCity).limitToLast(listCounter);
+                Query query = myRef.orderByChild(Util.CITY).equalTo(whichCity).limitToLast(listCounter);
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot)
