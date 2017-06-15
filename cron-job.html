@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+
+<title>Vansit</title>
+</head>
+
+<body>
+<h1>Vansit Requests Cleaner Service</h1>
+  
+
+  
+<script src="https://www.gstatic.com/firebasejs/3.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.7.1/firebase-database.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDj-W5PWmnP42DC2ciNrfbiNQvOzciSa_k",
+    authDomain: "vansit-f961f.firebaseapp.com",
+    databaseURL: "https://vansit-f961f.firebaseio.com",
+    storageBucket: "vansit-f961f.appspot.com",
+    messagingSenderId: "407574058453"
+  };
+  
+  firebase.initializeApp(config);
+
+  var myRef = firebase.database().ref("Requests");
+  var cleanerErrors = firebase.database().ref("_Cleaner_Errors");
+  myRef.once('value').then(function(snapshot) 
+  {
+
+    snapshot.forEach(function(childSnapshot) 
+    {
+      var userRequest = childSnapshot.val();
+      if(didTimePass(userRequest.timeStamp) && userRequest.served==false )//delete request
+      {
+	console.log("Request With Key "+childSnapshot.key+" is deleted");
+	myRef.child(childSnapshot.key).remove();
+      }
+	    
+    });
+ 
+ },function(error)
+ {
+	  if(error!=null)
+	  {
+		      console.log("ERROR "+error.message);
+    		cleanerErrors.child(errorDate()).set({errorCode: error.code, errorMsg: error.message});
+	  }
+
+ });
+  
+
+
+function didTimePass(time)
+{
+  var dateOfTime =  new Date(time);
+  dateOfTime.setMinutes(dateOfTime.getMinutes()+30);
+  if(new Date().getTime() >= dateOfTime.getTime())
+    return true;
+  else
+    return false;
+}
+
+function errorDate()
+{
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth()+1; //January is 0!
+var yyyy = today.getFullYear();
+	
+if(dd<10) 
+{
+dd='0'+dd
+} 
+	
+if(mm<10) 
+{
+mm='0'+mm
+}
+	
+var curHour = today.getHours() > 12 ? today.getHours() - 12 : (today.getHours() < 10 ? "0" + today.getHours() : today.getHours());
+var curMinute = today.getMinutes() < 10 ? "0" + today.getMinutes() : today.getMinutes();
+
+today = dd+'_'+mm+'_'+yyyy+"_T_"+curHour+"_"+curMinute;
+
+return today;
+}
+	
+	
+	
+	
+  </script>
+</body>
+
+</html>
